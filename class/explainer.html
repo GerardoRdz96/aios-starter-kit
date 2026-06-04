@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is an AIOS? — AI Operating Systems, explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16182b; --ink-soft:#3a3d57; --muted:#6b6e8a;
+    --cream:#faf6ef; --card:#fffdfa; --line:#e7e0d4;
+    --teal:#0e9488; --teal-deep:#0b6e66; --amber:#e8930c; --amber-soft:#fbe6c4;
+    --violet:#6d5ce0; --rose:#e0556d;
+    --shadow:0 1px 2px rgba(22,24,43,.04),0 8px 30px rgba(22,24,43,.07);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--cream);color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* language toggle */
+  .lang-es{display:none}
+  body.es .lang-en{display:none}
+  body.es .lang-es{display:block}
+  body.es span.lang-en{display:none}
+  body.es span.lang-es{display:inline}
+  span.lang-es{display:none}
+  .langbar{
+    position:fixed;top:16px;right:16px;z-index:50;display:flex;gap:4px;
+    background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:4px;box-shadow:var(--shadow);font-family:'Space Grotesk',sans-serif;
+  }
+  .langbar button{
+    border:0;background:transparent;color:var(--muted);font-weight:600;
+    padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px;
+    font-family:inherit;transition:.15s;
+  }
+  .langbar button.active{background:var(--ink);color:#fff}
+  /* layout */
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.15;letter-spacing:-.02em}
+  h1{font-size:clamp(34px,6vw,58px);font-weight:700;margin:0 0 .3em}
+  h2{font-size:clamp(26px,4vw,38px);font-weight:600;margin:0 0 .5em}
+  h3{font-size:20px;font-weight:600;margin:0 0 .3em}
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;text-transform:uppercase;
+    letter-spacing:.18em;font-size:12px;font-weight:600;color:var(--teal);
+    margin-bottom:14px;
+  }
+  p{margin:0 0 1em;color:var(--ink-soft);font-size:17px}
+  .lead{font-size:20px;color:var(--ink)}
+  strong{color:var(--ink);font-weight:600}
+  .accent{color:var(--teal-deep)}
+  /* hero */
+  .hero{
+    background:radial-gradient(120% 120% at 80% 0%,#fff7ea 0%,var(--cream) 55%);
+    text-align:left;padding-top:96px;padding-bottom:80px;border-bottom:1px solid var(--line);
+  }
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:8px;background:var(--amber-soft);
+    color:#92590a;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
+    padding:6px 14px;border-radius:999px;margin-bottom:24px;
+  }
+  .hero-art{margin:36px 0 0}
+  .illus{width:100%;height:auto;display:block;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow);margin:28px 0 4px;background:#fff}
+  .illus-cap{font-size:13px;color:var(--muted);text-align:center;margin:0 0 4px;font-style:italic}
+  /* cards */
+  .grid{display:grid;gap:18px}
+  .grid.two{grid-template-columns:1fr 1fr}
+  .grid.three{grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:680px){.grid.two,.grid.three{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px;box-shadow:var(--shadow);
+  }
+  .card h3{display:flex;align-items:center;gap:10px}
+  .card .ic{
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    flex:0 0 auto;font-size:18px;
+  }
+  .pill{
+    display:inline-block;font-family:'Space Grotesk',sans-serif;font-size:12px;
+    font-weight:600;padding:3px 10px;border-radius:999px;margin:0 6px 6px 0;
+  }
+  /* compare row */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  @media(max-width:680px){.compare{grid-template-columns:1fr}}
+  .compare>div{padding:26px}
+  .compare .bad{background:#fff;border-right:1px solid var(--line)}
+  .compare .good{background:linear-gradient(180deg,#f3fbf9,#fff)}
+  .compare h3{font-size:17px}
+  .compare ul{margin:.4em 0 0;padding-left:18px;color:var(--ink-soft);font-size:15px}
+  .compare li{margin-bottom:6px}
+  .tagbad{color:var(--rose)} .taggood{color:var(--teal-deep)}
+  /* try box */
+  .try{
+    background:var(--ink);color:#e9eaf3;border-radius:16px;padding:22px 26px;
+    margin-top:22px;font-size:16px;
+  }
+  .try code{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:6px;
+    font-family:'Space Grotesk',monospace;color:#ffd79b}
+  .try .label{font-family:'Space Grotesk',sans-serif;font-weight:600;color:#7fe0d4;
+    text-transform:uppercase;letter-spacing:.1em;font-size:11px;display:block;margin-bottom:6px}
+  /* steps */
+  .steps{counter-reset:s;display:grid;gap:14px;margin-top:8px}
+  .step{display:flex;gap:16px;align-items:flex-start}
+  .step .n{
+    counter-increment:s;flex:0 0 auto;width:34px;height:34px;border-radius:50%;
+    background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:700;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .step .n::before{content:counter(s)}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:'Space Grotesk',sans-serif;color:var(--ink);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+  td code{font-family:'Space Grotesk',monospace;background:#f2eee5;padding:2px 7px;border-radius:5px;font-size:13px;color:var(--teal-deep)}
+  .cmd{font-family:'Space Grotesk',monospace;color:var(--violet);font-weight:600}
+  footer{padding:48px 0 70px;text-align:center;color:var(--muted);font-size:14px}
+  footer a{color:var(--teal-deep);text-decoration:none}
+  .credit{font-size:13px;color:var(--muted);margin-top:30px}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<div class="langbar">
+  <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+  <button id="btn-es" onclick="setLang('es')">ES</button>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="badge">🧠 <span class="lang-en">A class on AI Operating Systems</span><span class="lang-es">Una clase sobre Sistemas Operativos de IA</span></span>
+    <div class="lang-en">
+      <h1>Your AI shouldn't<br>forget you every morning.</h1>
+      <p class="lead">This is a class about <strong>AIOS</strong> — an <span class="accent">AI Operating System</span>. A way to turn a chatbot that forgets everything into a partner that knows who you are, remembers what it learns, and grows new skills over time.</p>
+    </div>
+    <div class="lang-es">
+      <h1>Tu IA no debería<br>olvidarte cada mañana.</h1>
+      <p class="lead">Esta es una clase sobre <strong>AIOS</strong> — un <span class="accent">Sistema Operativo de IA</span>. Una forma de convertir un chatbot que olvida todo en un compañero que sabe quién eres, recuerda lo que aprende, y desarrolla nuevas habilidades con el tiempo.</p>
+    </div>
+    <div class="hero-art">
+      <img class="illus" src="images/hero-aios.png" alt="A person at a desk with a friendly AI companion made of organized knowledge cards, linked to skill panels">
+      <!-- SVG hero diagram: chat box -> OS -->
+      <svg viewBox="0 0 840 240" width="100%" height="auto" role="img" aria-label="From forgetful chat to AI Operating System">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0e9488"/><stop offset="1" stop-color="#0b6e66"/>
+          </linearGradient>
+          <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#16182b" flood-opacity="0.12"/>
+          </filter>
+        </defs>
+        <!-- forgetful chat -->
+        <g filter="url(#sh)">
+          <rect x="20" y="60" width="190" height="120" rx="16" fill="#fff" stroke="#e7e0d4"/>
+          <circle cx="55" cy="95" r="9" fill="#e0556d" opacity=".25"/>
+          <rect x="74" y="89" width="110" height="11" rx="5" fill="#efe9dd"/>
+          <rect x="44" y="118" width="140" height="10" rx="5" fill="#f3eee4"/>
+          <rect x="44" y="138" width="96" height="10" rx="5" fill="#f3eee4"/>
+        </g>
+        <text x="115" y="208" text-anchor="middle" font-family="Space Grotesk" font-size="13" fill="#6b6e8a">today: blank again</text>
+        <!-- arrow -->
+        <g>
+          <line x1="232" y1="120" x2="312" y2="120" stroke="#c9c1b1" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+          <path d="M308 113 l12 7 -12 7 z" fill="#c9c1b1"/>
+        </g>
+        <!-- the OS -->
+        <g filter="url(#sh)">
+          <rect x="340" y="36" width="480" height="168" rx="20" fill="url(#g1)"/>
+          <text x="366" y="74" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">AI Operating System</text>
+          <!-- inner tiles -->
+          <g font-family="Space Grotesk" font-size="11.5" fill="#0b6e66" font-weight="600">
+            <rect x="366" y="92" width="128" height="44" rx="10" fill="#fff" opacity=".96"/>
+            <text x="382" y="112">📇 context</text><text x="382" y="127" fill="#6b6e8a" font-weight="500">who you are</text>
+            <rect x="506" y="92" width="128" height="44" rx="10" fill="#fff" opacity=".96"/>
+            <text x="522" y="112">📚 wiki</text><text x="522" y="127" fill="#6b6e8a" font-weight="500">what it learns</text>
+            <rect x="646" y="92" width="150" height="44" rx="10" fill="#fff" opacity=".96"/>
+            <text x="662" y="112">⚡ skills</text><text x="662" y="127" fill="#6b6e8a" font-weight="500">what it can do</text>
+            <rect x="366" y="146" width="430" height="42" rx="10" fill="#0b6e66" opacity=".55"/>
+            <text x="586" y="172" text-anchor="middle" fill="#eafbf8" font-size="12">…and builders that grow new skills, agents &amp; routines</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- THE PROBLEM -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">The problem</span><span class="lang-es">El problema</span></div>
+    <div class="lang-en">
+      <h2>A chat is a goldfish.</h2>
+      <p class="lead">Every new conversation, your AI starts from zero. You re-explain who you are, what you're working on, how you like things. It can't remember yesterday's decision or last week's lesson. Brilliant for ten minutes, amnesiac forever.</p>
+    </div>
+    <div class="lang-es">
+      <h2>Un chat es un pez de colores.</h2>
+      <p class="lead">Cada conversación nueva, tu IA empieza desde cero. Le vuelves a explicar quién eres, en qué trabajas, cómo te gustan las cosas. No recuerda la decisión de ayer ni la lección de la semana pasada. Brillante por diez minutos, amnésico para siempre.</p>
+    </div>
+
+    <div class="compare" style="margin-top:24px">
+      <div class="bad">
+        <h3 class="tagbad">🐠 <span class="lang-en">Plain chatbot</span><span class="lang-es">Chatbot normal</span></h3>
+        <ul>
+          <li><span class="lang-en">Forgets everything when you close it</span><span class="lang-es">Olvida todo cuando lo cierras</span></li>
+          <li><span class="lang-en">You repeat your context every time</span><span class="lang-es">Repites tu contexto cada vez</span></li>
+          <li><span class="lang-en">No memory of decisions or lessons</span><span class="lang-es">Sin memoria de decisiones ni lecciones</span></li>
+          <li><span class="lang-en">Same generic assistant for everyone</span><span class="lang-es">El mismo asistente genérico para todos</span></li>
+        </ul>
+      </div>
+      <div class="good">
+        <h3 class="taggood">🧠 <span class="lang-en">An AIOS</span><span class="lang-es">Un AIOS</span></h3>
+        <ul>
+          <li><span class="lang-en">Remembers across sessions — it's a folder, not a chat</span><span class="lang-es">Recuerda entre sesiones — es una carpeta, no un chat</span></li>
+          <li><span class="lang-en">Knows your role, priorities, and voice</span><span class="lang-es">Conoce tu rol, prioridades y tu voz</span></li>
+          <li><span class="lang-en">Writes down what it learns and reuses it</span><span class="lang-es">Escribe lo que aprende y lo reutiliza</span></li>
+          <li><span class="lang-en">Grows new skills shaped around you</span><span class="lang-es">Desarrolla nuevas habilidades hechas para ti</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE SHIFT / DEFINITION -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">The idea</span><span class="lang-es">La idea</span></div>
+    <div class="lang-en">
+      <h2>From <em>chat</em> to <span class="accent">operating system</span>.</h2>
+      <p>An AIOS is a version-controlled folder you own. Your AI lives <em>inside</em> it. The folder gives the AI four things a blank chat never has:</p>
+    </div>
+    <div class="lang-es">
+      <h2>De <em>chat</em> a <span class="accent">sistema operativo</span>.</h2>
+      <p>Un AIOS es una carpeta con control de versiones que es tuya. Tu IA vive <em>dentro</em> de ella. La carpeta le da a la IA cuatro cosas que un chat en blanco nunca tiene:</p>
+    </div>
+
+    <div class="grid two" style="margin-top:22px">
+      <div class="card">
+        <h3><span class="ic" style="background:#e6f6f3">📇</span> <span class="lang-en">1. Context</span><span class="lang-es">1. Contexto</span></h3>
+        <p style="font-size:15px"><span class="lang-en">It knows who you are, what you're working on, and how you like to sound. Lives in <code>context/</code>.</span><span class="lang-es">Sabe quién eres, en qué trabajas y cómo te gusta sonar. Vive en <code>context/</code>.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="ic" style="background:#eae6fb">📚</span> <span class="lang-en">2. A knowledge wiki</span><span class="lang-es">2. Una wiki de conocimiento</span></h3>
+        <p style="font-size:15px"><span class="lang-en">Facts it has learned, written down and reused — not lost in chat history. Lives in <code>references/</code>.</span><span class="lang-es">Hechos que ha aprendido, escritos y reutilizados — no perdidos en el historial. Vive en <code>references/</code>.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="ic" style="background:#fbe6c9">⚡</span> <span class="lang-en">3. Skills</span><span class="lang-es">3. Skills (habilidades)</span></h3>
+        <p style="font-size:15px"><span class="lang-en">Repeatable workflows you trigger with <code>/commands</code>. Live in <code>.claude/skills/</code>.</span><span class="lang-es">Flujos de trabajo repetibles que activas con <code>/comandos</code>. Viven en <code>.claude/skills/</code>.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="ic" style="background:#fbe0e6">🌱</span> <span class="lang-en">4. A way to grow</span><span class="lang-es">4. Una forma de crecer</span></h3>
+        <p style="font-size:15px"><span class="lang-en">Builders that let it create <em>new</em> skills, agents, and automations as your needs change.</span><span class="lang-es">Constructores que le permiten crear <em>nuevas</em> skills, agentes y automatizaciones según cambian tus necesidades.</span></p>
+      </div>
+    </div>
+    <p style="margin-top:22px;text-align:center;color:var(--muted)"><span class="lang-en"><strong>You don't program it. You talk to it</strong> — and it writes itself into a system.</span><span class="lang-es"><strong>No lo programas. Hablas con él</strong> — y se escribe a sí mismo como un sistema.</span></p>
+  </div>
+</section>
+
+<!-- ANATOMY -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">The anatomy</span><span class="lang-es">La anatomía</span></div>
+    <div class="lang-en"><h2>What's inside the folder.</h2>
+      <p>Every AIOS is just organized folders and markdown files. Nothing magic — that's the point. You can read all of it.</p></div>
+    <div class="lang-es"><h2>Qué hay dentro de la carpeta.</h2>
+      <p>Cada AIOS son solo carpetas organizadas y archivos markdown. Nada mágico — ese es el punto. Puedes leerlo todo.</p></div>
+
+    <div class="card" style="margin-top:20px;font-family:'Space Grotesk',monospace;font-size:14px;line-height:2;background:#fffdfa">
+      <div><span style="color:var(--violet)">my-aios/</span></div>
+      <div><span style="color:var(--teal-deep)">├── CLAUDE.md</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">the operating system: who your AI is + how it works</span><span class="lang-es">el sistema operativo: quién es tu IA + cómo trabaja</span></span></div>
+      <div><span style="color:var(--teal-deep)">├── aios-intake.md</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">the 7-question onboarding form</span><span class="lang-es">el formulario de bienvenida de 7 preguntas</span></span></div>
+      <div>├── <span style="color:var(--violet)">.claude/</span></div>
+      <div>│ &nbsp; ├── <span style="color:var(--violet)">skills/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">/commands you run</span><span class="lang-es">/comandos que corres</span></span></div>
+      <div>│ &nbsp; ├── <span style="color:var(--violet)">agents/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">specialized helpers</span><span class="lang-es">ayudantes especializados</span></span></div>
+      <div>│ &nbsp; └── <span style="color:var(--violet)">teams/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">multi-agent crews</span><span class="lang-es">equipos de varios agentes</span></span></div>
+      <div>├── <span style="color:var(--violet)">context/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">what it knows about YOU</span><span class="lang-es">lo que sabe sobre TI</span></span></div>
+      <div>├── <span style="color:var(--violet)">references/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">the knowledge wiki (AI writes this)</span><span class="lang-es">la wiki de conocimiento (la IA la escribe)</span></span></div>
+      <div>├── <span style="color:var(--violet)">knowledge/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">raw sources you drop in</span><span class="lang-es">fuentes que sueltas adentro</span></span></div>
+      <div>├── <span style="color:var(--violet)">artifacts/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">things it builds for you</span><span class="lang-es">cosas que construye para ti</span></span></div>
+      <div>├── <span style="color:var(--violet)">decisions/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">log of decisions + why</span><span class="lang-es">registro de decisiones + por qué</span></span></div>
+      <div>└── <span style="color:var(--violet)">routines/</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">scheduled automations</span><span class="lang-es">automatizaciones programadas</span></span></div>
+    </div>
+    <div class="try">
+      <span class="label"><span class="lang-en">The keystone file</span><span class="lang-es">El archivo clave</span></span>
+      <span class="lang-en"><code>CLAUDE.md</code> is re-read by the AI <strong>every single turn</strong>. It's the AIOS's constitution — short on purpose (a 200-line budget), pointing to detail that lives elsewhere.</span>
+      <span class="lang-es"><code>CLAUDE.md</code> es releído por la IA <strong>en cada turno</strong>. Es la constitución del AIOS — corto a propósito (un presupuesto de 200 líneas), apuntando al detalle que vive en otros archivos.</span>
+    </div>
+  </div>
+</section>
+
+<!-- THE WIKI -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">The heart · Karpathy's pattern</span><span class="lang-es">El corazón · el patrón de Karpathy</span></div>
+    <div class="lang-en"><h2>Knowledge that compounds.</h2>
+      <p>The most important part. Your wiki has <strong>three layers</strong>, an idea from Andrej Karpathy. Raw sources flow in, the AI writes interpreted pages, and a protocol keeps it disciplined.</p></div>
+    <div class="lang-es"><h2>Conocimiento que se acumula.</h2>
+      <p>La parte más importante. Tu wiki tiene <strong>tres capas</strong>, una idea de Andrej Karpathy. Las fuentes entran, la IA escribe páginas interpretadas, y un protocolo la mantiene disciplinada.</p></div>
+
+    <svg viewBox="0 0 840 250" width="100%" height="auto" style="margin-top:24px" role="img" aria-label="Three-layer knowledge wiki">
+      <defs><filter id="sh2" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#16182b" flood-opacity="0.10"/></filter></defs>
+      <!-- layer 1 -->
+      <g filter="url(#sh2)"><rect x="20" y="50" width="230" height="150" rx="16" fill="#fff" stroke="#e7e0d4"/></g>
+      <text x="135" y="84" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#e0556d">knowledge/</text>
+      <text x="135" y="106" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#6b6e8a">raw sources you drop in</text>
+      <text x="135" y="126" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#6b6e8a">PDFs · transcripts · notes</text>
+      <text x="135" y="170" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#b9a98a">IMMUTABLE — never rewritten</text>
+      <!-- arrow -->
+      <g><line x1="258" y1="125" x2="300" y2="125" stroke="#0e9488" stroke-width="2.5" stroke-linecap="round"/><path d="M296 119 l11 6 -11 6 z" fill="#0e9488"/></g>
+      <!-- layer 2 -->
+      <g filter="url(#sh2)"><rect x="308" y="40" width="230" height="170" rx="16" fill="#0e9488"/></g>
+      <text x="423" y="76" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#fff">references/</text>
+      <text x="423" y="98" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#d7f5ef">the wiki the AI owns</text>
+      <text x="423" y="116" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#d7f5ef">&amp; writes — interpreted</text>
+      <g fill="#fff" opacity=".93"><rect x="334" y="138" width="80" height="20" rx="5"/><rect x="424" y="138" width="88" height="20" rx="5"/><rect x="334" y="166" width="100" height="20" rx="5"/></g>
+      <g font-family="Space Grotesk" font-size="9.5" fill="#0b6e66" font-weight="600"><text x="342" y="152">concept</text><text x="432" y="152">framework</text><text x="342" y="180">cross-linked</text></g>
+      <!-- arrow -->
+      <g><line x1="546" y1="125" x2="588" y2="125" stroke="#6d5ce0" stroke-width="2.5" stroke-linecap="round"/><path d="M584 119 l11 6 -11 6 z" fill="#6d5ce0"/></g>
+      <!-- layer 3 -->
+      <g filter="url(#sh2)"><rect x="596" y="50" width="224" height="150" rx="16" fill="#fff" stroke="#e7e0d4"/></g>
+      <text x="708" y="84" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#6d5ce0">the protocol</text>
+      <text x="708" y="106" text-anchor="middle" font-family="Inter" font-size="12" fill="#6b6e8a">CLAUDE.md +</text>
+      <text x="708" y="123" text-anchor="middle" font-family="Inter" font-size="12" fill="#6b6e8a">wiki-protocol.md</text>
+      <text x="708" y="160" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#b9a98a">rules that keep it clean</text>
+    </svg>
+
+    <img class="illus" src="images/wiki-tree.png" alt="A tree growing from a few index cards at its base into a rich connected canopy of knowledge">
+    <p class="illus-cap"><span class="lang-en">A few notes today become a connected canopy of knowledge over time.</span><span class="lang-es">Unas cuantas notas de hoy se vuelven una copa de conocimiento conectado con el tiempo.</span></p>
+
+    <div class="grid three" style="margin-top:24px">
+      <div class="card"><h3 style="color:var(--teal-deep);font-size:17px"><span class="lang-en">Ingest</span><span class="lang-es">Ingerir</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">A source lands in <code>knowledge/</code>. The AI reads it, talks it over with you, writes a wiki page, updates the index.</span><span class="lang-es">Una fuente llega a <code>knowledge/</code>. La IA la lee, la platica contigo, escribe una página y actualiza el índice.</span></p></div>
+      <div class="card"><h3 style="color:var(--teal-deep);font-size:17px"><span class="lang-en">Query</span><span class="lang-es">Consultar</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">You ask something. It reads the wiki, answers with citations, and files good answers back as new pages.</span><span class="lang-es">Preguntas algo. Lee la wiki, responde con citas, y guarda las buenas respuestas como nuevas páginas.</span></p></div>
+      <div class="card"><h3 style="color:var(--teal-deep);font-size:17px"><span class="lang-en">Lint</span><span class="lang-es">Revisar</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">During <span class="cmd">/audit</span>, it checks for contradictions, stale claims, broken links, and orphans.</span><span class="lang-es">Durante <span class="cmd">/audit</span>, busca contradicciones, datos viejos, enlaces rotos y páginas huérfanas.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS / AGENTS / ROUTINES -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">What it can do</span><span class="lang-es">Lo que puede hacer</span></div>
+    <div class="lang-en"><h2>Skill, Agent, or Routine?</h2>
+      <p>Three ways your AIOS does work. The first question whenever you want to automate something: <strong>which of the three is this?</strong></p></div>
+    <div class="lang-es"><h2>¿Skill, Agente o Rutina?</h2>
+      <p>Tres formas en que tu AIOS hace el trabajo. La primera pregunta cuando quieras automatizar algo: <strong>¿cuál de las tres es esta?</strong></p></div>
+
+    <img class="illus" src="images/skill-agent-routine.png" alt="Three friendly helper robots: one with a checklist and wrench (skill), one with headphones working alone in a bubble (agent), one with a clock and calendar (routine)">
+
+    <table style="margin-top:18px">
+      <tr><th></th><th><span class="lang-en">Who starts it</span><span class="lang-es">Quién lo inicia</span></th><th><span class="lang-en">Where it runs</span><span class="lang-es">Dónde corre</span></th><th><span class="lang-en">Reach for it when…</span><span class="lang-es">Úsalo cuando…</span></th></tr>
+      <tr><td><strong>⚡ <span class="lang-en">Skill</span><span class="lang-es">Skill</span></strong></td><td><span class="lang-en">You</span><span class="lang-es">Tú</span></td><td><span class="lang-en">In the chat</span><span class="lang-es">En el chat</span></td><td><span class="lang-en">A workflow you run together, interactively.</span><span class="lang-es">Un flujo que corren juntos, de forma interactiva.</span></td></tr>
+      <tr><td><strong>🤖 <span class="lang-en">Agent</span><span class="lang-es">Agente</span></strong></td><td><span class="lang-en">You (delegated)</span><span class="lang-es">Tú (delegado)</span></td><td><span class="lang-en">Its own clean context</span><span class="lang-es">Su propio contexto limpio</span></td><td><span class="lang-en">It needs isolation or restricted tools.</span><span class="lang-es">Necesita aislamiento o herramientas limitadas.</span></td></tr>
+      <tr><td><strong>⏰ <span class="lang-en">Routine</span><span class="lang-es">Rutina</span></strong></td><td><span class="lang-en">Itself (schedule)</span><span class="lang-es">Ella misma (horario)</span></td><td><span class="lang-en">Unattended</span><span class="lang-es">Sin supervisión</span></td><td><span class="lang-en">It should run on its own, on a schedule.</span><span class="lang-es">Debe correr sola, en un horario.</span></td></tr>
+    </table>
+    <p style="margin-top:16px;font-size:15px;color:var(--muted)"><span class="lang-en">⚠️ Common trap: "I keep doing X by hand" is usually a <strong>skill</strong> (a saved recipe), not an agent.</span><span class="lang-es">⚠️ Trampa común: "sigo haciendo X a mano" casi siempre es una <strong>skill</strong> (una receta guardada), no un agente.</span></p>
+  </div>
+</section>
+
+<!-- GROWTH LOOP -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">How it grows</span><span class="lang-es">Cómo crece</span></div>
+    <div class="lang-en"><h2>Three rituals, four builders.</h2>
+      <p>An AIOS isn't finished when you install it — that's day one. It grows because you run a small loop and build when you hit a repeating need.</p></div>
+    <div class="lang-es"><h2>Tres rituales, cuatro constructores.</h2>
+      <p>Un AIOS no está terminado cuando lo instalas — ese es el día uno. Crece porque corres un pequeño ciclo y construyes cuando topas con una necesidad repetida.</p></div>
+
+    <div class="grid three" style="margin-top:22px">
+      <div class="card"><h3><span class="cmd">/onboard</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">Day 1. ~7 questions, then it fills your context.</span><span class="lang-es">Día 1. ~7 preguntas, luego llena tu contexto.</span></p></div>
+      <div class="card"><h3><span class="cmd">/audit</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">Weekly health check. Scores the <strong>Four Cs</strong> and names your top gaps.</span><span class="lang-es">Chequeo semanal. Califica las <strong>Cuatro C</strong> y nombra tus brechas principales.</span></p></div>
+      <div class="card"><h3><span class="cmd">/level-up</span></h3><p style="font-size:14.5px;margin:0"><span class="lang-en">Weekly. Find one thing to automate, scope it, ship it. Runs on the <strong>3Ms</strong>.</span><span class="lang-es">Semanal. Encuentra algo que automatizar, defínelo, constrúyelo. Usa las <strong>3M</strong>.</span></p></div>
+    </div>
+
+    <div class="grid two" style="margin-top:18px">
+      <div class="card" style="background:linear-gradient(180deg,#fbf7ef,#fff)">
+        <h3 style="font-size:16px">📐 <span class="lang-en">The Four Cs · drives /audit</span><span class="lang-es">Las Cuatro C · guían /audit</span></h3>
+        <p style="font-size:14.5px;margin:.3em 0 0">
+          <span class="pill" style="background:#e6f6f3;color:#0b6e66">Context</span>
+          <span class="pill" style="background:#eae6fb;color:#5646c4">Connections</span>
+          <span class="pill" style="background:#fbe6c9;color:#92590a">Capabilities</span>
+          <span class="pill" style="background:#fbe0e6;color:#b03651">Cadence</span>
+          <br><span class="lang-en" style="color:var(--muted)">25 points each. Is your AIOS well-rounded?</span><span class="lang-es" style="color:var(--muted)">25 puntos cada una. ¿Está tu AIOS equilibrado?</span>
+        </p>
+      </div>
+      <div class="card" style="background:linear-gradient(180deg,#f3fbf9,#fff)">
+        <h3 style="font-size:16px">🧭 <span class="lang-en">The 3Ms · drives /level-up</span><span class="lang-es">Las 3M · guían /level-up</span></h3>
+        <p style="font-size:14.5px;margin:.3em 0 0">
+          <span class="pill" style="background:#e6f6f3;color:#0b6e66">Mindset</span>
+          <span class="pill" style="background:#e6f6f3;color:#0b6e66">Method</span>
+          <span class="pill" style="background:#e6f6f3;color:#0b6e66">Machine</span>
+          <br><span class="lang-en" style="color:var(--muted)">How to think → decide → build. A framework by Nate Herk.</span><span class="lang-es" style="color:var(--muted)">Cómo pensar → decidir → construir. Un marco de Nate Herk.</span>
+        </p>
+      </div>
+    </div>
+
+    <p style="margin-top:22px;font-size:15px"><span class="lang-en">When the loop surfaces a repeating need, you reach for a <strong>builder</strong> — <span class="cmd">/skill-builder</span>, <span class="cmd">/agent-builder</span>, <span class="cmd">/routines-builder</span>, or <span class="cmd">/agents-team-builder</span> — and the AIOS grows a new part of itself.</span><span class="lang-es">Cuando el ciclo revela una necesidad repetida, usas un <strong>constructor</strong> — <span class="cmd">/skill-builder</span>, <span class="cmd">/agent-builder</span>, <span class="cmd">/routines-builder</span>, o <span class="cmd">/agents-team-builder</span> — y el AIOS hace crecer una nueva parte de sí mismo.</span></p>
+  </div>
+</section>
+
+<!-- GET STARTED -->
+<section style="border-bottom:none">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lang-en">Your turn</span><span class="lang-es">Tu turno</span></div>
+    <div class="lang-en"><h2>Stand up your own in 4 steps.</h2></div>
+    <div class="lang-es"><h2>Levanta el tuyo en 4 pasos.</h2></div>
+    <div class="steps" style="margin-top:18px">
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Clone the kit.</span><span class="lang-es">Clona el kit.</span></strong> <span style="color:var(--muted)"><code style="font-family:'Space Grotesk',monospace">git clone …/aios-starter-kit my-aios</code></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Open Claude Code</span><span class="lang-es">Abre Claude Code</span></strong> <span style="color:var(--muted)"><span class="lang-en">in the folder — type <code style="font-family:'Space Grotesk',monospace">claude</code>.</span><span class="lang-es">en la carpeta — escribe <code style="font-family:'Space Grotesk',monospace">claude</code>.</span></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Run</span><span class="lang-es">Corre</span> <span class="cmd">/onboard</span>.</strong> <span style="color:var(--muted)"><span class="lang-en">Answer ~7 questions.</span><span class="lang-es">Responde ~7 preguntas.</span></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Ask it something.</span><span class="lang-es">Pregúntale algo.</span></strong> <span style="color:var(--muted)"><span class="lang-en">"What should I focus on this week?" — and watch it answer as <em>your</em> AIOS.</span><span class="lang-es">"¿En qué me enfoco esta semana?" — y mira cómo responde como <em>tu</em> AIOS.</span></span></div></div>
+    </div>
+    <div class="try">
+      <span class="label"><span class="lang-en">Try it live in class</span><span class="lang-es">Pruébalo en vivo en clase</span></span>
+      <span class="lang-en">Drop a meeting transcript into <code>knowledge/</code> and ask Sage to summarize it. Then run <span style="color:#ffd79b">/audit</span> and watch it score the very AIOS you just built.</span>
+      <span class="lang-es">Suelta una transcripción de junta en <code>knowledge/</code> y pídele a Sage que la resuma. Luego corre <span style="color:#ffd79b">/audit</span> y mira cómo califica el AIOS que acabas de construir.</span>
+    </div>
+    <div class="credit">
+      <span class="lang-en"><span class="dot" style="background:var(--teal)"></span>Knowledge wiki pattern: Andrej Karpathy &nbsp;·&nbsp; <span class="dot" style="background:var(--amber)"></span>3Ms framework: Nate Herk &nbsp;·&nbsp; Built on Claude Code by Anthropic.</span>
+      <span class="lang-es"><span class="dot" style="background:var(--teal)"></span>Patrón de wiki: Andrej Karpathy &nbsp;·&nbsp; <span class="dot" style="background:var(--amber)"></span>Marco de las 3M: Nate Herk &nbsp;·&nbsp; Construido sobre Claude Code de Anthropic.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);font-size:16px;margin-bottom:4px">AIOS Starter Kit</p>
+    <span class="lang-en">An AI Operating System you can clone, own, and grow. · MIT licensed.</span>
+    <span class="lang-es">Un Sistema Operativo de IA que puedes clonar, poseer y hacer crecer. · Licencia MIT.</span>
+  </div>
+</footer>
+
+<script>
+  function setLang(l){
+    document.body.classList.toggle('es', l==='es');
+    document.documentElement.lang = l;
+    document.getElementById('btn-en').classList.toggle('active', l==='en');
+    document.getElementById('btn-es').classList.toggle('active', l==='es');
+  }
+</script>
+</body>
+</html>

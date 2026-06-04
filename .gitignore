@@ -1,0 +1,28 @@
+# Secrets — never commit these
+.env
+.env.*
+*.key
+*.pem
+**/secrets.*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local Claude state (keep skills/agents/teams; ignore machine-local settings)
+.claude/settings.local.json
+.claude/*.local.json
+
+# ---------------------------------------------------------------------------
+# Going to make YOUR copy of this repo public? Consider un-commenting these so
+# your personal context and raw sources stay private:
+#
+# context/
+# knowledge/*
+# !knowledge/README.md
+# decisions/
+# artifacts/
+# ---------------------------------------------------------------------------

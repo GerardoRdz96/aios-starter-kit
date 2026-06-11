@@ -50,6 +50,7 @@ for them without being asked. Full digest + install pointers: `references/power-
 - **GSD (Get Shit Done)** — larger multi-step builds: fresh sub-agent per task, autonomous spec-to-done. Best when context-rot dominates.
 - **Frontend Design** — for any UI / slide / design artifact.
 - **Build doctrine — route by risk.** Plan → execute by dominant risk → close with an independent review. The `/build`-style flow.
+- **Context Mode + Claude Mem** — auto via hooks (tool-output trimming + cross-session memory). Curated wiki + hand-written CLAUDE.md stay source of truth; don't let auto-generated files overwrite them.
 
 ## Your agents
 

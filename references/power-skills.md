@@ -26,6 +26,12 @@ Not installed skills — already in Claude Code.
 ### Frontend Design
 Makes anything visual — websites, slide decks, components — look polished and avoid the generic AI aesthetic. Reach for it any time the deliverable has a visual surface.
 
+### Context Mode + Claude Mem — the memory pair (auto via hooks)
+Unlike the skills above, you never *invoke* these — once installed they ride along on every session via hooks.
+- **Context Mode** — keeps long sessions lean: trims bulky tool output and indexes project content into a searchable local knowledge base, so the context window holds what matters instead of raw dumps.
+- **Claude Mem** — cross-session memory: automatically captures observations from each session (what you built, what broke, what you decided) and surfaces them in future sessions, so work doesn't reset between chats.
+- **The discipline:** these are *supplements*. Your hand-written `CLAUDE.md` and the curated `references/` wiki stay the source of truth — never let auto-generated memory files overwrite or replace them. Auto-memory remembers what happened; the wiki records what's *true*.
+
 ## The build doctrine — plan, execute by risk, review
 
 Plan with Superpowers → execute by **which risk dominates the task** → always close with an adversarial review.
@@ -60,6 +66,11 @@ These install from the Claude Code plugin marketplace (and, for Superpowers/GSD,
 
 # Frontend Design ships in the Anthropic marketplace:
 /plugin install frontend-design@claude-code
+
+# the memory pair (community plugins — search /plugin for current marketplace names):
+/plugin marketplace add thedotmack/claude-mem
+/plugin install claude-mem@thedotmack
+# Context Mode: search "context-mode" in /plugin
 ```
 
 (Marketplace names drift — if an install line fails, search the marketplace in `/plugin` for the current name rather than forcing these.)

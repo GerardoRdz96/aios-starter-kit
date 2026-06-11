@@ -109,10 +109,12 @@ fires on its own when a route matters.
 
 ### Power skills (install once, user-global)
 
-The kit assumes four public power skills that work in every project once installed:
-**Superpowers** (plan → test-first → self-review), **GSD** (fresh sub-agent per task for
-long builds), **Frontend Design** (anything visual), and the built-in `/review`. Install
-commands + the route-by-risk doctrine: [`references/power-skills.md`](references/power-skills.md).
+The kit assumes a small stack of public power skills that work in every project once
+installed: **Superpowers** (plan → test-first → self-review), **GSD** (fresh sub-agent per
+task for long builds), **Frontend Design** (anything visual), the built-in `/review`, and
+the memory pair **Context Mode + Claude Mem** (auto via hooks: leaner context + cross-session
+memory). Install commands + the route-by-risk doctrine:
+[`references/power-skills.md`](references/power-skills.md).
 
 ---
 

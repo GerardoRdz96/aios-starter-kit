@@ -31,12 +31,15 @@ Skills are interactive workflows I start by typing `/<name>`. They live in
 - `/onboard` — Day-1 wizard. ~7-question intake, then scaffolds your `context/` files. Idempotent — re-run after editing `aios-intake.md`.
 - `/audit` — Four-Cs health report (Context, Connections, Capabilities, Cadence). Run on Day 7, then weekly. Spec: `references/four-cs-framework.md`.
 - `/level-up` — Weekly 3Ms interview. Find one thing to automate, scope it, ship it.
+- `/grill-me` — Relentless one-question-at-a-time interview that extracts what's in your head into a checkpointed capture (`knowledge/grills/`), then graduates it into the wiki.
+- `/session-handoff` — Prints + saves a structured handoff note (what we did, files, open decisions, next steps) for clearing context or switching tools.
 
 **Builders** (use these to grow your AIOS)
 - `/skill-builder` — Build / optimize / audit a skill. Discovery Interview first.
 - `/agent-builder` — Build / optimize / audit a subagent (`.claude/agents/*.md`): decision gate + Discovery Interview.
 - `/routines-builder` — Build a recurring cadence (scheduled routine, hook, `/loop`, or ritual skill): decision gate + supervised test.
 - `/agents-team-builder` — Design / launch a 2–5 agent team that shares a task list and works in parallel.
+- `/plugin-builder` — Package skills/agents into a shippable Claude Code plugin + marketplace: decision gate first (most things shouldn't be plugins).
 
 ## Power skills (installed user-wide — lean on these by default)
 
@@ -85,12 +88,15 @@ a **second model**.
 Trap: "I keep doing X by hand" is usually a **skill** (an SOP), not an agent. Reach for an
 agent only when isolation or restricted tools genuinely help.
 
-## Get a second opinion (don't self-review)
+## Multi-brain — many models, one driver (don't self-review)
 
-When you ask me to check, review, or sanity-check work I just produced, the strongest move
-is a fresh set of eyes — ideally a *different* AI, because the same model has the same blind
-spots. If you have a second AI CLI installed (Codex, Gemini, etc.) I'll route the review
-there; if not, I'll at least re-derive the check from scratch rather than rubber-stamp.
+The `multi-brain` skill (auto-fires) makes me the orchestrator of every model you have:
+I route a sub-task to a specialist brain only when it genuinely fits better, and I stay in
+front of you the whole time. **Fill in your roster** in `.claude/skills/multi-brain/SKILL.md`
+— cloud CLIs (Codex, Gemini…) and local models (Ollama…) both count. The hard rule is the
+**No-Self-Review Law**: when you ask me to check/review/verify work I just produced, I route
+it to a *different lineage* — same architecture has the same blind spots. No second brain
+installed? I re-derive the check from scratch rather than rubber-stamp.
 
 ## Where things live
 
@@ -100,6 +106,7 @@ there; if not, I'll at least re-derive the check from scratch rather than rubber
 - `knowledge/` — raw source drop zone (transcripts, PDFs, notes). Immutable. Facts graduate into `references/`.
 - `artifacts/` — HTML / deliverables you render for me. Naming: `artifacts/<topic>/<date>-<slug>.html`.
 - `decisions/log.md` — append-only record of decisions and why
+- `pending.md` — open follow-ups (manual setup, deferred builds, things to verify). Append new ones at end of session; check off when done.
 - `routines/` — definitions for scheduled/recurring automations
 - `archives/` — old stuff. Don't delete. Move here.
 
@@ -127,6 +134,8 @@ fake my voice on anything external (a post, an email) without showing me a draft
 - When I make a decision, suggest logging it in `decisions/log.md`.
 - When you spot a manual task I do 3+ times, surface it next time `/level-up` runs.
 - Default question on any new task: "to what extent could AI be leveraged here?"
+- Every skill run is data: after any skill fires, capture what worked / what to fix and **update the skill** in the same session. A skill that never gets feedback quietly rots.
+- End of session: append any new follow-ups to `pending.md` so they survive the context window.
 - When we add a capability (skill, agent, routine, tool, connection), update this CLAUDE.md in the same session so it doesn't drift.
 
 ## CLAUDE.md budget protocol

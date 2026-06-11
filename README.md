@@ -71,9 +71,11 @@ you have a working AIOS. Try asking it: *"what should I focus on this week?"*
 ```
 my-aios/
 ├── CLAUDE.md            ← the operating system: who your AI is + how it works
+├── AGENTS.md / GEMINI.md ← entry points for non-Claude tools (Codex, Gemini, Cursor…)
 ├── aios-intake.md       ← the 7-question intake /onboard reads
+├── pending.md           ← open follow-ups that must survive between sessions
 ├── .claude/
-│   ├── skills/          ← /commands you run (onboard, audit, level-up, 4 builders)
+│   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 11 total)
 │   ├── agents/          ← specialized helpers (scribe, warden)
 │   └── teams/           ← multi-agent crews you build later
 ├── context/             ← what your AI knows about YOU (filled by /onboard)
@@ -92,13 +94,25 @@ my-aios/
 | `/onboard` | Day-1 setup wizard. ~7 questions → your context files. |
 | `/audit` | Health check. Scores your AIOS on the **Four Cs** (Context, Connections, Capabilities, Cadence). |
 | `/level-up` | Weekly ritual. Find one thing to automate, scope it, ship it. Runs on the **3Ms** (Mindset, Method, Machine). |
+| `/grill-me` | Deep extraction interview. One question at a time, checkpointed to disk, graduates into your wiki. |
+| `/session-handoff` | Wrap-up note (what we did, open decisions, next steps) so a fresh session — in any tool — continues cold. |
 | `/skill-builder` | Build a new skill. |
 | `/agent-builder` | Build a new specialized agent. |
 | `/routines-builder` | Build a scheduled / recurring automation. |
 | `/agents-team-builder` | Design a small team of agents that work in parallel. |
+| `/plugin-builder` | Package your skills/agents into a shippable, installable plugin. |
+| `multi-brain` | Auto-router for *all* your models — cloud CLIs and local ones. You define the roster; it enforces the **No-Self-Review Law** (a model never reviews its own work). |
 
-The first three are **rituals** (you run them on a cadence). The last four are **builders** —
-this is how your AIOS grows itself.
+The first five are **rituals** (you run them on a cadence or a moment). The next five are
+**builders** — this is how your AIOS grows itself. `multi-brain` has no slash command; it
+fires on its own when a route matters.
+
+### Power skills (install once, user-global)
+
+The kit assumes four public power skills that work in every project once installed:
+**Superpowers** (plan → test-first → self-review), **GSD** (fresh sub-agent per task for
+long builds), **Frontend Design** (anything visual), and the built-in `/review`. Install
+commands + the route-by-risk doctrine: [`references/power-skills.md`](references/power-skills.md).
 
 ---
 
@@ -137,6 +151,23 @@ Once you're onboarded, the loop is simple:
 - **Build** with the four builder skills whenever you hit a repeating need.
 
 Your AIOS in month three looks nothing like day one — because you grew it.
+
+---
+
+## Works beyond Claude Code / Funciona más allá de Claude Code
+
+An AIOS is **folders and markdown** — nothing here is locked to one vendor.
+
+- **Claude Code CLI** — the native experience: skills load as `/commands`, agents fork automatically.
+- **Claude Desktop (Cowork tab)** — point Cowork at your AIOS folder and talk. Same brain, same wiki, no terminal. Great for non-coders; switch to the CLI when you want skills as slash commands.
+- **Codex CLI / Gemini CLI / Cursor / others** — `AGENTS.md` and `GEMINI.md` route any harness to `CLAUDE.md`, the single operating manual. Skills are written as plain procedures, so any agent can follow them.
+
+And with the `multi-brain` skill, your models stop being either/or: one assistant drives, and it *routes* sub-tasks to whichever brain — cloud or local — fits best.
+
+> **Español:** Un AIOS son carpetas y markdown — nada está amarrado a un solo proveedor.
+> Funciona en Claude Code, en la pestaña Cowork de Claude Desktop (apunta Cowork a tu
+> carpeta y conversa), y cualquier otro agente entra por `AGENTS.md`. Con `multi-brain`,
+> tus modelos dejan de ser "uno u otro": uno maneja y enruta al que mejor le quede.
 
 ---
 

@@ -11,13 +11,13 @@ This is a **starter kit**. The few pages below ship with the template. You and y
 ## Operating the wiki
 
 - [Wiki Protocol](wiki-protocol.md) — how the AI maintains the wiki: three layers, page conventions, ingest/query/lint workflows, the CLAUDE.md budget. The schema.
-- [LLM Wiki pattern](llm-wiki-pattern.md) — digest of Andrej Karpathy's "LLM Wiki" idea this whole system is built on. *Source: Karpathy.*
+- [LLM Wiki pattern](llm-wiki-pattern.md) — digest of Andrej Karpathy's "LLM Wiki" idea this whole system is built on, including the wiki-vs-RAG comparison. *Source: Karpathy.*
 
 ## Frameworks & methods
 
 - [The Three Ms of AI](3ms-framework.md) — Mindset / Method / Machine. How to think about, decide on, and build automations. Drives `/level-up`. *Source: Nate Herk.*
-- [The Four Cs of an AIOS](four-cs-framework.md) — Context / Connections / Capabilities / Cadence. How to architect and run an AI operating system; what `/audit` scores against. Companion to the 3Ms. *Source: Nate Herk.*
-- [Power Skills](power-skills.md) — the Claude Code skill stack and the plan → execute → review build doctrine: Superpowers, GSD, route-by-risk, `/review`, Frontend Design.
+- [The Four Cs of an AIOS](four-cs-framework.md) — Context / Connections / Capabilities / Cadence. How to architect and run an AI operating system; what `/audit` scores against. Includes the two-layer split (second brain vs AIOS), CLAUDE.md-as-router, the tier-1 connections heuristic, and keys-not-prompts. Companion to the 3Ms. *Source: Nate Herk.*
+- [Power Skills](power-skills.md) — the Claude Code skill stack and the plan → execute → review build doctrine: Superpowers, GSD, route-by-risk, `/review`, Frontend Design, the self-verify 70%→92% rule, install commands.
 
 ## Concepts
 

@@ -31,6 +31,22 @@ Chat history is a transcript: it scrolls away, it isn't organized, and a model s
 - **Query.** Ask against the wiki. The LLM finds relevant pages, reads them, synthesizes a cited answer. Key insight: **good answers get filed back as new pages** so explorations compound instead of vanishing into chat.
 - **Lint.** Periodically health-check: contradictions, stale claims superseded by newer sources, orphan pages, index drift.
 
+## Wiki vs RAG — why not a vector database?
+
+The standard answer to "give the LLM my knowledge" is RAG: chunk documents, embed them, retrieve top-k chunks at query time. The wiki deliberately skips all of that. At personal scale, it wins on every axis that matters:
+
+| | RAG (vector store) | LLM wiki |
+|---|---|---|
+| **What's stored** | Raw chunks of source text | *Interpreted* pages — already synthesized, deduplicated, reconciled |
+| **Retrieval** | Similarity search → top-k chunks, may miss or fragment | Read the index → drill into whole, coherent pages |
+| **Contradictions** | Both versions retrieved; the model must notice at answer time | Resolved at *ingest* time — the lint pass catches drift |
+| **Compounding** | Answers vanish; the store only grows raw text | Good answers get filed back as pages — the artifact improves |
+| **Human-readable?** | No — embeddings are opaque | Yes — you can open and read every page |
+| **Infrastructure** | Embedding model, vector DB, chunking pipeline | Folders and markdown. `grep` works. |
+| **Maintenance** | Re-embed on every change | The LLM edits a page like any file |
+
+The honest trade-off: RAG scales to millions of documents; the index-first wiki works to roughly ~100 sources / hundreds of pages. A personal AIOS lives comfortably inside that range for years — and pays zero infrastructure for it. The deeper difference is *when understanding happens*: RAG defers interpretation to query time (every question re-reads raw chunks); the wiki does interpretation once, at ingest, and every later question benefits. If you ever outgrow it, the wiki is also the best possible *input* to a RAG system — interpreted pages chunk better than raw transcripts.
+
 ## Why it works
 
 The hard part of a knowledge base is the bookkeeping — cross-references, keeping summaries current, noticing contradictions, consistency across dozens of pages. Humans abandon wikis because maintenance grows faster than value. LLMs don't get bored and can touch fifteen files in one pass, so maintenance cost stays near zero and the wiki stays alive. The human curates sources, directs analysis, asks good questions, and thinks about meaning. The LLM does the rest.

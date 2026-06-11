@@ -15,28 +15,40 @@ The architecture for building an AI operating system: four layers, each dependin
 
 **Each layer can't exist without the previous one.** No real Capabilities without Connections to act on; no Cadence without all three beneath it. Build bottom-up.
 
+**The two-layer split:** the first two Cs *are* the second brain (Context + Connections = does it know your world and can it reach live data); the last two are the AIOS proper (Capabilities + Cadence = can it do work and run unattended). You can't have an AIOS without a second brain underneath. The gut check for the second-brain half: ask a fresh session about you and your work — do you get a **stranger's answer or a co-founder's answer?**
+
+**An OS doesn't start with architecture. It starts with a default.** The first move isn't folder design — it's closing the other AI tabs and routing everything through one harness, so context and memory compound in one place.
+
 ## The four layers
 
 ### 1. Context — *does it know your business?*
 The bedrock. Fed by everything: meeting transcripts, posts, video/LinkedIn transcripts, Slack/project threads, email. Done well, the OS recalls your own business faster than you can. **Context is king, not the model** — everyone has the same models, so generic fuel gives generic output; your context is the differentiator. Models are stateless: each session reloads global rules + `CLAUDE.md` + memory/skill files, or it's a beginner again.
+
+**CLAUDE.md is a router, not a manual.** It points the agent at where rules, references, skills, and projects *live*; the content lives in those files. (This kit encodes that as the CLAUDE.md budget protocol.)
+
+**"Architecture engineering" — the pulse check.** Organizing the file system is its own craft. The two-question test: *could I manually drill through the folders and find what I need? Can the agent find it just as fast?* If the agent searches 5 minutes for a file you could locate instantly, the architecture — not the model — is the bug. Amount of context is rarely the problem; findability is.
 *Where it lives:* `context/`, the `references/` wiki, `memory/`, the `CLAUDE.md` files.
 
 ### 2. Connections — *what can it actually touch?*
-Built by wiring APIs / CLIs / MCPs one at a time. **How to choose what to connect:** audit yourself — where do you go, week to week, to look things up? Solid starters: revenue figures, customer data/communication, calendar, internal communication, tasks/project management, meetings, knowledge.
+Built by wiring APIs / CLIs / MCPs one at a time. **The tier-1 heuristic for what to connect:** audit yourself — what apps would you open in a normal week? What bookmarks are always there? Where do you go to talk to people? That's your tier-1 list; wire those first. Seven solid starters: revenue figures, customer data/communication, calendar, internal communication, tasks/project management, meetings, knowledge. Static data (your background, old transcripts) is Context; *constantly-changing* data is what earns a Connection.
 
 **The risk lives in this layer.** More connections = more reach = more risk *and* cost.
 - **Assume that if an agent *can* do something, it *will*.** Design as if it will.
-- **Instructions ≠ capabilities.** "Never send emails" (an instruction) is far weaker than simply *not putting the send-email key on the keyring* (a capability). If the tool is in the harness, it can physically fire — no instruction reliably stops it. Don't hand it the key; scope every key minimally. (This sharpens the [3Ms Intern Rule](3ms-framework.md).)
+- **Instructions ≠ capabilities — keys, not prompts.** "Never send emails" (an instruction) is far weaker than simply *not putting the send-email key on the keyring* (a capability). If the tool is in the harness, it can physically fire — no instruction reliably stops it. Real war story: an agent on Nate Herk's team picked up a to-do, interpreted it as "send these emails," and blasted a never-meant-to-ship discount code to ~150–200k inboxes. Nobody told it to send anything. The fix isn't a rule — it's not granting the capability: scoped keys (e.g. read-only), minimal reach. A prompt is never a permission layer. And when it slips: it's data, not failure — fix the key scope, write the case study, it never happens again. (This sharpens the [3Ms Intern Rule](3ms-framework.md).)
 *Where it lives:* `connections.md`, CLI-first wiring (CLI > API > MCP).
 
 ### 3. Capabilities — *how do you do the work?*
 Skills and instruction files that encode *how you* work — your style, your frameworks, your steps. That's true capability, vs. a model guessing.
 
-**Two ways to build a skill:** *forward* — spot something you do on a cadence, build it with a skill-creator, iterate; or *reverse-engineer* — do the task once, then have the AI look back at the conversation (what tools, what steps, what produced the good output) and build the skill from that. A skill doesn't have to be a big SOP — if you keep retyping the same prompt, that's a skill.
+**Two ways to build a skill:** *forward* — spot something you do on a cadence, build it with a skill-creator, iterate; or *reverse-engineer* — do the task once, then have the AI look back at the conversation (what tools, what steps, what produced the good output) and build the skill from that. A skill doesn't have to be a big SOP — if you keep retyping the same prompt, that's a skill (the kit's `/session-handoff` is exactly that).
+
+**Every skill use is data — the update-the-skill ritual.** A skill is never finished: preferences drift, models change, endpoints move. After every run, say what worked and what didn't, then "update the skill." The skill that never receives feedback is the skill that quietly rots.
 *Where it lives:* `.claude/skills/` and `.claude/agents/`. The [Bike Method](3ms-framework.md) governs how much trust a maturing skill earns.
 
 ### 4. Cadence — *does it run while your laptop is closed?*
 The top layer: turning Context + Connections + Capabilities into things that happen on a schedule or event, unasked. Needs all three layers beneath it. **Phase trust up the Bike Method before arming anything autonomous** — and given the Connections risk, scope what a cadence can touch.
+
+**Cadence is earned, and it's never free:** as autonomy goes up, cost, risk, *and maintenance* go up together. Deployed ≠ done — every automation still needs an owner, visibility, and a does-it-move-the-needle check.
 *Where it lives:* cloud routines, local hooks, `/loop`, and ritual skills.
 
 ## How `/audit` scores it

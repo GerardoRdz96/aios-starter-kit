@@ -42,9 +42,27 @@ Two standing rules:
 
 One-line doctrine: **Plan with Superpowers → execute by risk (TDD when a bug is expensive, GSD when context-rot is the enemy) → always close with an adversarial review.**
 
+## Self-verify before review — the 70%→92% rule
+
+Before any independent review, make the builder check its own work *the way a human would*: run it, click through it (a browser tool for UIs), and walk it as 3 personas (a beginner, an engineer, a business owner). Teams report first-pass success jumping from ~70% to ~92% with this one standing instruction. It's *upstream of* — never instead of — the adversarial review closer: self-verify catches "it doesn't actually run"; the cross-model review catches "it runs but it's wrong."
+
 ## Where to get these
 
 These install from the Claude Code plugin marketplace (and, for Superpowers/GSD, their GitHub repos). **Install them user-global** so they're available in every project, not just one. `/review` and `/ultra-review` ship inside Claude Code already.
+
+```bash
+# inside Claude Code, one time:
+/plugin marketplace add obra/superpowers-marketplace
+/plugin install superpowers@superpowers-marketplace
+
+/plugin marketplace add gsd-build/get-shit-done
+/plugin install get-shit-done@gsd-build
+
+# Frontend Design ships in the Anthropic marketplace:
+/plugin install frontend-design@claude-code
+```
+
+(Marketplace names drift — if an install line fails, search the marketplace in `/plugin` for the current name rather than forcing these.)
 
 The "sell outcomes, not workflows" lesson travels with this stack: when you put these in front of a client or teammate, pitch the outcome (hours saved, mistakes prevented, throughput gained), not the skill names.
 

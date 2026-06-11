@@ -1,4 +1,4 @@
-# Facilitator Guide v2 — Teaching the AIOS class
+# Facilitator Guide v2.1 — Teaching the AIOS class
 
 *For the instructor. Everything here is yours to adapt. Full version: 120 minutes. Compressed: 90 (cut the hands-on to a demo) or 60 (modules 0–5 + wow prompt only).*
 
@@ -37,6 +37,7 @@ If students leave with that sentence and have run `/onboard` once, the class suc
 | 8 | 80–90 | **The LLM wiki (vs RAG)** | The Karpathy three-layer pattern — go slow, this is the deepest idea. Then the RAG comparison table (`references/llm-wiki-pattern.md`): interpretation at *ingest* time vs query time; human-readable vs opaque; zero infra. Honest trade-off: RAG wins at millions of docs; you don't have millions of docs. |
 | 9 | 90–100 | **The growth rituals** | `/onboard` (day 1) → `/audit` (day 7, then weekly — show a real score) → `/level-up` (weekly, one automation) → `/grill-me` (when knowledge is in your head) → `/session-handoff` (every wrap-up). Then the builders + the Skill-vs-Agent-vs-Routine triage. |
 | 10 | 100–120 | **Hands-on + wrap** | Students run exercises 0–4 live; you float. Everyone fires the wow prompt: *"what should I focus on this week?"* Share screens. Assign the rest as homework. |
+| 11 | +10 (optional) | **Governing an AI that builds itself** | The v2.1 add-on — see the dedicated section below. Slot it after module 9 (the builders) for advanced rooms, or run it as a standalone part-2 opener. |
 
 ---
 
@@ -50,6 +51,28 @@ Have a **pre-onboarded** copy of the kit ready on your machine.
 4. **Growth.** Run `/audit`, read the score live. "It grades itself and tells me what to fix."
 
 ---
+
+## Module 11 (optional, +10 min) — Governing an AI that builds itself
+
+*New in v2.1. Run it after module 9 when the room skews senior, or whenever someone asks "wait — if it builds its own automations, what stops it?" That question IS this module.*
+
+**The setup (1 min).** Point back at module 9: the kit now ships a builder for **every** capability type — skills, agents, teams, routines, workflows, hooks, plugins. The completeness is the point *and* the problem: an AIOS that can build anything needs rules about what ships how. The question flips from "what can it build?" to "**who governs what it builds?**"
+
+**The pattern (5 min).** Walk `references/autonomous-entity-charter.md` top-down, one beat per section:
+
+1. **Five faculties** — Learning, Dreaming, Evolving, Measuring, Acting. An autonomous AIOS is all five; you are the *editor*, not the approver.
+2. **The creation matrix** — three risk tiers. **P** (passive: wiki pages, drafts) auto-ships with rollback. **S** (judgment artifacts: skills, agents, workflow files) auto-ships but UNARMED, gated by a different-lineage review + validation scan. **X** (executable: armed hooks, scheduled routines, fired teams) — *"the AI builds, the human arms."* That one sentence is the take-home.
+3. **The measurement harness** — evolving without measuring is just drift. Weekly scoreboard (`scripts/entity-scoreboard.py`), graduation rule (a capability must demonstrably do its job once within 14 days or it's flagged "verify or retire"), regression rule (a metric drops after an autonomous ship → suspect commits get flagged). *Numbers decide, not vibes.*
+4. **Five hard HITL gates** — arming Tier X, identity, external voice, money & keys, the daily revert digest. Everything else, the AI decides.
+5. **Provenance** — one record per creation *and per community import* (`references/provenance/`): who built it, who reviewed it, was it validated, did it ever work. Community skills get a static validation scan BEFORE install — installing someone's skill is letting their instructions run inside your AIOS.
+
+**The demo (2 min).** Run `python3 scripts/entity-scoreboard.py --dry-run` live — the room watches the AIOS count its own capabilities and grade itself. Tie it back to module 9's `/audit`: same idea, now append-only and trend-aware.
+
+**The metaphor that lands.** Extend module 5's intern-with-keys: *you've now given the intern a workshop where it can build new tools. Fine — but the keys to actually switch each tool on stay on your keyring.* Same "keys, not prompts" doctrine, one level up.
+
+**Slide outline (if you make slides):** (1) The builder family is complete — 7 builders, one per capability type. (2) The flip: what can it build → who governs it. (3) The P/S/X matrix — "the AI builds, the human arms". (4) Measurement: graduation + regression, scoreboard screenshot. (5) The five HITL gates. (6) Provenance + the import scan. (7) Close: autonomy is earned per-tier, never granted wholesale.
+
+**Anticipated question:** "Isn't this overkill for a personal setup?" — Honest answer: yes, until the week it isn't. You adopt the charter the day you arm your first unattended automation; before that it's a 5-minute read that shapes habits.
 
 ## Audience calibration
 
@@ -76,5 +99,6 @@ Naming sources models good practice — and it's the honest thing to do.
 
 ## Compressed formats
 
+- **130 min:** all 10 modules + module 11 (governance) after module 9 — best for senior rooms that will actually arm automations.
 - **90 min:** keep all 10 modules; cut module 10 to a 10-minute demo of exercises 1–2; assign the rest as homework.
-- **60 min:** modules 0–5 + the wow prompt. Hand out the study guide; modules 6–9 become a part-2 session (they stand alone well).
+- **60 min:** modules 0–5 + the wow prompt. Hand out the study guide; modules 6–9 become a part-2 session (they stand alone well — module 11 makes a strong part-2 closer).

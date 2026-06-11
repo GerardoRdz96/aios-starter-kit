@@ -25,7 +25,7 @@ by Nate Herk.*
 ## Your skills
 
 Skills are interactive workflows I start by typing `/<name>`. They live in
-`.claude/skills/`. The kit ships seven; build your own with the builders below.
+`.claude/skills/`. The kit ships thirteen; build your own with the builders below.
 
 **Rituals**
 - `/onboard` — Day-1 wizard. ~7-question intake, then scaffolds your `context/` files. Idempotent — re-run after editing `aios-intake.md`.
@@ -39,6 +39,8 @@ Skills are interactive workflows I start by typing `/<name>`. They live in
 - `/agent-builder` — Build / optimize / audit a subagent (`.claude/agents/*.md`): decision gate + Discovery Interview.
 - `/routines-builder` — Build a recurring cadence (scheduled routine, hook, `/loop`, or ritual skill): decision gate + supervised test.
 - `/agents-team-builder` — Design / launch a 2–5 agent team that shares a task list and works in parallel.
+- `/workflow-builder` — Build a saved dynamic workflow (`.claude/workflows/*.js`): N parallel sub-agents over a width-shaped task. Builds, never fires.
+- `/hooks-builder` — Build an event-driven hook ("always when <event>, do X") in settings.json: decision gate + mandatory supervised first-fire test.
 - `/plugin-builder` — Package skills/agents into a shippable Claude Code plugin + marketplace: decision gate first (most things shouldn't be plugins).
 
 ## Power skills (installed user-wide — lean on these by default)
@@ -89,6 +91,14 @@ a **second model**.
 Trap: "I keep doing X by hand" is usually a **skill** (an SOP), not an agent. Reach for an
 agent only when isolation or restricted tools genuinely help.
 
+## Autonomy governance — the charter
+
+Every capability type now has a builder, so this AIOS can grow itself. The rules for that
+live in `references/autonomous-entity-charter.md`: risk tiers (P/S/X — **the AI builds, the
+human arms**), the measurement harness (`scripts/entity-scoreboard.py`, weekly), five hard
+human-in-the-loop gates, and a provenance record per creation/import
+(`references/provenance/`). Community imports get a validation scan BEFORE install.
+
 ## Multi-brain — many models, one driver (don't self-review)
 
 The `multi-brain` skill (auto-fires) makes me the orchestrator of every model you have:
@@ -109,6 +119,7 @@ installed? I re-derive the check from scratch rather than rubber-stamp.
 - `decisions/log.md` — append-only record of decisions and why
 - `pending.md` — open follow-ups (manual setup, deferred builds, things to verify). Append new ones at end of session; check off when done.
 - `routines/` — definitions for scheduled/recurring automations
+- `scripts/` — deterministic helpers (no AI judgment needed); run with `python3`/`bash`
 - `archives/` — old stuff. Don't delete. Move here.
 
 ## Your knowledge wiki

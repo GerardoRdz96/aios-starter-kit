@@ -10,6 +10,8 @@ knows who you are, compounds knowledge across sessions, and grows new skills ove
 *Un sistema operativo de IA personal. Una plantilla para clonar que convierte a Claude Code
 en un compañero de trabajo que **recuerda**.*
 
+**Kit v2.1** — June 2026
+
 </div>
 
 ---
@@ -75,9 +77,10 @@ my-aios/
 ├── aios-intake.md       ← the 7-question intake /onboard reads
 ├── pending.md           ← open follow-ups that must survive between sessions
 ├── .claude/
-│   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 11 total)
+│   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 13 total)
 │   ├── agents/          ← specialized helpers (scribe, warden)
 │   └── teams/           ← multi-agent crews you build later
+├── scripts/             ← deterministic helpers (e.g. the weekly scoreboard)
 ├── context/             ← what your AI knows about YOU (filled by /onboard)
 ├── references/          ← your knowledge wiki (the AI owns and writes this)
 ├── knowledge/           ← raw sources you drop in (transcripts, PDFs, notes)
@@ -100,12 +103,17 @@ my-aios/
 | `/agent-builder` | Build a new specialized agent. |
 | `/routines-builder` | Build a scheduled / recurring automation. |
 | `/agents-team-builder` | Design a small team of agents that work in parallel. |
+| `/workflow-builder` | Build a saved dynamic workflow — N parallel sub-agents fanning out over a big task. |
+| `/hooks-builder` | Build an event-driven hook ("every time X happens, do Y") with a mandatory supervised test. |
 | `/plugin-builder` | Package your skills/agents into a shippable, installable plugin. |
 | `multi-brain` | Auto-router for *all* your models — cloud CLIs and local ones. You define the roster; it enforces the **No-Self-Review Law** (a model never reviews its own work). |
 
-The first five are **rituals** (you run them on a cadence or a moment). The next five are
-**builders** — this is how your AIOS grows itself. `multi-brain` has no slash command; it
-fires on its own when a route matters.
+The first five are **rituals** (you run them on a cadence or a moment). The next seven are
+**builders** — every capability type your AIOS can have now has a builder, which means it
+can grow *itself*. `multi-brain` has no slash command; it fires on its own when a route
+matters. Before you let any of it run unattended, read
+[`references/autonomous-entity-charter.md`](references/autonomous-entity-charter.md) —
+the governance layer: **the AI builds, you arm.**
 
 ### Power skills (install once, user-global)
 
@@ -150,7 +158,10 @@ Once you're onboarded, the loop is simple:
 - **Run `/level-up`** weekly — it finds one manual thing you keep doing and helps you turn it
   into a skill, an agent, or a routine.
 - **Drop sources** into `knowledge/` as you learn — the wiki grows.
-- **Build** with the four builder skills whenever you hit a repeating need.
+- **Build** with the seven builder skills whenever you hit a repeating need.
+- **Govern** the growth: the [autonomous-entity charter](references/autonomous-entity-charter.md)
+  sets the risk tiers, the measurement scoreboard (`scripts/entity-scoreboard.py`), and the five
+  human-in-the-loop gates that keep a self-building AIOS honest.
 
 Your AIOS in month three looks nothing like day one — because you grew it.
 

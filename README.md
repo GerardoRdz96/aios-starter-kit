@@ -126,7 +126,9 @@ The kit assumes a small stack of public power skills that work in every project 
 installed: **Superpowers** (plan → test-first → self-review), **GSD** (fresh sub-agent per
 task for long builds), **Frontend Design** (anything visual), the built-in `/review`, and
 the memory pair **Context Mode + Claude Mem** (auto via hooks: leaner context + cross-session
-memory). Install commands + the route-by-risk doctrine:
+memory). One companion CLI rides along: **[graphify](https://github.com/safishamsi/graphify)**
+(`uv tool install graphifyy`) — it turns any repo into a knowledge graph, so your AI
+understands a codebase *before* working on it. Install commands + the route-by-risk doctrine:
 [`references/power-skills.md`](references/power-skills.md).
 
 ---
@@ -167,6 +169,22 @@ Once you're onboarded, the loop is simple:
 - **Govern** the growth: the [autonomous-entity charter](references/autonomous-entity-charter.md)
   sets the risk tiers, the measurement scoreboard (`scripts/entity-scoreboard.py`), and the five
   human-in-the-loop gates that keep a self-building AIOS honest.
+
+**Bonus move for code repos:** install [graphify](https://github.com/safishamsi/graphify)
+and your AI can map any codebase as a knowledge graph *before* working on it:
+
+```bash
+uv tool install graphifyy   # double-y! analysis is local & free (tree-sitter)
+cd some-repo && graphify .  # build the graph
+```
+
+Then ask your AI about the repo — *"what are the core modules?"*, *"what breaks if I change
+X?"* — and it answers from the graph instead of reading every file.
+
+> **Español:** instala [graphify](https://github.com/safishamsi/graphify) con
+> `uv tool install graphifyy` (¡doble y!), corre `graphify .` dentro del repo, y pregúntale
+> a tu IA sobre el código. Así entiende cualquier proyecto como un grafo de conocimiento
+> *antes* de trabajar en él.
 
 Your AIOS in month three looks nothing like day one — because you grew it.
 

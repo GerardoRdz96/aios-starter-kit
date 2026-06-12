@@ -32,6 +32,11 @@ Unlike the skills above, you never *invoke* these — once installed they ride a
 - **Claude Mem** — cross-session memory: automatically captures observations from each session (what you built, what broke, what you decided) and surfaces them in future sessions, so work doesn't reset between chats.
 - **The discipline:** these are *supplements*. Your hand-written `CLAUDE.md` and the curated `references/` wiki stay the source of truth — never let auto-generated memory files overwrite or replace them. Auto-memory remembers what happened; the wiki records what's *true*.
 
+### graphify — understand any codebase before working on it (companion CLI)
+Not a skill — a command-line tool ([graphify](https://github.com/safishamsi/graphify)) that turns any repo into a local **knowledge graph** your AI can query. `graphify .` builds the graph with free local code analysis (tree-sitter — no API key, nothing leaves your machine); `graphify query "how does X work?"` answers from a token-cheap subgraph instead of reading every file. It also ships its own Claude Code skill (`graphify install`) that teaches your AI to check the graph first.
+- **When:** any time your AIOS meets a codebase it hasn't seen — yours, a teammate's, or an open-source repo you want to learn from. Map first, work second.
+- **Honest edges:** every relationship is tagged `EXTRACTED` / `INFERRED` / `AMBIGUOUS`, so you can tell what came straight from the code and what the analysis guessed.
+
 ### Supply-chain discipline (applies to ALL third-party skills/plugins above)
 
 - **Scan before install.** Every community skill/agent/plugin takes the static validation scan from the charter (§6): prompt-injection patterns, suspicious hosts/tool grants, secret-touching instructions, description honesty. Record the verdict in a provenance record.
@@ -77,6 +82,11 @@ These install from the Claude Code plugin marketplace (and, for Superpowers/GSD,
 /plugin marketplace add thedotmack/claude-mem
 /plugin install claude-mem@thedotmack
 # Context Mode: search "context-mode" in /plugin
+```
+
+```bash
+# graphify (companion CLI — runs in your terminal, not /plugin):
+uv tool install graphifyy   # double-y! code analysis is local & free (tree-sitter)
 ```
 
 (Marketplace names drift — if an install line fails, search the marketplace in `/plugin` for the current name rather than forcing these.)

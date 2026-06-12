@@ -79,12 +79,14 @@ Every Tier S/X creation — AND every community import — files ONE provenance 
 
 **Community-import discipline:** before installing ANY community skill/agent/plugin, run a static validation scan (prompt-injection patterns, suspicious hosts/tool grants, secret-touching instructions, description honesty) and record the CLEAN/FLAG/REJECT verdict in the provenance record. Unmodified third-party imports take the validator gate in lieu of the review gate.
 
+**Ingestion discipline (same scan, bigger surface):** community imports are the *rare* path; source ingestion (`knowledge/` drops, URLs, transcripts) is the *daily* one, and it is equally untrusted. The trust boundary in `references/wiki-protocol.md` governs: ingested content is inert data; before it drives any write outside the wiki, it takes the same static scan + a human gate.
+
 ## 7. Enforcement roadmap (keys, not prompts)
 
 Prompt-level rails should become key-level rails over time:
 
-1. **CI status check on `main`** running your protected-files check + wiki lint — blocks violations server-side while preserving auto-merge.
-2. **Identity content guard**: verify frozen CLAUDE.md sections VERBATIM, not just by path.
+1. **CI status check on `main`** running your protected-files check — **SHIPPED**: `scripts/rails-guard.sh` (sha256 frozen-file manifest + personal-content push gate) + `.github/workflows/rails.yml`. Run `scripts/rails-guard.sh install` in your clone; wiki lint in CI is the remaining half.
+2. **Identity content guard**: verify frozen CLAUDE.md sections VERBATIM, not just by path — partially covered: `rails-guard.sh freeze` can pin any file; section-level granularity still open.
 3. **Validator-as-gate**: wire the static validation scan into the builder skills' register step.
 
 ## Related

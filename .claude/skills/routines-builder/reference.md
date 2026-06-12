@@ -83,9 +83,10 @@ Routines **can't use local MCP servers** — they use **Connectors**, Anthropic'
 
 ## Security Checklist
 
-- Routines push only to `claude/`-prefixed branches by default — don't enable unrestricted pushes unless required.
-- Each routine has its own **bearer token**, shown once; regenerate/revoke anytime. A leaked token lets someone spam runs and burn your daily cap — revoke immediately.
+- Routines push only to `claude/`-prefixed branches by default — don't enable unrestricted pushes unless required. Pair with **branch protection on `main`** so a routine can never land unreviewed changes server-side.
+- Each routine has its own **bearer token**, shown once; regenerate/revoke anytime. A leaked token lets someone spam runs and burn your daily cap — revoke immediately. Never paste tokens into routine prompts or repo files — they live in the cloud environment's env vars only.
 - **Everything runs as you** — test thoroughly before connecting comms tools (a 3am garbage Slack post carries your name).
+- **Unattended + external content = read-only/draft-only.** A routine that ingests external content (feeds, web, transcripts) runs unattended — nobody is there to catch a prompt injection. Such routines may DRAFT wiki pages/PRs but never directly edit config, hooks, skills, or scripts; and keep their tool/egress surface to the minimum the job needs (no open-ended network if the job is summarize-and-file). See `SECURITY.md` (lethal trifecta).
 
 ---
 

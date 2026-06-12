@@ -44,7 +44,7 @@ Layers + precedence: `~/.claude/settings.json` (user, all projects) · `.claude/
 - Two decision-control modes:
   - **Exit-code mode**: exit 0 = allow/success; **exit 2 = block** (PreToolUse blocks the tool call; other blockable events have event-specific block semantics — check the docs per event). stderr becomes the feedback shown to the model.
   - **JSON-output mode** (richer, preferred for guards): exit 0 + a JSON control object on stdout, e.g. `{"continue":true,"suppressOutput":true}` or decision fields per event. JSON mode can allow/deny/modify with a reason instead of a bare exit code.
-- Other exits / timeout — treated as hook failure; session continues (fail-open) but logs. A *crashing* guard script therefore fails OPEN. **Fail-closed wrapper pattern for guards:** `trap 'echo "guard error — denying" >&2; exit 2' ERR` at the top (plus `set -euo pipefail`), so internal errors deny instead of silently allowing.
+- Other exits / timeout — treated as hook failure; session continues (fail-open) but logs. A *crashing* guard script therefore fails OPEN. **Every guard skeleton this skill produces starts fail-closed by DEFAULT:** `set -euo pipefail` + `trap 'echo "guard error — denying" >&2; exit 2' ERR` at the top, so internal errors deny instead of silently allowing. Relax to fail-open only deliberately, for side-effect (non-guard) hooks.
 - Keep high-frequency hooks (the PostToolUse:Read class) under ~100ms — they run on EVERY match, every session.
 
 ## Variants
@@ -62,6 +62,7 @@ Layers + precedence: `~/.claude/settings.json` (user, all projects) · `.claude/
 
 1. Hooks run arbitrary shell **as you** on every matched event — supervised first-fire test is mandatory before arming (dry-fire with fake stdin, live-fire once, failure drill).
 2. Always set `timeout`. Never put secrets on the command line — source `.env` inside the script.
-3. Bias to fail-open for side-effect hooks, deliberate fail-closed (in-script default-deny) for guards.
+3. Guards are fail-closed by default (see the wrapper above); side-effect hooks may be deliberately fail-open.
+3b. **Arm hooks in `.claude/settings.local.json` (gitignored), not the tracked `settings.json`** — a public or shared repo must never ship armed hooks that execute on someone else's machine the moment they open the project. Promote to the tracked file only for hooks you explicitly intend to distribute, and say so in the PR.
 4. Few > many: every hook taxes every matched event forever. Audit kills zombies.
 5. Show the settings.json diff whether the write goes through `update-config` or directly.

@@ -17,12 +17,15 @@ Thumbs.db
 .claude/*.local.json
 
 # ---------------------------------------------------------------------------
-# Going to make YOUR copy of this repo public? Consider un-commenting these so
-# your personal context and raw sources stay private:
-#
-# context/
-# knowledge/*
-# !knowledge/README.md
-# decisions/
-# artifacts/
+# Privacy defaults — ON (fail-safe). New personal files in these dirs never
+# enter git. NOTE: the kit's tracked placeholders stay tracked (gitignore does
+# not untrack) — the pre-push privacy gate covers those: scripts/rails-guard.sh install
+# Keeping a PRIVATE fork and want your context versioned? Comment these out.
+context/*
+!context/README.md
+knowledge/*
+!knowledge/README.md
+decisions/*
+artifacts/*
+!artifacts/README.md
 # ---------------------------------------------------------------------------

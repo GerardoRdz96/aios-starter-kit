@@ -52,15 +52,20 @@ cd my-aios
 # 2. (optional) make it your own private repo  /  hazlo tu propio repo privado
 rm -rf .git && git init
 
-# 3. Open Claude Code in the folder  /  Abre Claude Code en la carpeta
+# 3. Arm the security guards  /  Activa los guardias de seguridad
+scripts/rails-guard.sh install
+
+# 4. Open Claude Code in the folder  /  Abre Claude Code en la carpeta
 claude
 
-# 4. Inside Claude Code, run the onboarding wizard  /  Corre el asistente de bienvenida
+# 5. Inside Claude Code, run the onboarding wizard  /  Corre el asistente de bienvenida
 /onboard
 ```
 
 `/onboard` interviews you (about 7 short questions), then fills in your context. That's it —
 you have a working AIOS. Try asking it: *"what should I focus on this week?"*
+
+**Security:** your personal dirs (`context/`, `knowledge/`, `decisions/`, `artifacts/`) are gitignored by default, and the guards from step 3 block accidental pushes of personal content + silent edits to governance files. Threat model and the rules: [`SECURITY.md`](SECURITY.md).
 
 > **Español:** Necesitas Claude Code instalado. Clona el kit, ábrelo con `claude`, y corre
 > `/onboard`. Te hará unas 7 preguntas y llenará tu contexto. Listo: ya tienes un AIOS

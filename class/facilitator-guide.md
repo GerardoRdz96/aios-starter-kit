@@ -11,6 +11,17 @@
 
 If students leave with that sentence and have run `/onboard` once, the class succeeded.
 
+## You're joining a movement — AIOS "in the wild" (a 30-second credibility beat)
+
+*Drop this early (module 1 or 2) so first-timers know this isn't a fringe hobby — it's a pattern serious builders independently converged on in 2026.*
+
+- **Daniel Miessler — PAI** ("Personal AI Infrastructure," a self-described "Life Operating System," ~16k★ on GitHub): a full personal AIOS on Claude Code, with a named-assistant identity layer and one local daemon for dashboard + schedule + voice + messaging.
+- **Alireza Rezvani — gAIOS** (open-source, MIT): built on the **same Four Cs** taught in this class, credited to Nate Herk — proof the framework travels beyond its author.
+- **Cole Medin — "AI Second Brain"** + the "context engineering" movement (~13.5k★): the same bets we make — markdown files as memory, a simple index instead of a vector database (Karpathy's pattern), and CLI over heavyweight tool plugins.
+- **The academic "AIOS"** (Rutgers, "LLM Agent Operating System," COLM 2025, arXiv 2403.16971): a *different* thing — an OS **kernel that runs under** agents. The useful contrast for the room: *theirs runs under the agent; ours runs around it, and you can read every file.*
+
+The honest line: "You're not early to something weird. You're on time for something real." (Sources: the four projects above + arXiv 2403.16971.)
+
 ## Materials in this folder
 
 | File | Use it for |
@@ -31,7 +42,7 @@ If students leave with that sentence and have run `/onboard` once, the class suc
 | 2 | 10–25 | **What is an AIOS** | Definition + purposes. Run the **with/without demo**: cold chat gives a stranger's answer; the AIOS gives a co-founder's answer. Land the **two-layer split**: Context+Connections = the second brain; Capabilities+Cadence = the OS on top. "An OS doesn't start with architecture — it starts with a *default*: one harness everything routes through." |
 | 3 | 25–35 | **Anatomy & architecture** | The folder tree, live in an editor — no magic, just markdown. `context/`, `references/`, `knowledge/`, `.claude/skills/`, `connections.md`, `pending.md`, `decisions/`. Tool-agnostic: same folder works from Claude Code, Cowork, Codex, Gemini (`AGENTS.md`). |
 | 4 | 35–45 | **The router: CLAUDE.md** | Open the real file. **Router, not manual** — it points at where things live; detail lives in the files. The budget protocol (200-line cap — why: it's re-read every turn, cost compounds). "Architecture engineering": can the agent find a file as fast as you can? If not, the architecture is the bug. |
-| 5 | 45–60 | **Managing the Four Cs** | One slide per C with its management rule: Context → feed it + keep it findable. Connections → tier-1 heuristic (wire what you open weekly) + **keys-not-prompts** (tell the 150–200k discount-email war story — it lands hard). Capabilities → every skill use is data; update the skill same-session. Cadence → earned, never free; supervised run before arming a schedule. |
+| 5 | 45–60 | **The Four Cs as one live thread** | **Teach this from the dedicated "spine demo" section below, not as four abstract slides.** Walk ONE worked example (daily research→email) up all four Cs: Context = `/onboard`; Connections = Gmail connector (safe Outlook stand-in) + CLI>API>MCP + keys-not-prompts war story; Capabilities = `/skill-builder` + the starter set; Cadence = **two** routines (A: research→email integrative, B: weekly `/audit` self-improving loop). The escalating thread proves the layers depend on each other. |
 | 6 | 60–70 | **Power skills** | What each does + when: Superpowers (bug-cost dominates), GSD (context-rot dominates), route-by-risk doctrine, `/review` closer, Frontend Design. The 70%→92% self-verify rule. Show the install commands (`references/power-skills.md`). Quick aside: the **graphify** companion CLI (`uv tool install graphifyy`) — any repo becomes a knowledge graph the AI queries *before* touching code. |
 | 7 | 70–80 | **Multi-brain** | Many models, one driver. Cloud CLIs + local models (Ollama) on one roster the *student* defines. The **No-Self-Review Law**: same architecture = same blind spots — reviews go to a different lineage. Demo if you have two CLIs installed. |
 | 8 | 80–90 | **The LLM wiki (vs RAG)** | The Karpathy three-layer pattern — go slow, this is the deepest idea. Then the RAG comparison table (`references/llm-wiki-pattern.md`): interpretation at *ingest* time vs query time; human-readable vs opaque; zero infra. Honest trade-off: RAG wins at millions of docs; you don't have millions of docs. |
@@ -49,6 +60,41 @@ Have a **pre-onboarded** copy of the kit ready on your machine.
 2. **The AIOS.** Same question in your kit → it cites your real priorities. "Same model. Different *operating system* around it."
 3. **Compounding.** Drop a short transcript in `knowledge/`, have it filed into `references/`, open the new page. "It just learned something permanent."
 4. **Growth.** Run `/audit`, read the score live. "It grades itself and tells me what to fix."
+
+---
+
+## The spine demo — the Four Cs as ONE escalating thread (this IS module 5, expanded)
+
+*The heart of the class. Don't teach the four Cs as four features — teach them as four floors of one building, by walking a single worked example up all four. The thread: a daily "research a topic and email it to me" assistant. You start with nothing and end with a real autonomous routine, and every C visibly earns its place. The dependency — no Cadence without Capabilities, no Capabilities without Connections, no Connections without Context — gets **proven**, not asserted.*
+
+### C1 · Context — *teach it who you are* → `/onboard`
+Run `/onboard` live (or open a pre-onboarded copy). The 7 questions write `context/`, `references/voice.md`, and fill `CLAUDE.md`. The point to land: this is the gap between a **stranger's answer and a co-founder's answer**. Fire the wow prompt — *"what should I focus on this week?"* — and let the room hear it cite the student's *real* priorities. Context is the fuel; everything above runs on it. **Context is king, not the model** — everyone has the same model.
+
+### C2 · Connections — *give it senses* → a connector (Gmail), not Outlook
+Work email (Outlook / M365) is IT-gated — so don't fight it on stage. Use **personal Gmail via the claude.ai connector** as the safe, reproducible stand-in: *Settings → Connectors → Gmail → authorize*. No code, and it works in Claude Desktop / Cowork too, so the non-CLI crowd can replicate it. Ask live: *"what are my 3 most recent unread emails?"* — it reads them.
+- **The credibility line:** *"At SoftServe the exact same pattern runs through approved, governed channels — same shape, different plumbing."* Turn the limitation into a teaching moment (and a scale-up moment for you).
+- **Connection-related skills / doctrine to name:** the rule is **CLI > API > MCP** (token cost + reliability climb in that order). Show `gh` as a live CLI connection; name `/printing-press` as "how I print a CLI for anything that *doesn't* have a connector." A connector is the click-to-connect **floor**; a printed CLI is the build-anything **ceiling**.
+- **Keys, not prompts** (tell the war story): the 150–200k discount-email blast. The fix was never "add a rule" — it was *don't hand it the send key*. Scope every connection minimally; read-only by default. A prompt is never a permission layer.
+
+### C3 · Capabilities — *teach it how YOU work* → `/skill-builder` + the starter set
+A capability is *your* way of doing a task, written down so the model stops guessing.
+- **Build one live with `/skill-builder`** (Discovery Interview → `SKILL.md`). The reverse-engineer trick (the fast path): do the task once end-to-end, then say *"look back at what we just did and make it a skill."*
+- **The starter set worth showing** — all ship in the kit: `/onboard` (C1), `/audit` (grades the four Cs), `/level-up` (find one automation a week), `/grill-me` (get what's in your head into the wiki), `/session-handoff` (clean context switches), plus the **builder family** (`/skill-builder` · `/agent-builder` · `/routines-builder` · `/workflow-builder` · `/hooks-builder` · `/plugin-builder` · `/agents-team-builder`).
+- **For our thread**, the capability is *"research today's news on my topic, the way I like it"* — a small skill that produces a tight digest in the student's voice.
+- **Every skill use is data:** after each run, say what worked and *"update the skill."* The skill that never gets feedback quietly rots.
+
+### C4 · Cadence — *make it run while the laptop is closed* → show TWO routines
+Cadence = Context + Connections + Capabilities, fired on a schedule or event, **unasked**. Show two, so the room sees the full range of what cadence is for:
+
+**Cadence A — the integrative routine (all three lower Cs cooperating, outward-facing):**
+> *Daily 7am: research [my topic] → write the digest in my voice → email it to me (or a coworker) via Gmail.*
+This is the thread's payoff. Point at each C as it fires: it knows the topic + tone (**Context**), it can reach the inbox (**Connection**), it knows how I like the digest (**Capability**), and now it happens every morning without me (**Cadence**). Build it with `/routines-builder` → a cloud routine. **Hard rule: supervised "Run now" first** — watch one real round-trip before you arm the schedule. Cadence is earned, never free.
+
+**Cadence B — the self-improving loop (the AIOS grading itself, inward-facing):**
+> *Weekly Sunday: run `/audit` → score my own four Cs → commit the scoreboard to `references/audits/<date>.md` → file the top-3 fixes.*
+This is the loop that makes the OS get better on its own: it reads its own state, grades it, and queues its own homework — a tiny self-improving system. Students leave knowing their AIOS isn't static; it has a heartbeat that keeps raising its own floor. (The full-strength version is the weekly Improvement loop in `references/autonomous-entity-charter.md` — name it as "where this goes next.")
+
+**Why two:** Cadence A does *outward* work **for** you (research → email = leverage); Cadence B does *inward* work **on the system itself** (audit → improve = compounding). One thread, two directions — that's the whole idea of cadence in two demos.
 
 ---
 

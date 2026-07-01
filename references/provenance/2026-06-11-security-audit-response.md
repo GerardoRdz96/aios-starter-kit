@@ -1,8 +1,8 @@
 # Provenance — security audit response (external report → kit v2.2)
 
-- **What:** response to an external security review of kit v2.1 (8 findings, V1–V8) shared as a Claude artifact (`revision-seguridad-aios.md`, claude.ai/public/artifacts/be8f825b-…). Headline: no leaked secrets, no vulnerable traditional code; the gaps are agentic-architecture — ingestion has no trust boundary, the lethal trifecta is assembled by design, and rails live in prose.
-- **Why:** report handed to Gera by the auditing friend, 2026-06-11; every finding verified against the repo before acting.
-- **Builder:** Servy (Claude Code session, 2026-06-11), fixes implemented surgically per the report's own priority call.
+- **What:** response to an external security review of kit v2.1 (8 findings, V1–V8). Headline: no leaked secrets, no vulnerable traditional code; the gaps are agentic-architecture — ingestion has no trust boundary, the lethal trifecta is assembled by design, and rails live in prose.
+- **Why:** report provided by an external reviewer, 2026-06-11; every finding verified against the repo before acting.
+- **Builder:** the kit's AIOS (a Claude Code session, 2026-06-11), fixes implemented surgically per the report's own priority call.
 - **Response map:**
 
 | Finding | Action |

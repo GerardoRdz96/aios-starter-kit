@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 ## What This Skill Does
 
-Designs, ships, optimizes, and audits **recurring automations** so the AIOS runs without being asked — the Cadence pillar of the Four Cs. It's the third sibling of `/skill-builder` and `/agent-builder`: **decision gate and Discovery Interview first, a mandatory supervised test before anything fires, files/schedules last.**
+Designs, ships, optimizes, and audits **recurring automations** so the AIOS runs without being asked — the Cadence pillar of the Four Cs. It's part of the builder family (`/skill-builder`, `/agent-builder`, `/agents-team-builder`, `/hooks-builder`, `/plugin-builder`, `/workflow-builder`) — that family picks the *mechanism*; this one is the cadence/scheduling specialist: **decision gate and Discovery Interview first, a mandatory supervised test before anything fires, files/schedules last.**
 
 The headline mechanism is **Claude Code Routines** — saved tasks that run on Anthropic's cloud on a schedule, even with your laptop closed, **fully autonomous and acting AS you**. That power is exactly why this skill never arms a schedule until a supervised "Run now" has passed. Full mechanics (triggers, environments, network modes, connectors, limits, what won't work) are in [reference.md](reference.md).
 
@@ -44,7 +44,7 @@ Pick the right mechanism before scoping anything:
 4. **Is it polling something during a session you're already in?** → **`/loop`**.
 5. **Is it really a manual SOP you just want to run consistently?** → a **ritual skill** named `weekly-*`/`daily-*` (no true automation, but `/audit` credits it).
 
-State one sentence on the chosen mechanism and why. If cloud-routine is chosen, continue below. (For hook/loop/ritual, hand off to `update-config` for hooks, `/loop`, or `/skill-builder` for a ritual skill — and still do the discovery + test discipline.)
+State one sentence on the chosen mechanism and why. If cloud-routine is chosen, continue below. (For hook/loop/ritual, hand off to `/hooks-builder` for hooks, `/loop`, or `/skill-builder` for a ritual skill — and still do the discovery + test discipline.)
 
 ### Step 1 — Discovery Interview (cloud routine)
 
@@ -53,7 +53,7 @@ Ask with AskUserQuestion, one round at a time, skipping what's already known.
 **Round 1: Job & cadence**
 - What exactly should the routine do, start to finish? (One job. If it's two, that's two routines.)
 - How often? (cron preset or natural language; **min 1 hour**. Respect daily caps: Pro 5 / Max 15 / Team 25 / Enterprise 25 runs/day.)
-- Also trigger on a GitHub event or API call? (e.g. "weekly AND on every new PR")
+- Also trigger on a GitHub event or API call? (e.g. "weekly AND on every new PR") **Warning:** a from-fork / public-PR trigger feeds *untrusted* input into a routine that runs and posts **as you** — that's the lethal trifecta (`SECURITY.md`). For any such trigger, **exclude forks** (use the from-fork PR filter), keep the routine on **Trusted** network, and make it **draft-only**. Loop discipline: `references/agent-loops.md`.
 
 **Round 2: Repo & scope**
 - Which repo does it clone? (Your own AIOS repo is a good default for self-running rituals.) Consider a **lean dedicated repo** if the target's `CLAUDE.md` would drag in irrelevant context.
@@ -65,12 +65,12 @@ Ask with AskUserQuestion, one round at a time, skipping what's already known.
 - Setup script needed before each run? (`npm install`, `pip install`.)
 
 **Round 4: Output & failure path**
-- What does success look like, concretely? (e.g. "push to a `claude/audit-YYYY-WW` branch, open a draft PR summarizing the score delta.")
+- What does success look like, concretely? Success must be a **boolean, a metric, or a named artifact** (e.g. "push to a `claude/audit-YYYY-WW` branch, open a draft PR summarizing the score delta"). Reject any "run until satisfied / keep iterating" framing — **a routine is single-pass, not iterate-until-done; that's a loop, see `references/agent-loops.md`.**
 - Where does output land? (`claude/` branch, a connector post, a notes file committed back as a memory trail.)
 - **What should it do on failure?** There are no automatic retries — bake a fallback into the prompt ("if X fails, log it and stop" / "notify me").
 
 **Round 5: Identity & safety**
-- It runs and posts **as you**. Confirm any comms/connector actions are OK to carry your name. Default to **draft/branch output** over auto-posting until trust is established.
+- It runs and posts **as you**. Confirm any comms/connector actions are OK to carry your name. **Permanent rule (not a starter setting):** anything that **sends/posts/deletes/pays/deploys** ships as **branch or draft output** OR behind a **per-run human gate** — never silent auto-action, no "until trust is established" graduation.
 
 **Round 6: Confirmation** — summarize:
 ```
@@ -94,6 +94,7 @@ The **prompt IS the routine.** Write it as a one-shot the agent can finish witho
 - Include the output format ("push to `claude/...`, open a draft PR with a summary").
 - Tell it where secrets live ("API key is an env var — use it directly, no `.env`").
 - Say what to do on failure.
+- **Design the verification into the prompt:** a functional **boolean/metric self-check** the run does first (did the artifact get produced? did tests pass?) → where judgment is needed, route the check to a **different-lineage judge** (not the model that did the work, to dodge same-blind-spot self-review) → land the result behind a **human gate** (draft PR / `claude/` branch). A routine that can't state its own done-check shouldn't be armed. See `references/agent-loops.md` (the *observe* beat).
 - Put **stable** rules in the repo's `CLAUDE.md` (read automatically on the fresh clone); keep **run-specific** instructions in the prompt. Don't duplicate.
 
 ### Step 3 — Environment setup (manual, at claude.ai — flag clearly)
@@ -102,7 +103,7 @@ If the routine needs env vars, a network mode change, or a setup script, those a
 
 ### Step 4 — Create + the MANDATORY supervised test
 
-Create the routine via the **`/schedule`** skill (the terminal path to Routines). Then, before the schedule is armed:
+Create the routine via the **`/schedule`** skill (the terminal path to Routines). For **event-triggered** routines (GitHub/API), create them with the **triggers DISABLED** so a real event can't fire before you've watched a supervised run. Then, before the schedule is armed:
 
 1. **"Run now"** and watch one execution live.
 2. Verify it read `CLAUDE.md`, stayed in scope, produced the agreed output on the `claude/` branch / session.
@@ -113,11 +114,11 @@ Create the routine via the **`/schedule`** skill (the terminal path to Routines)
 
 ### Step 5 — Arm the schedule
 
-Once the supervised run passes, set the recurring schedule via `/schedule`. Confirm back to the user: cadence, repo, next fire time, daily-cap headroom, and how to review/pause it.
+Once the supervised run passes, set the recurring schedule via `/schedule` — and **now** enable any GitHub/API triggers you created disabled in Step 4. Confirm back to the user: cadence, repo, next fire time, daily-cap headroom, and how to review/pause it.
 
 ### Step 6 — Document & register
 
-Add the routine to `CLAUDE.md` (a "Your routines / cadence" area): name, what it does, cadence, repo, output location. This is also what lets `/audit` credit the Cadence pillar.
+Write the routine's definition to **`routines/<name>.md`** — the single source of truth, matching `routines/README.md`'s schema: **what it does**, **when it fires** (cadence + any GitHub/API triggers), **what it produces** (output location), plus repo and the verification/human-gate from Step 2. Then add just a **one-line cross-link** to that file in `CLAUDE.md`'s "Your routines / cadence" area — don't duplicate the body. The `routines/<name>.md` file is what lets `/audit` credit the Cadence pillar.
 
 ---
 
@@ -139,7 +140,7 @@ Add the routine to `CLAUDE.md` (a "Your routines / cadence" area): name, what it
 - [ ] Every routine prompt is one-shot with an explicit failure path
 - [ ] Comms/connector actions that post **as you** were tested before being wired
 - [ ] Routines push only to `claude/`-prefixed branches; bearer tokens not leaked
-- [ ] Each routine is documented in CLAUDE.md so `/audit` can see it
+- [ ] Each routine has a `routines/<name>.md` definition (cross-linked from CLAUDE.md) so `/audit` can see it
 
 ---
 
@@ -156,7 +157,7 @@ The canonical first routine (closes the Cadence gap):
 
 - **Decision gate is not optional** — most "schedule this" asks for *local* work belong to a hook, `/loop`, or a ritual skill, not a cloud routine.
 - **The supervised "Run now" test is a hard gate** before arming any schedule, even on "just schedule it."
-- **Everything runs as you.** Default to draft/branch output; test before wiring any comms connector.
+- **Everything runs as you.** Branch/draft output (or a per-run human gate) is the permanent rule for any send/post/delete/pay/deploy; test before wiring any comms connector.
 - **Secrets → cloud env vars, never `.env`.** Never commit `.env` to "solve" a missing-key error.
 - Cloud routines can't reach local MCP, localhost, or local files — only what's in the repo or an API.
 - For the full triggers / environments / network / connectors / limits reference, see [reference.md](reference.md).

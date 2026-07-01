@@ -47,10 +47,11 @@ A subagent file is `<name>.md` with YAML frontmatter + a markdown body. Only `na
 | `description` | Yes | string | — | **When to use this agent.** This is how the orchestrator decides to delegate. Lead with the trigger condition. Add "use proactively" to encourage auto-delegation. May include `<example>` blocks. |
 | `tools` | No | string (comma-separated) | inherit all | Allowlist of tools the agent may use. **Omit to inherit every tool.** Set it to enforce least-privilege. |
 | `model` | No | string | inherit | `haiku`, `sonnet`, `opus`, or `inherit`. Omit to inherit the main session's model. |
+| `skills` | No | string (comma-separated) | none | Names of skills to **preload** into the agent's context before it starts — the `skills:` composition direction noted in "Agent vs Skill — the relationship." Omit unless the agent needs a specific skill's procedure on hand. |
 | `color` | No | string | none | Display color in the UI (`red`, `green`, `cyan`, … or a hex like `"#F59E0B"`). Cosmetic only. |
 | `hooks` | No | object | none | Lifecycle hooks scoped to this agent (PreToolUse/PostToolUse/Stop). Same shape as skill/settings hooks. |
 
-> A reliable house-standard minimum is to set exactly `name`, `description`, `tools`, `color`. Add `model` only when a tier is clearly right; add `hooks` only when you need lifecycle automation.
+> A reliable house-standard minimum is to set exactly `name`, `description`, `tools`, `color`. Add `model` only when a tier is clearly right; add `hooks` (lifecycle automation) or `skills` (preloaded procedures) only when you need them.
 
 ### `description` — write it for the orchestrator
 
@@ -179,7 +180,7 @@ Events: `PreToolUse` (before a tool), `PostToolUse` (after), `Stop` (agent finis
 - **No-Self-Review principle.** A Claude subagent reviewing Claude's output has the same architecture, hence the same blind spots. For adversarial review/verification of work the main session produced, route to a **second model (a different AI)** if you have one available — don't build a Claude review agent for that purpose. A Claude *finder* agent (different task, e.g. "list candidate issues") is fine; a Claude *judge* of Claude's own work is not. If only Claude is available, at least review in a fresh, isolated context with explicit critic framing.
 - **Connection preference: CLI > API > MCP.** When an agent needs to reach an external system, prefer a command-line tool, then a `scripts/` API integration, then MCP last. Grant the agent only the tool that mechanism needs.
 - **Another-lineage boundary.** Subagents are Claude-only. If the *better* worker is another model lineage (live web, math, multimodal, whole-repo scans), that's a route to a different AI the orchestrator makes — not a subagent.
-- **Cadence.** If an agent is part of a recurring ritual, document it so `/audit` credits it toward the Cadence pillar.
+- **Cadence.** If an agent is part of a recurring ritual, document it so `/audit` credits it toward the Cadence pillar. A recurring, scheduled, or run-on-an-event agent is a *loop* — design its cadence, verification beat, and stop-brake per `references/agent-loops.md`.
 
 ---
 

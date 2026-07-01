@@ -27,7 +27,7 @@ Use this whenever the ask is "every time / whenever / always when <event>, do X"
 | Skill-scoped hook | only while a specific skill runs | yes | yes | `/skill-builder` (frontmatter) |
 | Plugin hook | shipped inside a plugin, fires for its users | — | — | `/plugin-builder` |
 
-**Scope (v1): hooks this skill authors are `type:"command"` only.** Claude Code also supports `http`/`mcp_tool`/`prompt`/`agent` handlers and fields like `if`/`async` — prompt/agent handlers spend tokens on every match, so they need an explicit cost case; see reference.md before reaching for them.
+**Scope (v1): hooks this skill authors are `type:"command"` only.** Claude Code reportedly also supports `http`/`mcp_tool`/`prompt`/`agent` handlers and fields like `if`/`async` — but these handler names are candidate/observed, not all guaranteed in your build, so confirm each against the official docs first. (prompt/agent handlers also spend tokens on every match, so they need an explicit cost case.) See reference.md before reaching for them.
 
 **Division of labor with `update-config`:** where that built-in skill is available, it owns the mechanical settings.json edit. This skill owns everything around it — the decision, the design, the script, the test discipline — and invokes `update-config` for the write (or edits directly when it's unavailable, reporting exactly what changed).
 
@@ -39,7 +39,7 @@ Use this whenever the ask is "every time / whenever / always when <event>, do X"
 2. **Must it fire every time, deterministically?** If "usually / when relevant" → it's an instruction for CLAUDE.md or a skill, not a hook. STOP and refer.
 3. **Only while one skill runs?** → skill-scoped hooks in that skill's frontmatter via `/skill-builder`. STOP and refer.
 4. **Shipping to others?** → plugin `hooks/hooks.json` via `/plugin-builder`. STOP and refer.
-5. **Deterministic, no LLM judgment needed in the action?** Hooks should run scripts, not think. If the action needs judgment, the hook may still fire `claude -p` — but flag the cost and consider whether a skill ritual fits better.
+5. **Deterministic, no LLM judgment needed in the action?** Hooks should run scripts, not think. If the action needs judgment, the hook may still fire `claude -p` — but flag the cost and consider whether a skill ritual fits better. A hook that spawns `claude -p` MUST cap it (`--max-turns` + a hard `timeout`) AND carry a re-entry guard (e.g. `[ -n "${CLAUDE_HOOK_DEPTH:-}" ] && exit 0; export CLAUDE_HOOK_DEPTH=1` at the top), and must NEVER fire from a `Stop` hook the same run can re-trigger — an LLM-spawning hook whose child can re-fire it, with no depth guard, is a fork bomb. See `references/agent-loops.md`.
 
 State the verdict in one sentence before interviewing.
 
@@ -86,9 +86,36 @@ For every hook across `~/.claude/settings.json`, `.claude/settings.json`, `.clau
 - [ ] Layer is right (user vs project vs local) for who should get it
 - [ ] Registered: log entry exists; CLAUDE.md mentions it if behavior-changing
 
-## Complete example
+## Complete example (flagship) — a fail-closed `PreToolUse` guard
 
-Goal: a notification whenever a session ends (SessionEnd — NOT `Stop`, which fires at the end of every response).
+Goal: block destructive shell before it runs. Defensive, fail-closed, fast — the shape to copy first.
+
+`.claude/hooks/bash-guard.sh`:
+```bash
+#!/usr/bin/env bash
+# PreToolUse:Bash guard — fail-CLOSED. Blocks dangerous commands; denies on its own errors.
+set -euo pipefail
+trap 'echo "bash-guard error — denying" >&2; exit 2' ERR
+cmd="$(jq -r '.tool_input.command // ""')"   # the command the model wants to run
+# Decision logic in a conditional (exempt from set -e): a match blocks with exit 2.
+case "$cmd" in
+  *"rm -rf /"*|*"rm -rf ~"*|*"mkfs"*|*"dd if="*)
+    echo "blocked: destructive command pattern" >&2; exit 2 ;;
+esac
+exit 0   # default: allow
+```
+
+`.claude/settings.local.json` fragment (via `update-config`):
+```json
+{ "hooks": { "PreToolUse": [ { "matcher": "Bash", "hooks": [ { "type": "command",
+  "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/bash-guard.sh\"", "timeout": 5 } ] } ] } }
+```
+
+Test all three: block case `echo '{"tool_input":{"command":"rm -rf /"}}' | bash .claude/hooks/bash-guard.sh; echo $?` → message on stderr, exit 2 (denied); benign case `echo '{"tool_input":{"command":"ls -la"}}' | bash .claude/hooks/bash-guard.sh; echo $?` → exit 0 (allowed); failure drill `echo 'not json' | bash .claude/hooks/bash-guard.sh; echo $?` → trap fires → exit 2 (fail-CLOSED deny). Then live-fire: ask for a harmless `ls` (runs) and confirm a destructive command is blocked.
+
+### Side-effect counterpart — a fail-OPEN `SessionEnd` ping
+
+When the hook is a notification, not a guard, fail-OPEN is right (a failed ping must never wedge the session). SessionEnd — NOT `Stop`, which fires at the end of every response.
 
 `.claude/hooks/session-end-ping.sh`:
 ```bash

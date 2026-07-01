@@ -1,6 +1,6 @@
 ---
 name: workflow-builder
-description: Use when the user asks to design, build, optimize, or audit a SAVED DYNAMIC WORKFLOW — a JS orchestration file in `.claude/workflows/` that fans work out to N parallel sub-agents and merges results. Triggers — "build a workflow", "save this as a workflow", "make this rerunnable as a workflow", "turn this fan-out into a saved workflow", "audit my workflows", or `/workflow-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/agents-team-builder`, `/plugin-builder` — that family picks the mechanism; this one is the width-orchestration specialist. Runs a decision gate (just-ask / skill / sub-agent / agent team / workflow ladder), a discovery interview (deliverable, fan-out unit, scope bounds, verify pass, cost ceiling), validates against red gates, then writes `.claude/workflows/<name>.js` with the house meta/phase/agent skeleton. Build = cheap, fire = expensive — it never fires the workflow for you. Harness API: `reference.md`.
+description: Use when the user asks to design, build, optimize, or audit a SAVED DYNAMIC WORKFLOW — a JS orchestration file in `.claude/workflows/` that fans work out to N parallel sub-agents and merges results. Triggers — "build a workflow", "save this as a workflow", "make this rerunnable as a workflow", "turn this fan-out into a saved workflow", "audit my workflows", or `/workflow-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/agents-team-builder`, `/plugin-builder`, `/hooks-builder` — that family picks the mechanism; this one is the width-orchestration specialist. Runs a decision gate (just-ask / skill / sub-agent / agent team / workflow ladder), a discovery interview (deliverable, fan-out unit, scope bounds, verify pass, cost ceiling), validates against red gates, then writes `.claude/workflows/<name>.js` with the house meta/phase/agent skeleton. Build = cheap, fire = expensive — it never fires the workflow for you. Harness API: `reference.md`.
 argument-hint: [workflow goal or existing workflow name]
 disable-model-invocation: true
 ---
@@ -9,11 +9,14 @@ disable-model-invocation: true
 
 Builds **saved dynamic workflows**: JS files in `.claude/workflows/` that orchestrate N parallel sub-agents deterministically (loops, fan-out, schemas, adversarial verify) and surface in the skill list by `meta.name`. The harness API lives in [reference.md](reference.md) — read it before writing any JS.
 
+> **Heads up — the dynamic-workflow harness is a recent/preview Claude Code surface and may not exist in your build.** Check `/workflows` first (Phase 0). If the command is unknown, this skill has nothing to drive — stop and tell the user their build doesn't ship workflows yet.
+
 **The orchestration ladder** (cheapest first): just-ask → skill (reusable recipe) → sub-agent (parallel, clean context) → agent team (small crew that talks to each other) → **dynamic workflow** (width fan-out — a JS file that spins N parallel sub-agents and merges results). The deciding question: *does this break into many pieces that can run independently of each other at the same time?* If yes → workflow.
 
-## Phase 0 — Source check (silent)
+## Phase 0 — Source + harness check (silent)
 
-Confirm this skill's `reference.md` exists. If it's missing, stop and say so. Don't build from memory — the harness API drifts.
+1. Confirm this skill's `reference.md` exists. If it's missing, stop and say so. Don't build from memory — the harness API drifts.
+2. **Confirm the harness exists before anything else.** Run `/workflows` (lists runs) — workflows are model-agnostic harness features of recent Claude Code builds, so verify by the command, not by version strings (wrapper installs report stale numbers). If `/workflows` isn't a command, stop here and tell the user this build doesn't ship dynamic workflows yet — don't run the decision gate or interview against a surface that isn't there.
 
 ## Phase 1 — Decision gate (mandatory)
 
@@ -30,8 +33,8 @@ The test: *"Does this break into many pieces that can run independently of each 
 
 ## Phase 2 — Preflight
 
-- Workflows are **model-agnostic harness features** of recent Claude Code builds; verify support by running `/workflows` (lists runs) rather than trusting version strings — wrapper installs can report stale numbers.
-- Save location is **in-project `.claude/workflows/`** — never a global default dir.
+- Harness support was confirmed in Phase 0 (`/workflows`) — don't re-verify by version string.
+- Save location is **in-project `.claude/workflows/`** — never a global default dir. **No example workflow ships pre-built in the kit** — `.claude/workflows/` does not exist until you create one (same as agent teams, which also ship none). The first file in it is the one you build here; don't expect a populated directory.
 - State the cost story ONCE here: a careless unbounded workflow can burn through a large share of a monthly subscription in one run. Mitigations are designed in Phase 3 (bounded scope, named deliverable, worker model choice).
 
 ## Phase 3 — Discovery Interview
@@ -53,10 +56,10 @@ AskUserQuestion, one round at a time; skip rounds already answered. Stop when 95
 | Gate | Check | If red |
 |---|---|---|
 | **Width test** | Units genuinely independent (no ordering between them) | Block → refer back to the ladder |
-| **Bounded scope** | Explicit cap on items AND rounds (or budget guard) | Block — this is the runaway-cost gate |
+| **Bounded scope** | Explicit item cap, AND — on EVERY looping design — a numeric round cap (`MAX_ROUNDS`). A budget guard alone, or an item cap alone, is NOT enough: any loop needs both brakes (objective done-check + numeric hard cap, `references/agent-loops.md`). | Block — this is the runaway-cost gate |
 | **Concrete deliverable** | Return value is a named artifact/structure, not "summary"/"ideas" | Block |
 | **Schema'd workers** | Workers returning data use `schema` | Yellow — warn, prose merges badly |
-| **Verify pass** | Finding-type outputs have adversarial/diverse-lens verification | Yellow — warn (default is verify) |
+| **Verify pass** | Finding-type outputs have adversarial/diverse-lens verification, scored by a DIFFERENT lineage than produced them (never same-model self-grading) | Yellow — warn (default is verify) |
 | **Dedupe key** | Loop-until-dry designs dedupe vs ALL seen, not vs confirmed | Block if looping |
 | **No wall-clock randomness** | No `Date.now()` / `Math.random()` / argless `new Date()` (breaks resume) | Block — pass timestamps via `args` |
 
@@ -65,7 +68,7 @@ AskUserQuestion, one round at a time; skip rounds already answered. Stop when 95
 1. Write `.claude/workflows/<name>.js` using the house skeleton (full API + patterns in [reference.md](reference.md)):
    - `export const meta = { name, description, whenToUse, phases }` — pure literal; `name` matches filename; `description` + `whenToUse` become the surfaced skill text.
    - `phase()` per stage; workers via `agent(prompt, {label, phase, schema, model})`; `pipeline()` by default, `parallel()` only for true barriers; `.filter(Boolean)` after every parallel; bounds + dedupe from Phase 3/4.
-2. Self-check: `node --check .claude/workflows/<name>.js` (syntax only — never execute it).
+2. Self-check (syntax only — never execute it): if Node is installed, `node --check .claude/workflows/<name>.js`. **Node is optional** — a freshly-cloned kit may not have it on PATH. When `node` is unavailable, fall back to a harness-native confirmation: re-read the file for balanced braces and a pure-literal `meta`, and let `/workflows` surface it (a parse error there means broken syntax). Don't block the build on a missing Node.
 3. **Do NOT fire it.** Build = cheap (text); fire = expensive (N sessions). The user invokes it by name when they want a run.
 
 ## Phase 6 — Output to chat
@@ -102,6 +105,8 @@ trusting it on full scope.
 - **Don't fire it for the user.** Ever. Same rule as `/agents-team-builder`.
 - **The prompt IS the workflow** — workers' prompts carry all context; they inherit zero conversation history.
 - **Workers on the smallest model that survives the task**; synthesis on the session model.
+- **Fan-out workers default to read-only / branch-only.** N agents writing the same tree in parallel collide. The safe default is read-only exploration (`agentType: 'Explore'`); a worker that genuinely must mutate files runs `isolation: 'worktree'` so each writer gets its own branch. Never fan unbounded file-writers at a shared working tree.
+- **Verify panels (judges, critics, refuters) must be a DIFFERENT lineage** — never let the same model that produced a finding grade it. Judgment verification is scored by a different model lineage (No-Self-Review Law in `multi-brain`; the four verification types in `references/agent-loops.md`).
 - Skill stays under 500 lines; harness detail lives in `reference.md`.
 - Review of a built workflow file routes to a **different-lineage model** (No-Self-Review Law in `multi-brain`).
 

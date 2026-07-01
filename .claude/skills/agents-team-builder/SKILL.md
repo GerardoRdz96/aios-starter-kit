@@ -1,13 +1,13 @@
 ---
 name: agents-team-builder
-description: Use to design and launch a Claude Code agent team (2–5 specialized agents that share a task list, talk peer-to-peer, work in parallel). Triggers — "build an agent team", "design a team of agents", "set up a Claude agent team", "I need a multi-agent crew", "create an agent team for X", "spin up a team of teammates", "build me a Claude team", or `/agents-team-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder` — that family picks the *mechanism* and walks the discovery; this one is the agent-teams specialist. Runs a four-part discovery interview (goal, team, roles, deliverables), enforces the do/don't gates, saves a rerunnable template to `.claude/teams/<name>.md`, and ends with a paste-ready invocation prompt + tmux observability tip.
+description: Use to design and launch a Claude Code agent team (2–5 specialized agents that share a task list, talk peer-to-peer, work in parallel). Triggers — "build an agent team", "design a team of agents", "set up a Claude agent team", "I need a multi-agent crew", "create an agent team for X", "spin up a team of teammates", "build me a Claude team", or `/agents-team-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/workflow-builder`, `/plugin-builder` — that family picks the *mechanism* and walks the discovery; this one is the agent-teams specialist. Runs a four-part discovery interview (goal, team, roles, deliverables), enforces the do/don't gates, saves a rerunnable template to `.claude/teams/<name>.md`, and ends with a paste-ready invocation prompt + tmux observability tip.
 argument-hint: [optional one-line goal]
 disable-model-invocation: false
 ---
 
 # /agents-team-builder
 
-Builds Claude Code **agent teams**: 2–5 specialized agents that share a task list, **talk to each other peer-to-peer**, and work **in parallel**. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`.
+Builds Claude Code **agent teams**: 2–5 specialized agents that share a task list, **talk to each other peer-to-peer**, and work **in parallel**. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/workflow-builder`, `/plugin-builder`.
 
 > Agent teams are an experimental Claude Code feature. They require the `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` env var and a recent Claude Code version. The do/don't gates below keep teams cheap and well-scoped.
 
@@ -22,17 +22,17 @@ Don't ask "what team do you want to build?" yet. **First confirm this should eve
 - **Agent team** — multiple specialized areas, parallel + reactive, quality matters (multi-pass review). *Proceed.*
 - **Sub-agents (no team)** — independent parallel work, no peer comms needed. *Tell the user to just ask Claude to spin sub-agents; don't team.*
 - **Dynamic workflow** — wide fan-out (10s–100s agents), no peer comms. *Point them at a width-fan-out workflow instead.*
-- **`/goal` loop** — depth not width; run until criteria met. *Refer the user there.*
+- **A depth loop** — depth not width; iterate to an objective done-check. *This kit ships no `/goal` command — just ask Claude to iterate to the done-check, with a numeric cap (see `references/agent-loops.md`).*
 - **Just-ask** — simple one-shot. *Don't fire anything; suggest they just ask Claude.*
 
 If the chosen option is not **agent team**, stop here and explain *why* in one line. Do not proceed.
 
 ## Phase 2 — Enablement check
 
-Read `.claude/settings.local.json` and verify `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS == "1"`.
+Read `.claude/settings.local.json` **if it exists** — it's gitignored, so a fresh clone won't have it; treat a missing file as "not set" and don't error. If present, check `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS == "1"`.
 
 - **If set:** confirm to the user *"Agent teams enabled at project level — good."* and move on.
-- **If missing:** tell the user *"Agent teams require the `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` env var. May I add it to `.claude/settings.local.json`?"* On yes, add the `env` block (or add the key to an existing `env` block). On no, stop and tell them the feature won't fire without it.
+- **If missing or the file doesn't exist:** tell the user *"Agent teams require the `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` env var. May I add it to `.claude/settings.local.json`?"* On yes, **create the file if it's absent** with `{ "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }`, or add the key to an existing `env` block. On no, stop and tell them the feature won't fire without it.
 
 Also remind the user: **the env var only applies to NEW Claude Code sessions**. If you just added it, they need to launch a fresh `claude` session before the team can run. The skill can still build the prompt + save the template right now — they're persistent artifacts.
 
@@ -64,12 +64,13 @@ Track answers in a scratch table:
 | # | Role | Job | Outputs | Files owned | Talks to |
 |---|------|-----|---------|-------------|----------|
 
-### Round C — Final deliverables + approval mode
+### Round C — Final deliverables + stop condition + approval mode
 
-One AskUserQuestion with two questions:
+One AskUserQuestion with three questions:
 
 1. **Final deliverables** — free-form bullet list. What does the *human* see at the end? (a running app? a PR? a test report? a doc?)
-2. **First-run approval mode** — options:
+2. **Stop condition** — free-form, **both parts required**: (a) an objective done-check the team can test (a deliverable file exists / a test passes — never "until it's good") and (b) a numeric hard cap (max message rounds, wall-clock, or token budget). Both brakes are mandatory — a team with no cap is a runaway token bill. Doctrine: `references/agent-loops.md`.
+3. **First-run approval mode** — options:
    - **Human approves every teammate's plan (Recommended)** — safest first run; relax later.
    - **Main session approves teammate plans** — lower friction; the orchestrator is the gatekeeper.
    - **One teammate is the plan reviewer** — specialist pattern; pick which role in the next message.
@@ -84,6 +85,9 @@ Run these checks on the answers. **Red = block and ask the user to fix.** Yellow
 | **File ownership** | Every teammate has at least one file/glob nobody else writes | Block. Show the overlap. |
 | **Recipients named** | Every teammate that produces a handoff names the recipient | Block. Show the unnamed handoffs. |
 | **Deliverables concrete** | At least one deliverable is a *file path* or *runnable artifact* — not "summary" / "ideas" | Block. Ask for a concrete artifact. |
+| **Goal testable** | Goal names an objective, testable end-state — not "improve X" / "make it better" | Block. Make them state a checkable end-state (`references/agent-loops.md`, Brake 1). |
+| **Stop condition present** | Round C gives BOTH an objective done-check AND a numeric hard cap | Block. A loop missing either brake is a runaway, not a system (`references/agent-loops.md`, the two brakes). |
+| **Verification role** | At least one teammate verifies the others' output — a functional check where possible — and is a *fresh, separate* teammate, never grading its own work | Block. No verifier ships confidently-wrong work (`references/agent-loops.md`, Maker→Checker / No-Self-Review). |
 | **Goal one-line** | Goal is ≤ 200 chars and starts with a verb | Yellow. Trim if longer. |
 | **Approval mode picked** | Phase 3 Round C answered | Block. |
 
@@ -99,6 +103,7 @@ Run these checks on the answers. **Red = block and ask the user to fix.** Yellow
 **Goal:** <one-line goal>
 **Created:** <YYYY-MM-DD>
 **Status:** ready / re-firable
+**Stop condition:** <objective done-check> · cap: <numeric hard cap>
 **First-run approval mode:** <Human-approves | Main-approves | Reviewer-teammate>
 
 ## Invocation prompt (paste into a fresh Claude session)
@@ -117,15 +122,26 @@ Final deliverables:
   - <deliverable 2>
   - <deliverable 3>
 
+Done when (both required — stop and report the moment it's met):
+  - Done-check: <objective done-check — deliverable files exist / a test passes>
+  - Hard cap: <numeric cap — max message rounds / wall-clock / token budget>
+
+Verification: <verifier role> checks the others' output (a functional check where possible) as a fresh, separate teammate — never grade your own work.
+
+Git + send rail: teammates push only to a feature branch — never to main, never deploy, never send externally (including through an inherited MCP) without a human gate.
+
 Approval mode: <approval-mode-instruction>
 
 ## Notes
 - Each teammate inherits the orchestrator's permissions, MCPs, skills, and project files. No conversation history is passed — context is the prompt above.
+- **Two brakes are mandatory:** the objective done-check stops a finished team; the numeric cap stops a stuck one. A team with neither is a runaway token bill (`references/agent-loops.md`).
+- **Branch-only rail:** teammates push to a feature branch and never to main/deploy/external-send through an inherited MCP without a human gate.
 - For real per-agent visibility, run in tmux (not VS Code).
+- **Log each run:** append one line to `.claude/teams/<team-name>.log.md` — `YYYY-MM-DD · what shipped · why it stopped (done-check met / hit cap)`.
 - To re-fire this team later: open a fresh Claude session in this repo, then paste the "Invocation prompt" block above.
 ```
 
-**Step 3 — Update `.claude/teams/index.md`** (create if missing). One-line entry per team:
+**Step 3 — Append the team to `.claude/teams/README.md`** (the directory's index — create if missing). One-line entry per team:
 ```markdown
 - [<team-name>](<team-name>.md) — <one-line goal> · created <YYYY-MM-DD>
 ```
@@ -146,10 +162,10 @@ Re-fire later by pasting that file's invocation prompt into a fresh session.
 
 1. (If env var was just added) Restart Claude Code in this directory.
 2. Open a fresh `claude` session — ideally inside tmux for per-agent visibility:
-   ```
+   ~~~
    tmux new -s team
    claude
-   ```
+   ~~~
 3. Paste the invocation prompt from `.claude/teams/<team-name>.md`.
 4. First run: keep the human-approval mode on; switch to main-approves once the pattern is working.
 
@@ -180,4 +196,5 @@ Built via `/agents-team-builder`. Goal: <goal>. <N> teammates on <model>. Saved 
 
 ## Related
 
-- `.claude/skills/skill-builder/SKILL.md`, `agent-builder/SKILL.md`, `routines-builder/SKILL.md` — sibling builders.
+- `.claude/skills/skill-builder/SKILL.md`, `agent-builder/SKILL.md`, `routines-builder/SKILL.md`, `workflow-builder/SKILL.md`, `plugin-builder/SKILL.md` — sibling builders.
+- `references/agent-loops.md` — loop-engineering doctrine (the two brakes, the four verification types, when *not* to loop). A team that iterates is a loop; give it both brakes and a fresh-lineage checker.

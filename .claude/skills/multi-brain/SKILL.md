@@ -1,14 +1,9 @@
 ---
 name: multi-brain
 description: |
-  Multi-LLM auto-router. Your main assistant is the orchestrator and driver; it routes a sub-task to a different model ONLY when that model fits the job better than the main one alone. The other brains are tools the orchestrator calls — the user talks to one assistant the whole time. The roster below is YOURS TO FILL IN: define which models you have, what each is best at, and how to call it. Fires automatically when a routing rule matches.
+  Multi-LLM auto-router. Your main assistant is the orchestrator and driver; it routes a sub-task to a different model ONLY when that model fits the job better than the main one alone. The other brains are tools the orchestrator calls — the user talks to one assistant the whole time. The roster below is YOURS TO FILL IN. Fires automatically when a routing rule matches.
 
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  HARD RULE — THE NO-SELF-REVIEW LAW (READ THIS FIRST)
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  When the user asks you to "check / review / verify / sanity-check / second-opinion" ANY work YOU just produced — code, writing, plan, anything — route the review to a model from a DIFFERENT lineage (different company/architecture) if one is on the roster. A model reviewing its own output has the same blind spots that produced the bug. If no second lineage is installed, say so, then re-derive the check from scratch instead of rubber-stamping.
-
-  Phrases that MUST trigger a cross-model review: "check your work" · "review what you just did" · "is this right?" · "second opinion" · "sanity check" · "double-check" · "make sure this works".
+  NO-SELF-REVIEW LAW: when the user asks you to "check / review / verify / sanity-check / second-opinion" ANY work YOU just produced, route the review to a model from a DIFFERENT lineage if one is on the roster — a model reviewing its own output shares the blind spots that produced the bug. Triggers: "check your work" · "review what you just did" · "is this right?" · "second opinion" · "sanity check" · "double-check" · "make sure this works".
 ---
 
 # Multi-Brain Auto-Router
@@ -17,9 +12,11 @@ Many brains, one terminal. The orchestrator drives and stays in front of the use
 
 **Why different lineages matter:** two models from the same company share training, so they share blind spots. Cross-architecture diversity (e.g. Anthropic + OpenAI + Google + a local open-weights model) is what actually catches errors.
 
+**THE NO-SELF-REVIEW LAW (read this first).** When the user asks you to "check / review / verify / sanity-check / second-opinion" ANY work YOU just produced — code, writing, plan, anything — route the review to a model from a DIFFERENT lineage if one is on the roster. A model reviewing its own output has the same blind spots that produced the bug. If no second lineage is installed, say so, then re-derive the check from scratch instead of rubber-stamping.
+
 ## Your roster — FILL THIS IN
 
-Edit this table for *your* setup (run `/onboard` or just edit it by hand). Delete rows you don't have; add rows for what you do. Examples are placeholders.
+Edit this table for *your* setup by hand: delete the rows for brains you don't have, add a row for each brain you do. Examples are placeholders.
 
 | Brain | Lineage | Best at (role) | How to call | Cost |
 |---|---|---|---|---|
@@ -58,7 +55,7 @@ Whenever you route somewhere the user did NOT explicitly request — announce in
 
 ## Failure-detection rule (deterministic, not a vibe)
 
-2× same test failure, 2× same shell error, or 2× same edit with no progress → MUST route a rescue (if a second brain exists) or stop and tell the user. Reset the counter only when the step passes, the goal changes, or the user says "keep trying."
+2× same test failure, 2× same shell error, or 2× same edit with no progress → MUST route a rescue (if a second brain exists) or stop and tell the user. Reset the counter only when the step passes, the goal changes, or the user says "keep trying." This 2× counter is the same kind of loop brake taught in `references/agent-loops.md` — read it before wiring any run-until-done loop.
 
 ## Cost discipline
 

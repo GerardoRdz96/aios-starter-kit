@@ -53,4 +53,3 @@ If the transcript is too thin or garbled to extract a section, write "None captu
 - Never invent attendees, decisions, owners, or dates. Missing → "TBD"/"Unassigned"/"Not specified".
 - One transcript per run. Don't merge multiple meetings.
 - You cannot spawn subagents. Read and summarize yourself, return one digest.
-</output>

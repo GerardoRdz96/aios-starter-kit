@@ -1,4 +1,4 @@
-# Facilitator Guide v2.1 — Teaching the AIOS class
+# Facilitator Guide v2.2 — Teaching "What Is an Agentic OS — and How to Build Your Own"
 
 *For the instructor. Everything here is yours to adapt. Full version: 120 minutes. Compressed: 90 (cut the hands-on to a demo) or 60 (modules 0–5 + wow prompt only).*
 
@@ -72,8 +72,8 @@ Run `/onboard` live (or open a pre-onboarded copy). The 7 questions write `conte
 
 ### C2 · Connections — *give it senses* → a connector (Gmail), not Outlook
 Work email (Outlook / M365) is IT-gated — so don't fight it on stage. Use **personal Gmail via the claude.ai connector** as the safe, reproducible stand-in: *Settings → Connectors → Gmail → authorize*. No code, and it works in Claude Desktop / Cowork too, so the non-CLI crowd can replicate it. Ask live: *"what are my 3 most recent unread emails?"* — it reads them.
-- **The credibility line:** *"At SoftServe the exact same pattern runs through approved, governed channels — same shape, different plumbing."* Turn the limitation into a teaching moment (and a scale-up moment for you).
-- **Connection-related skills / doctrine to name:** the rule is **CLI > API > MCP** (token cost + reliability climb in that order). Show `gh` as a live CLI connection; name `/printing-press` as "how I print a CLI for anything that *doesn't* have a connector." A connector is the click-to-connect **floor**; a printed CLI is the build-anything **ceiling**.
+- **The credibility line:** *"At a regulated workplace, the same pattern runs through approved, governed channels — same shape, different plumbing."* Turn the limitation into a teaching moment.
+- **Connection-related skills / doctrine to name:** the rule is **CLI > API > MCP** (token cost + reliability climb in that order). Show `gh` as a live CLI connection; name the public `printing-press` skill (not bundled in this kit) as "how I print a CLI for anything that *doesn't* have a connector." A connector is the click-to-connect **floor**; a printed CLI is the build-anything **ceiling**.
 - **Keys, not prompts** (tell the war story): the 150–200k discount-email blast. The fix was never "add a rule" — it was *don't hand it the send key*. Scope every connection minimally; read-only by default. A prompt is never a permission layer.
 
 ### C3 · Capabilities — *teach it how YOU work* → `/skill-builder` + the starter set
@@ -92,7 +92,7 @@ This is the thread's payoff. Point at each C as it fires: it knows the topic + t
 
 **Cadence B — the self-improving loop (the AIOS grading itself, inward-facing):**
 > *Weekly Sunday: run `/audit` → score my own four Cs → commit the scoreboard to `references/audits/<date>.md` → file the top-3 fixes.*
-This is the loop that makes the OS get better on its own: it reads its own state, grades it, and queues its own homework — a tiny self-improving system. Students leave knowing their AIOS isn't static; it has a heartbeat that keeps raising its own floor. (The full-strength version is the weekly Improvement loop in `references/autonomous-entity-charter.md` — name it as "where this goes next.")
+This is the loop that makes the OS get better on its own: it reads its own state, grades it, and queues its own homework — a tiny self-improving system. Students leave knowing their AIOS isn't static; it has a heartbeat that keeps raising its own floor. (The loop-engineering doctrine behind cadences like this — how to design a loop and the verify-before-you-arm discipline — lives in `references/agent-loops.md`; the full-strength version is the weekly Improvement loop in `references/autonomous-entity-charter.md` — name it as "where this goes next.")
 
 **Why two:** Cadence A does *outward* work **for** you (research → email = leverage); Cadence B does *inward* work **on the system itself** (audit → improve = compounding). One thread, two directions — that's the whole idea of cadence in two demos.
 

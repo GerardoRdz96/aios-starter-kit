@@ -73,7 +73,7 @@ Date: {date} · Goal: {one line}
 
 1. **Final reconciliation pass:** read the whole capture for contradictions or gaps; make the Summary stand on its own.
 2. **Recap in chat:** what's captured, what's flagged (with owners), suggested next step.
-3. **Offer to graduate** into the wiki, proposing the destination per `references/wiki-protocol.md`: personal/work facts → a `context/` file; reusable knowledge → a `references/` page (then update `index.md`, append to `log.md`); a build plan → the relevant project spot. Let the user confirm or defer — don't auto-write into the wiki without a yes.
+3. **Offer to graduate** into the wiki, proposing the destination per `references/wiki-protocol.md`: personal/work facts → a `context/` file; a decision-with-a-why → append to `decisions/log.md`; fast-changing personal facts or preferences → `memory/` (if present); evergreen reusable knowledge → a `references/` page (then update `index.md`, append to `log.md`, and add a row to `knowledge/README.md`'s Source registry: date · `knowledge/grills/<file>` · grill capture · graduated to `<page>`); a build plan → the relevant project spot. **Heads-up: `references/` is committed and public** — unlike the gitignored `knowledge/grills/` capture and the privacy-gated `context/` — so only graduate non-sensitive evergreen knowledge there; anything tied to an employer or a specific person goes to `context/`. Let the user confirm or defer — don't auto-write into the wiki without a yes.
 4. If deferred, the capture stays in `knowledge/grills/` and you log a follow-up in `pending.md`.
 
 ## Guardrails

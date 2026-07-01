@@ -32,6 +32,7 @@ All fields are optional. Only `description` is recommended.
 | `name` | No | string | directory name | Display name and `/slash-command`. Lowercase letters, numbers, hyphens only. Max 64 chars. |
 | `description` | Recommended | string | first paragraph of content | What the skill does and when to use it. Claude uses this for auto-invocation decisions. |
 | `argument-hint` | No | string | none | Autocomplete hint for expected arguments. Shown in `/` menu. Examples: `[issue-number]`, `[filename] [format]` |
+| `arguments` | No | string \| list | none | Declare **named** positional arguments (a list of argument names). Reference each by `$<name>` in the skill body instead of positional `$1`/`$2`. |
 | `disable-model-invocation` | No | boolean | `false` | When `true`, only the user can invoke the skill. Removes it from Claude's context entirely. |
 | `user-invocable` | No | boolean | `true` | When `false`, hides the skill from the `/` menu. Only Claude can invoke it. |
 | `allowed-tools` | No | string (comma-separated) | all tools | Tools available without permission prompts when this skill is active. |
@@ -67,6 +68,7 @@ Available placeholders in skill content:
 | `$ARGUMENTS` | All arguments passed when invoking the skill | `/fix-issue 123` -> `$ARGUMENTS` = `123` |
 | `$ARGUMENTS[N]` | Specific argument by 0-based index | `$ARGUMENTS[0]` = first arg |
 | `$N` | Shorthand for `$ARGUMENTS[N]` | `$0` = first arg, `$1` = second |
+| `$<name>` | A named argument declared in the `arguments` frontmatter | `arguments: [issue]` -> `$issue` = the value passed for `issue` |
 | `${CLAUDE_SESSION_ID}` | Current session ID | Useful for logs, session-specific files |
 
 **Automatic fallback:** If `$ARGUMENTS` is NOT present anywhere in the skill content, arguments are automatically appended as `ARGUMENTS: <value>` at the end.

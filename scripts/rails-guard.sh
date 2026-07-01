@@ -16,9 +16,9 @@ trap 'echo "rails-guard: internal error — denying (fail-closed)" >&2; exit 2' 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 MANIFEST="$REPO/references/provenance/frozen.manifest"
 
-# Personal-content paths (privacy gate). knowledge/README.md + artifacts/README.md stay public.
-PERSONAL=( "context/" "decisions/" "knowledge/" "artifacts/" "aios-intake.md" )
-PUBLIC_EXCEPTIONS=( "knowledge/README.md" "artifacts/README.md" "context/README.md" )
+# Personal-content paths (privacy gate). The */README.md placeholders stay public.
+PERSONAL=( "context/" "decisions/" "knowledge/" "artifacts/" "archives/" "aios-intake.md" )
+PUBLIC_EXCEPTIONS=( "knowledge/README.md" "artifacts/README.md" "context/README.md" "archives/README.md" )
 
 sha() { shasum -a 256 "$1" 2>/dev/null | awk '{print $1}'; }
 
@@ -58,13 +58,22 @@ cmd_check() {
 }
 
 cmd_privacy() {
-  local range="$1" bad=0 f
+  local range="$1" bad=0 f commits files
   [ "${ALLOW_PERSONAL_PUSH:-0}" = "1" ] && { echo "rails-guard: privacy gate overridden (ALLOW_PERSONAL_PUSH=1)"; return 0; }
+  # Scan EVERY commit being pushed (not just the endpoint diff) so a personal file added and then
+  # deleted before the push is still caught. Capture rev-list first so a bad range fails CLOSED —
+  # a failure inside process substitution would not trip `set -e`.
+  commits="$(git -C "$REPO" rev-list "$range" 2>/dev/null)" \
+    || { echo "rails-guard: cannot resolve push range '$range' — denying (fail-closed)" >&2; exit 2; }
+  files="$(printf '%s\n' "$commits" | while IFS= read -r c; do
+             # --root so the INITIAL (root) commit lists its full file set (else additions
+             # made in the first commit and never touched again are silently missed).
+             [ -n "$c" ] && git -C "$REPO" diff-tree --root --no-commit-id --name-only -r "$c"
+           done | sort -u)"
   while IFS= read -r f; do
-    if is_personal "$f"; then
-      echo "PERSONAL CONTENT IN PUSH: $f" >&2; bad=1
-    fi
-  done < <(git -C "$REPO" diff --name-only "$range" 2>/dev/null || git -C "$REPO" diff --name-only HEAD~1..HEAD)
+    [ -z "$f" ] && continue
+    if is_personal "$f"; then echo "PERSONAL CONTENT IN PUSH: $f" >&2; bad=1; fi
+  done <<< "$files"
   if [ "$bad" -ne 0 ]; then
     echo "Push blocked — personal context/knowledge/decisions/artifacts changes detected." >&2
     echo "If this push is intentional (private fork): ALLOW_PERSONAL_PUSH=1 git push" >&2
@@ -100,7 +109,13 @@ set -euo pipefail
 top="$(git rev-parse --show-toplevel)"
 "$top/scripts/rails-guard.sh" check
 while read -r _local_ref local_sha _remote_ref remote_sha; do
-  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then range="$local_sha"; else range="$remote_sha..$local_sha"; fi
+  # First push / new branch: remote_sha is all-zeros, so every reachable commit is being pushed —
+  # pass the tip alone (rev-list walks all of its history). Otherwise scan only the new commits.
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    range="$local_sha"
+  else
+    range="$remote_sha..$local_sha"
+  fi
   "$top/scripts/rails-guard.sh" privacy "$range"
 done
 EOF

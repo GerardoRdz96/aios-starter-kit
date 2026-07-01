@@ -61,10 +61,12 @@ const results = await pipeline(DIMENSIONS,
 const confirmed = results.flat().filter(Boolean).filter(f => f.verdict?.isReal)
 ```
 
-**Loop-until-dry (unknown-size discovery):** keep spawning finders until K consecutive rounds add nothing new. **Dedupe vs ALL seen, never vs confirmed** — else judge-rejected findings reappear forever.
+**Loop-until-dry (unknown-size discovery):** keep spawning finders until K consecutive rounds add nothing new. **Dedupe vs ALL seen, never vs confirmed** — else judge-rejected findings reappear forever. Wire **both brakes** (objective done-check + numeric hard cap — `references/agent-loops.md`): the `dry` counter is the done-check; `MAX_ROUNDS` and the `budget` guard are the hard caps. The `budget.total &&` guard matters — without it `remaining()` is `Infinity` and the loop runs to the agent cap.
 ```js
-const seen = new Set(); let dry = 0
-while (dry < 2) {
+const seen = new Set(); let dry = 0, round = 0
+const MAX_ROUNDS = 10                       // numeric hard cap — declare near the top; tune per task
+while (dry < 2 && round < MAX_ROUNDS && budget.total && budget.remaining() > 50_000) {
+  round++
   const fresh = (await parallel(FINDERS.map(f => () => agent(f.prompt, {schema: FINDINGS}))))
     .filter(Boolean).flatMap(r => r.findings).filter(b => !seen.has(key(b)))
   if (!fresh.length) { dry++; continue }
@@ -73,9 +75,9 @@ while (dry < 2) {
 }
 ```
 
-**Adversarial verify:** N independent skeptics prompted to REFUTE; kill on majority refute. **Diverse-lens variant:** distinct lenses (correctness/security/repro) instead of identical refuters when a finding can fail in more than one way.
+**Adversarial verify:** N independent skeptics prompted to REFUTE; kill on majority refute. **Diverse-lens variant:** distinct lenses (correctness/security/repro) instead of identical refuters when a finding can fail in more than one way. **Score with a DIFFERENT model lineage than produced the finding** — same-model self-grading shares the same blind spots (No-Self-Review Law; the judgment verification type in `references/agent-loops.md`).
 
-**Judge panel:** N attempts from different angles → parallel judges score → synthesize from the winner, graft runners-up.
+**Judge panel:** N attempts from different angles → parallel judges score → synthesize from the winner, graft runners-up. The judges are a **different lineage** from the attempt-writers — a model grading its own output is not verification.
 
 **Completeness critic:** final agent asks "what's missing — modality not run, claim unverified?" — its findings become the next round.
 

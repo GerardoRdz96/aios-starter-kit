@@ -1,6 +1,6 @@
 ---
 name: plugin-builder
-description: Use when the user asks to build, package, bundle, optimize, or audit a Claude Code plugin or marketplace — a distributable bundle of skills + agents + commands + hooks installed via `/plugin`. Triggers — "build a plugin", "package this as a plugin", "bundle my skills", "make a marketplace", "turn these skills into something shareable", or `/plugin-builder`. The packaging + distribution sibling of `/skill-builder`, `/agent-builder`, `/agents-team-builder`, `/routines-builder`. Runs a decision gate and Discovery Interview before writing files.
+description: Use when the user asks to build, package, bundle, optimize, or audit a Claude Code plugin or marketplace — a distributable bundle of skills + agents + commands + hooks installed via `/plugin`. Triggers — "build a plugin", "package this as a plugin", "bundle my skills", "make a marketplace", "turn these skills into something shareable", or `/plugin-builder`. The packaging + distribution sibling of `/skill-builder`, `/agent-builder`, `/agents-team-builder`, `/routines-builder`, `/hooks-builder`, `/workflow-builder`. Runs a decision gate and Discovery Interview before writing files.
 argument-hint: [plugin name or what to package]
 disable-model-invocation: true
 ---
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Guides creating, optimizing, and auditing Claude Code **plugins** and **marketplaces**. A plugin is a single installable package bundling any mix of commands, agents, skills, and hooks, distributed through a marketplace and installed with `claude plugin install`.
 
-The four primitive builders each make *one loose capability* in `.claude/`. This one **bundles capabilities and makes them shippable** — to teammates, the public, or your own other machines. Build primitives with their builders first; package here.
+The six primitive builders each make *one loose capability* in `.claude/`. This one **bundles capabilities and makes them shippable** — to teammates, the public, or your own other machines. Build primitives with their builders first; package here.
 
 ### Plugin vs the primitive builders
 
@@ -19,6 +19,8 @@ The four primitive builders each make *one loose capability* in `.claude/`. This
 | One isolated-context delegate job | **Agent** (`/agent-builder`) | Lives loose in `.claude/agents/` |
 | A small crew working in parallel | **Team** (`/agents-team-builder`) | Lives loose in `.claude/teams/` |
 | Something unattended on a schedule | **Routine** (`/routines-builder`) | Scheduled, runs as you |
+| An event-driven local trigger | **Hooks** (`/hooks-builder`) | Lives in `settings.json` hooks; bundleable into a plugin |
+| Width fan-out to N parallel agents | **Workflow** (`/workflow-builder`) | Lives loose in `.claude/workflows/` |
 | To **bundle + version + ship** any mix of the above | **Plugin** (this skill) | Distribution is the whole point |
 
 ## Mode 1: Build / Package a Plugin
@@ -42,13 +44,15 @@ If 1–2 don't justify a plugin, recommend the right primitive builder and stop.
 
 ### Step 2 — Build
 
+(`claude plugin new <name>` can scaffold the skeleton for you, then fill it in.)
+
 Scaffold under `plugins/<name>/`:
 
 ```
 plugins/<name>/
 ├── .claude-plugin/
 │   ├── plugin.json          ← manifest (name, version, description, author, keywords)
-│   └── marketplace.json     ← only for a standalone single-plugin repo ("source": "./")
+│   └── marketplace.json     ← required to install via a marketplace; lives in the dir you run `marketplace add` against ("source": "./")
 ├── skills/<skill>/SKILL.md  ← components live at the plugin ROOT, not in .claude-plugin/
 ├── agents/<agent>.md
 ├── commands/<cmd>.md
@@ -58,12 +62,20 @@ plugins/<name>/
 - **Components at the ROOT** — the #1 structural mistake is putting them inside `.claude-plugin/`.
 - **No hardcoded paths** — use `${CLAUDE_PLUGIN_ROOT}` in every hook/script reference.
 - Minimal manifest: `name`, `version`, `description`, `author`, `keywords`. Nothing unused.
+- Minimal `marketplace.json` (one entry per plugin in the repo):
+
+```json
+{ "name": "<market>", "owner": { "name": "..." }, "plugins": [ { "name": "<plugin>", "source": "./", "description": "what the plugin does" } ] }
+```
+
+  `source` is the path to the plugin dir relative to the marketplace root — use `"./"` only when the plugin IS the repo root; otherwise point at it (e.g. `"./plugins/<name>"`).
 
 ### Step 3 — Validate (don't skip)
 
 ```bash
 claude plugin validate ./plugins/<name>/.claude-plugin/plugin.json
-claude plugin marketplace add ./ --scope local     # "./", not bare "."
+claude plugin validate --strict ./plugins/<name>/.claude-plugin/plugin.json   # fail on warnings before shipping (use in CI)
+claude plugin marketplace add ./plugins/<name> --scope local   # the dir holding .claude-plugin/marketplace.json (use "./" only if the plugin IS the repo root)
 claude plugin install <name>@<marketplace> --scope local
 claude plugin details <name>                       # inventory + token cost
 # exercise each component, then tear down:

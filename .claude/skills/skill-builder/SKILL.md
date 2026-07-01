@@ -1,6 +1,7 @@
 ---
 name: skill-builder
-description: Use when creating new skills, optimizing existing skills, or auditing skill quality. Guides skill development following Claude Code official best practices.
+description: Use when someone asks to build, create, make, optimize, or audit a Claude Code skill -- "build me a skill", "make a /slash-command", "create a new skill", "audit my skills", or /skill-builder. Runs a Discovery Interview before writing files.
+argument-hint: [skill name or what it should do]
 ---
 
 ## What This Skill Does
@@ -143,16 +144,11 @@ Content rules:
 
 If your skill needs detailed reference docs, examples, or scripts, add them alongside SKILL.md in the same directory. Reference them from SKILL.md so Claude knows they exist. Supporting files are NOT loaded automatically -- they load only when Claude needs them. See [reference.md](reference.md) for the full pattern.
 
-**Step 5: Document in CLAUDE.md**
+**Step 5: Document in CLAUDE.md (one line, not four)**
 
-Your project's `CLAUDE.md` file is where Claude loads project-wide instructions every conversation. After creating a skill, add a brief entry so you (and your team) know what's available:
+Your project's `CLAUDE.md` is re-read every conversation, so its cost compounds -- keep its footprint tiny. The skill's `description` is *already* auto-loaded into context, so don't restate the trigger phrases or what it does here; that would duplicate what Claude already sees (and the Quality Audit flags duplication). Add at most a single-line pointer -- the skill name and a one-line purpose -- so you and your team can see what's available.
 
-- Skill name and `/slash-command`
-- Trigger phrases
-- Brief description of what it does
-- Output location (if it produces files)
-
-This isn't required for the skill to work, but it keeps your project organized and helps Claude understand how skills fit into your broader workflow.
+This isn't required for the skill to work. Follow your project's CLAUDE.md budget protocol: one line plus a pointer to the canonical file, detail lives in the skill, not in CLAUDE.md.
 
 **Step 6: Test**
 

@@ -87,6 +87,7 @@ Routines **can't use local MCP servers** — they use **Connectors**, Anthropic'
 - Each routine has its own **bearer token**, shown once; regenerate/revoke anytime. A leaked token lets someone spam runs and burn your daily cap — revoke immediately. Never paste tokens into routine prompts or repo files — they live in the cloud environment's env vars only.
 - **Everything runs as you** — test thoroughly before connecting comms tools (a 3am garbage Slack post carries your name).
 - **Unattended + external content = read-only/draft-only.** A routine that ingests external content (feeds, web, transcripts) runs unattended — nobody is there to catch a prompt injection. Such routines may DRAFT wiki pages/PRs but never directly edit config, hooks, skills, or scripts; and keep their tool/egress surface to the minimum the job needs (no open-ended network if the job is summarize-and-file). See `SECURITY.md` (lethal trifecta).
+- **Cloud routines bypass your local `rails-guard.sh` privacy gate.** That pre-push guard (over `context/`/`knowledge/`/`decisions/`/`artifacts/`) is a git hook on *your* machine — a routine pushes from Anthropic's cloud, so it never fires. Don't lean on it to stop a routine leaking personal dirs: keep those *out of the routine's repo scope*, and rely on **branch protection on `main`** as the server-side backstop.
 
 ---
 
@@ -134,7 +135,7 @@ Desktop scheduled tasks do **not** migrate to routines — recreate manually.
 
 - **Terminal path = the `/schedule` skill** (manages scheduled remote agents = routines). routines-builder delegates creation/arming to it rather than reimplementing.
 - **Environment setup (env vars, network mode, setup script) is a claude.ai web action** — not scriptable from the CLI. Flag these as manual steps for the user and pause until confirmed.
-- Local cadence alternatives: `update-config` for `.claude/settings.json` hooks; `/loop` for in-session polling; `/skill-builder` for a `weekly-*` ritual skill.
+- Local cadence alternatives: `/hooks-builder` for `.claude/settings.json` hooks; `/loop` for in-session polling; `/skill-builder` for a `weekly-*` ritual skill.
 
 ---
 
@@ -142,7 +143,7 @@ Desktop scheduled tasks do **not** migrate to routines — recreate manually.
 
 - **Your AIOS can run itself**: if it's a private GitHub repo, a routine can run weekly rituals (`/audit`, decisions housekeeping) and land them as a reviewable `claude/` branch + PR.
 - **Local-tool caveat:** no local MCP means tools without an API or a cloud Connector won't ride along. External APIs need **Full** network.
-- **Everything posts as you** — default to draft/branch output; test before wiring Slack/comms.
+- **Everything posts as you** — branch/draft output (or a per-run human gate) is the permanent rule for any send/post/delete/pay/deploy; test before wiring Slack/comms.
 
 ---
 

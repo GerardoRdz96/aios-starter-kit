@@ -3,6 +3,8 @@
 The architecture for building an AI operating system: four layers, each depending on the one before — Context → Connections → Capabilities → Cadence. This is the framework `/audit` scores against, and the companion to the [Three Ms](3ms-framework.md). The 3Ms is *how to think about and build automations* (platform-agnostic); the Four Cs is *how to architect and run an AIOS*.
 
 > **The Four Cs is a framework by Nate Herk.** This page is a concise, interpreted digest for use inside the AIOS. For the full version, see Nate Herk's own content.
+>
+> *The Four Cs of an AIOS™ is a trademark of Nate Herk. © 2026 Nate Herk.*
 
 ## The one-line test for each layer
 
@@ -48,8 +50,10 @@ Skills and instruction files that encode *how you* work — your style, your fra
 ### 4. Cadence — *does it run while your laptop is closed?*
 The top layer: turning Context + Connections + Capabilities into things that happen on a schedule or event, unasked. Needs all three layers beneath it. **Phase trust up the Bike Method before arming anything autonomous** — and given the Connections risk, scope what a cadence can touch.
 
+**A cadence that *iterates* is a loop** — it needs **both brakes** (an objective done-check, *not* iterate-until-done, **and** a numeric cap) plus a correctness check (functional > visual > different-lineage judgment > human-gate; route any irreversible step to a human gate or branch-only). Before arming any schedule/hook, a supervised Run-now must pass. (Loop-engineering doctrine: [[agent-loops]].)
+
 **Cadence is earned, and it's never free:** as autonomy goes up, cost, risk, *and maintenance* go up together. Deployed ≠ done — every automation still needs an owner, visibility, and a does-it-move-the-needle check.
-*Where it lives:* cloud routines, local hooks, `/loop`, and ritual skills.
+*Where it lives:* cloud routines (the only kind that truly run *while your laptop is closed*), plus local hooks, `/loop`, and ritual skills — these last are session/local-bound, so they only fire while the session or machine is up, not while it's asleep.
 
 ## How `/audit` scores it
 
@@ -63,4 +67,4 @@ The top layer: turning Context + Connections + Capabilities into things that hap
 Run `/audit` early (e.g. Day 7) and then weekly to watch each layer climb. The score isn't the point — the ranked fixes are.
 
 **Sources:** Framework by Nate Herk — see his public content for the full version. This page is an interpreted digest.
-**Related:** [[3ms-framework]], [[power-skills]], [[wiki-protocol]]
+**Related:** [[3ms-framework]], [[power-skills]], [[wiki-protocol]], [[agent-loops]] · builder skills for the Cadence layer: `/routines-builder`, `/hooks-builder`

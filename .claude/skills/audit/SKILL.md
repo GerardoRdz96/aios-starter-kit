@@ -34,7 +34,7 @@ The audit looks for **patterns and intent**, not exact paths. File names vary. U
 **Operating manual:** `CLAUDE.md` (root), `CLAUDE.local.md` (gitignored).
 **Memory:** `MEMORY.md` (root), `~/.claude/projects/<id>/memory/MEMORY.md`, or `memory/` folder.
 **Skills:** `.claude/skills/*/SKILL.md` — count + frontmatter.
-**Agents:** `.claude/agents/*.md` — count + frontmatter.
+**Agents:** `.claude/agents/*.md` — count + frontmatter. Match by frontmatter: only count files with `name`/`description` frontmatter; skip `README.md` (a folder README is not an agent).
 **Connection mechanisms** (any of these = "reachable"):
 - MCPs: `.mcp.json`, `.claude/settings.json` (mcpServers key), `.claude/settings.local.json`
 - API scripts: `scripts/*.py|.js|.ts` documented in CLAUDE.md
@@ -83,18 +83,18 @@ A "reachable" connection counts via ANY mechanism: MCP, script, export pipeline,
 | Criterion | Points | How to detect |
 |---|---|---|
 | Tier-1 domain coverage | 10 | 1.4 pts per tier-1 domain reachable. Round to nearest 0.5. Cap 10. |
-| Reference guide presence | 5 | -1 per connected tool with no `references/{tool}-api.md`. Floor 0. |
-| Auth / pipeline freshness | 5 | -1 per connection in `needs-auth`/`expired` state, or script with no run within 30 days. Floor 0. |
+| Reference guide presence | 5 | **0 if no connections are reachable.** Otherwise start at 5, -1 per connected tool with no `references/{tool}-api.md`. Floor 0. |
+| Auth / pipeline freshness | 5 | **0 if no connections are reachable.** Otherwise start at 5, -1 per connection in `needs-auth`/`expired` state, or script with no run within 30 days. Floor 0. |
 | Documentation in `connections.md` | 3 | 0 if missing; 1 sparse; 2 most; 3 covers all reachable. |
-| Read-AND-write balance | 2 | At least one connection can WRITE (send email, post update, etc.). 0 if all read-only — the AIOS is a viewer not an OS. |
+| Intentional + safely-scoped write path | 2 | +1 if at least one connection has an INTENTIONAL, scoped write path a cadence actually needs (send email, post update); +1 if keys are scoped to least privilege (read-only, or write/admin scopes no broader than a cadence needs). Read-only is fine when nothing needs to write — don't blanket-penalize it, and don't reward over-broad write keys. |
 
 #### Capabilities (25 pts)
 
 | Criterion | Points | How to detect |
 |---|---|---|
 | 3+ skills installed | 10 | Count `.claude/skills/*/SKILL.md` |
-| 1+ user-built skill | 10 | Skill names not in: `onboard`, `audit`, `level-up`, `skill-creator`, `skill-builder`, `agent-builder`, `routines-builder`, `agents-team-builder`, `decision`, `connect`, `connect-check`, `memory-prune`, `scaffold-skill`, `scaffold-agent`, `draft`, `standup` (canonical kit + Anthropic shipped skills) |
-| 1+ agent defined | 5 | Count `.claude/agents/*.md` ≥ 1 |
+| 1+ user-built skill | 10 | A skill in `.claude/skills/` **beyond the box-shipped set** (`agent-builder`, `agents-team-builder`, `audit`, `grill-me`, `hooks-builder`, `level-up`, `multi-brain`, `onboard`, `plugin-builder`, `routines-builder`, `session-handoff`, `skill-builder`, `workflow-builder`). A fresh clone scores **0** here — this point is for skills *you* add. (Update this set if the kit ships more.) |
+| 1+ user-built agent | 5 | An agent in `.claude/agents/*.md` **beyond the box-shipped `scribe` + `warden`**. A fresh clone scores **0**. |
 
 #### Cadence (25 pts)
 
@@ -114,7 +114,7 @@ For each criterion that lost points: leverage = (points lost) × (impact multipl
 - ≤2 tier-1 domains reachable: **3x** (Connections is the gateway to live data)
 - 0 skills: **2x** (no Capabilities = no AIOS)
 - No recurring trigger: **2x** (no Cadence = no autonomy)
-- All connections read-only: **2x** (viewer, not an OS)
+- No intentional write path where a cadence needs one: **2x** (viewer, not an OS)
 - 0 reference guides for connected tools: **1.5x** (every future skill re-researches the same APIs)
 - No decisions log: **1.5x**
 - All others: **1x**
@@ -124,7 +124,7 @@ Sort gaps by leverage descending. Take top 3. For each, write a one-line concret
 - **Need to log a decision?** "Append to `decisions/log.md`."
 - **Need to reach a tier-1 domain?** Prefer API+script (write `scripts/{tool}_api.py` + save `references/{tool}-api.md`). Recommend `claude mcp add` only if no API path exists.
 - **Connected tool missing a reference guide?** "Research the API once, save endpoints + auth + common queries to `references/{tool}-api.md`."
-- **Need a recurring trigger?** "Add a hook to `.claude/settings.json`, or write a skill named `daily-*` you run each morning."
+- **Need a recurring trigger?** "Add a hook to `.claude/settings.json`, or write a skill named `daily-*` you run each morning." For how to engineer a durable cadence/loop (triggers, brakes, verification), see `references/agent-loops.md`.
 
 ### Step 4: Output the report
 
@@ -147,7 +147,7 @@ Connections    {bar}  {n}/25  {label}
 Capabilities   {bar}  {n}/25  {label}
 Cadence        {bar}  {n}/25  {label}
 
-(bar = ## per 5pts; label = "Strong" ≥20, "Solid" 15-19, "Thin" 8-14, "Missing" <8)
+(bar = ## per 5pts, rounding each C score to the nearest whole point before rendering; label = "Strong" ≥20, "Solid" 15-19.99, "Thin" 8-14.99, "Missing" <8 — bands are continuous, so fractional Connections scores always land in exactly one band)
 
 ## Strengths
 - {1-3 short bullets from highest-scoring criteria}

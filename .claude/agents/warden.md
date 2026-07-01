@@ -34,4 +34,3 @@ Return a markdown report grouped by issue type, in this order: Contradictions, S
 - Scope is the `references/` tree only. Do not wander into `knowledge/`, source code, or `.claude/`.
 - Be precise about staleness: flag it as "possibly stale — verify" rather than asserting a fact is wrong unless a page directly contradicts another.
 - You cannot spawn subagents. Do all the reading yourself and return one report.
-</output>

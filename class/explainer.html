@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What is an AIOS? — AI Operating Systems, explained</title>
+<title>What Is an Agentic OS? — and How to Build Your Own</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
     --teal:#0e9488; --teal-deep:#0b6e66; --amber:#e8930c; --amber-soft:#fbe6c4;
     --violet:#6d5ce0; --rose:#e0556d;
     --shadow:0 1px 2px rgba(22,24,43,.04),0 8px 30px rgba(22,24,43,.07);
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -103,7 +104,7 @@
     margin-top:22px;font-size:16px;
   }
   .try code{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:6px;
-    font-family:'Space Grotesk',monospace;color:#ffd79b}
+    font-family:var(--mono);color:#ffd79b}
   .try .label{font-family:'Space Grotesk',sans-serif;font-weight:600;color:#7fe0d4;
     text-transform:uppercase;letter-spacing:.1em;font-size:11px;display:block;margin-bottom:6px}
   /* steps */
@@ -118,8 +119,8 @@
   table{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
   th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{font-family:'Space Grotesk',sans-serif;color:var(--ink);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
-  td code{font-family:'Space Grotesk',monospace;background:#f2eee5;padding:2px 7px;border-radius:5px;font-size:13px;color:var(--teal-deep)}
-  .cmd{font-family:'Space Grotesk',monospace;color:var(--violet);font-weight:600}
+  td code{font-family:var(--mono);background:#f2eee5;padding:2px 7px;border-radius:5px;font-size:13px;color:var(--teal-deep)}
+  .cmd{font-family:var(--mono);color:var(--violet);font-weight:600}
   footer{padding:48px 0 70px;text-align:center;color:var(--muted);font-size:14px}
   footer a{color:var(--teal-deep);text-decoration:none}
   .credit{font-size:13px;color:var(--muted);margin-top:30px}
@@ -136,14 +137,14 @@
 <!-- HERO -->
 <header class="hero">
   <div class="wrap">
-    <span class="badge">🧠 <span class="lang-en">A class on AI Operating Systems</span><span class="lang-es">Una clase sobre Sistemas Operativos de IA</span></span>
+    <span class="badge">🧠 <span class="lang-en">A class on the Agentic OS</span><span class="lang-es">Una clase sobre el Agentic OS</span></span>
     <div class="lang-en">
       <h1>Your AI shouldn't<br>forget you every morning.</h1>
-      <p class="lead">This is a class about <strong>AIOS</strong> — an <span class="accent">AI Operating System</span>. A way to turn a chatbot that forgets everything into a partner that knows who you are, remembers what it learns, and grows new skills over time.</p>
+      <p class="lead">This is a class about building your own <strong>Agentic OS</strong> — an <span class="accent">AI Operating System (AIOS)</span> you own. A way to turn a chatbot that forgets everything into a partner that knows who you are, remembers what it learns, and grows new skills over time.</p>
     </div>
     <div class="lang-es">
       <h1>Tu IA no debería<br>olvidarte cada mañana.</h1>
-      <p class="lead">Esta es una clase sobre <strong>AIOS</strong> — un <span class="accent">Sistema Operativo de IA</span>. Una forma de convertir un chatbot que olvida todo en un compañero que sabe quién eres, recuerda lo que aprende, y desarrolla nuevas habilidades con el tiempo.</p>
+      <p class="lead">Esta es una clase sobre construir tu propio <strong>Agentic OS</strong> — un <span class="accent">Sistema Operativo de IA (AIOS)</span> que es tuyo. Una forma de convertir un chatbot que olvida todo en un compañero que sabe quién eres, recuerda lo que aprende, y desarrolla nuevas habilidades con el tiempo.</p>
     </div>
     <div class="hero-art">
       <img class="illus" src="images/hero-aios.png" alt="A person at a desk with a friendly AI companion made of organized knowledge cards, linked to skill panels">
@@ -291,7 +292,7 @@
       </div>
       <div class="card">
         <h3><span class="ic" style="background:#fbe0e6">🌱</span> <span class="lang-en">4. Cadence — <em>it runs unasked</em></span><span class="lang-es">4. Cadencia — <em>corre sin pedirlo</em></span></h3>
-        <p style="font-size:15px"><span class="lang-en"><strong>A — outward:</strong> daily 7am, research → write in your voice → email it. <strong>B — inward:</strong> weekly, run <code class="cmd">/audit</code> on itself and file its own top-3 fixes. One does work <em>for</em> you (leverage); one does work <em>on the system</em> (compounding). Always test with a supervised run before you arm it.</span><span class="lang-es"><strong>A — hacia afuera:</strong> diario 7am, investiga → escribe en tu voz → lo manda por correo. <strong>B — hacia adentro:</strong> semanal, corre <code class="cmd">/audit</code> sobre sí mismo y registra sus propios 3 arreglos. Una hace trabajo <em>para</em> ti (apalancamiento); la otra trabaja <em>sobre el sistema</em> (acumulación). Siempre pruébala con una corrida supervisada antes de armarla.</span></p>
+        <p style="font-size:15px"><span class="lang-en"><strong>A — outward:</strong> daily 7am, research → write in your voice → email it. <strong>B — inward:</strong> weekly, run <code class="cmd">/audit</code> on itself and file its own top-3 fixes. One does work <em>for</em> you (leverage); one does work <em>on the system</em> (compounding). Always test with a supervised run before you arm it. <a href="../references/agent-loops.md" style="color:var(--teal-deep);text-decoration:none;font-weight:600;white-space:nowrap">Loop doctrine →</a></span><span class="lang-es"><strong>A — hacia afuera:</strong> diario 7am, investiga → escribe en tu voz → lo manda por correo. <strong>B — hacia adentro:</strong> semanal, corre <code class="cmd">/audit</code> sobre sí mismo y registra sus propios 3 arreglos. Una hace trabajo <em>para</em> ti (apalancamiento); la otra trabaja <em>sobre el sistema</em> (acumulación). Siempre pruébala con una corrida supervisada antes de armarla. <a href="../references/agent-loops.md" style="color:var(--teal-deep);text-decoration:none;font-weight:600;white-space:nowrap">Doctrina de loops →</a></span></p>
       </div>
     </div>
     <p style="margin-top:22px;text-align:center;color:var(--muted)"><span class="lang-en">No Cadence without Capabilities. No Capabilities without Connections. No Connections without Context. <strong>Build bottom-up.</strong></span><span class="lang-es">No hay Cadencia sin Capacidades. No hay Capacidades sin Conexiones. No hay Conexiones sin Contexto. <strong>Construye de abajo hacia arriba.</strong></span></p>
@@ -307,7 +308,7 @@
     <div class="lang-es"><h2>Qué hay dentro de la carpeta.</h2>
       <p>Cada AIOS son solo carpetas organizadas y archivos markdown. Nada mágico — ese es el punto. Puedes leerlo todo.</p></div>
 
-    <div class="card" style="margin-top:20px;font-family:'Space Grotesk',monospace;font-size:14px;line-height:2;background:#fffdfa">
+    <div class="card" style="margin-top:20px;font-family:var(--mono);font-size:14px;line-height:2;background:#fffdfa">
       <div><span style="color:var(--violet)">my-aios/</span></div>
       <div><span style="color:var(--teal-deep)">├── CLAUDE.md</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">the operating system: who your AI is + how it works</span><span class="lang-es">el sistema operativo: quién es tu IA + cómo trabaja</span></span></div>
       <div><span style="color:var(--teal-deep)">├── aios-intake.md</span> &nbsp;<span style="color:var(--muted)">← <span class="lang-en">the 7-question onboarding form</span><span class="lang-es">el formulario de bienvenida de 7 preguntas</span></span></div>
@@ -366,7 +367,7 @@
       <text x="708" y="160" text-anchor="middle" font-family="Space Grotesk" font-size="11" fill="#b9a98a">rules that keep it clean</text>
     </svg>
 
-    <img class="illus" src="images/wiki-tree.png" alt="A tree growing from a few index cards at its base into a rich connected canopy of knowledge">
+    <img class="illus" src="images/wiki-tree.png" width="1672" height="941" loading="lazy" decoding="async" alt="A tree growing from a few index cards at its base into a rich connected canopy of knowledge">
     <p class="illus-cap"><span class="lang-en">A few notes today become a connected canopy of knowledge over time.</span><span class="lang-es">Unas cuantas notas de hoy se vuelven una copa de conocimiento conectado con el tiempo.</span></p>
 
     <div class="grid three" style="margin-top:24px">
@@ -386,7 +387,7 @@
     <div class="lang-es"><h2>¿Skill, Agente o Rutina?</h2>
       <p>Tres formas en que tu AIOS hace el trabajo. La primera pregunta cuando quieras automatizar algo: <strong>¿cuál de las tres es esta?</strong></p></div>
 
-    <img class="illus" src="images/skill-agent-routine.png" alt="Three friendly helper robots: one with a checklist and wrench (skill), one with headphones working alone in a bubble (agent), one with a clock and calendar (routine)">
+    <img class="illus" src="images/skill-agent-routine.png" width="1672" height="941" loading="lazy" decoding="async" alt="Three friendly helper robots: one with a checklist and wrench (skill), one with headphones working alone in a bubble (agent), one with a clock and calendar (routine)">
 
     <table style="margin-top:18px">
       <tr><th></th><th><span class="lang-en">Who starts it</span><span class="lang-es">Quién lo inicia</span></th><th><span class="lang-en">Where it runs</span><span class="lang-es">Dónde corre</span></th><th><span class="lang-en">Reach for it when…</span><span class="lang-es">Úsalo cuando…</span></th></tr>
@@ -446,9 +447,9 @@
     <div class="lang-en"><h2>Stand up your own in 4 steps.</h2></div>
     <div class="lang-es"><h2>Levanta el tuyo en 4 pasos.</h2></div>
     <div class="steps" style="margin-top:18px">
-      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Clone the kit.</span><span class="lang-es">Clona el kit.</span></strong> <span style="color:var(--muted)"><code style="font-family:'Space Grotesk',monospace">git clone …/aios-starter-kit my-aios</code></span></div></div>
-      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Open Claude Code</span><span class="lang-es">Abre Claude Code</span></strong> <span style="color:var(--muted)"><span class="lang-en">in the folder — type <code style="font-family:'Space Grotesk',monospace">claude</code>.</span><span class="lang-es">en la carpeta — escribe <code style="font-family:'Space Grotesk',monospace">claude</code>.</span></span></div></div>
-      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Run</span><span class="lang-es">Corre</span> <span class="cmd">/onboard</span>.</strong> <span style="color:var(--muted)"><span class="lang-en">Answer ~7 questions.</span><span class="lang-es">Responde ~7 preguntas.</span></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Clone the kit.</span><span class="lang-es">Clona el kit.</span></strong> <span style="color:var(--muted)"><code style="font-family:var(--mono)">git clone https://github.com/GerardoRdz96/aios-starter-kit.git my-aios</code></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Open Claude Code</span><span class="lang-es">Abre Claude Code</span></strong> <span style="color:var(--muted)"><span class="lang-en">in the folder — type <code style="font-family:var(--mono)">claude</code>.</span><span class="lang-es">en la carpeta — escribe <code style="font-family:var(--mono)">claude</code>.</span></span></div></div>
+      <div class="step"><div class="n"></div><div><strong><span class="lang-en">Run</span><span class="lang-es">Corre</span> <span class="cmd">/onboard</span>.</strong> <span style="color:var(--muted)"><span class="lang-en">Answer ~7 questions — and meet <strong>Sage</strong>, your AIOS's default name (rename it here).</span><span class="lang-es">Responde ~7 preguntas — y conoce a <strong>Sage</strong>, el nombre por defecto de tu AIOS (cámbialo aquí).</span></span></div></div>
       <div class="step"><div class="n"></div><div><strong><span class="lang-en">Ask it something.</span><span class="lang-es">Pregúntale algo.</span></strong> <span style="color:var(--muted)"><span class="lang-en">"What should I focus on this week?" — and watch it answer as <em>your</em> AIOS.</span><span class="lang-es">"¿En qué me enfoco esta semana?" — y mira cómo responde como <em>tu</em> AIOS.</span></span></div></div>
     </div>
     <div class="try">
@@ -477,7 +478,14 @@
     document.documentElement.lang = l;
     document.getElementById('btn-en').classList.toggle('active', l==='en');
     document.getElementById('btn-es').classList.toggle('active', l==='es');
+    try{ localStorage.setItem('aios-lang', l); }catch(e){}
   }
+  // restore the saved language on load (progress and language both persist)
+  (function(){
+    var saved;
+    try{ saved = localStorage.getItem('aios-lang'); }catch(e){}
+    if(saved==='es' || saved==='en') setLang(saved);
+  })();
 </script>
 </body>
 </html>

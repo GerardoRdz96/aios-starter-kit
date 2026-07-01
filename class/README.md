@@ -1,6 +1,6 @@
 # class/ — Teaching materials
 
-Everything you need to teach a class on AI Operating Systems, built around this kit. All
+Everything you need to teach **What Is an Agentic OS — and How to Build Your Own**, built around this kit. All
 bilingual (English / Español — toggle top-right in the HTML files).
 
 | File | Audience | What it is |

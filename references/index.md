@@ -17,8 +17,10 @@ This is a **starter kit**. The few pages below ship with the template. You and y
 
 - [The Three Ms of AI](3ms-framework.md) — Mindset / Method / Machine. How to think about, decide on, and build automations. Drives `/level-up`. *Source: Nate Herk.*
 - [The Four Cs of an AIOS](four-cs-framework.md) — Context / Connections / Capabilities / Cadence. How to architect and run an AI operating system; what `/audit` scores against. Includes the two-layer split (second brain vs AIOS), CLAUDE.md-as-router, the tier-1 connections heuristic, and keys-not-prompts. Companion to the 3Ms. *Source: Nate Herk.*
+- [Agent Loops](agent-loops.md) — loop engineering, the doctrine behind **Cadence**: trigger · action · stop + verification, the **two-brakes rule** (an objective done-check AND a numeric hard cap — *you* supply the brake), the four verification types (cheapest that fits), the three loop shapes (start solo), when *not* to loop, and which mechanism to pick. Read before building anything autonomous. *Source: Nate Herk · Anthropic.*
 - [Power Skills](power-skills.md) — the Claude Code skill stack and the plan → execute → review build doctrine: Superpowers, GSD, route-by-risk, `/review`, Frontend Design, the self-verify 70%→92% rule, the graphify companion CLI (any repo → knowledge graph), install commands.
-- [Autonomous-Entity Charter](autonomous-entity-charter.md) — the governance layer for an AIOS that builds itself: five faculties, risk-tiered creation matrix (P/S/X — "the AI builds, the human arms"), measurement harness with graduation/regression rules, five hard HITL gates, provenance records (`provenance/`). Adopt before granting autonomy.
+- [Autonomous-Entity Charter](autonomous-entity-charter.md) — the governance layer for an AIOS that builds itself: five faculties, risk-tiered creation matrix (P/S/X — "the AI builds, the human arms"), measurement harness with graduation/regression rules, five hard HITL gates, provenance records. Adopt before granting autonomy.
+  - Provenance sub-registry: [provenance/](provenance/README.md) — append-only governance records (one per autonomy decision/security event). They live in their own folder and are catalogued there, not page-by-page here.
 
 ## Concepts
 

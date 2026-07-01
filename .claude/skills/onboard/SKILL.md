@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: Use on Day 1 of an AIOS install, when someone says "set me up", "onboard me", "let's get started", "fill in my AIOS", or has just cloned the kit. Combined wizard — runs the 7-question intake AND scaffolds the Day-1 file set at the end. Idempotent — re-run any time after editing aios-intake.md.
+description: Use on Day 1 of an AIOS install, when someone says "set me up", "onboard me", "let's get started", "fill in my AIOS", or has just cloned the kit. Combined wizard — runs the 7-question intake AND scaffolds the Day-1 file set at the end. Idempotent — re-run any time; the working aios-intake.md resets to placeholders after each run (your durable answers live in context/).
 ---
 
 ## What this skill does
@@ -11,18 +11,20 @@ Single combined wizard. Reads or writes `aios-intake.md` (the canonical intake),
 
 ## When NOT to run this
 
-- If the user has already onboarded and wants to refresh: still run, but skip questions already answered (idempotent).
+- If the user has already onboarded and wants to refresh: still run; it re-interviews and re-scaffolds, backing up the current `context/` files first (the working intake resets to placeholders after each run, so there are no old answers to skip).
 - If the user wants to add a new connection: that's not onboarding — point them at `connections.md` to edit directly, or schedule a `/level-up` Phase 2 walk.
 
 ## Execution
 
 ### Step 1: Read the intake
 
+If `aios-intake.md` doesn't exist yet (fresh clone), copy it from `aios-intake.md.template` first — the template is the canonical pristine intake that ships with the kit; `aios-intake.md` is the working copy the user fills in.
+
 Read `aios-intake.md`. Check which Q1-Q7 sections have content vs. `[Your answer here]` placeholders.
 
 - **All filled** → skip Step 2, jump to Step 3 (scaffold).
 - **Some filled** → ask the user: "I see Q1, Q3, Q4 are answered. Want to fill the rest now, or scaffold from what's there?" Their call.
-- **None filled (fresh clone)** → run Step 2 conversationally.
+- **None filled (fresh clone, or reset after a previous run)** → run Step 2 conversationally.
 
 ### Step 2: The interview (7 questions, hard cap)
 
@@ -62,19 +64,21 @@ Once the intake is complete, generate these files (or update if re-running). Bac
 1. **`context/about-me.md`** — from Q1 (identity, role) + Q7 (top_pain). One short paragraph each.
 2. **`context/about-work.md`** — from Q1 (what you do) + Q4 (how value lands). One paragraph.
 3. **`context/priorities.md`** — from Q3. Numbered list, one line per priority.
-4. **`references/voice.md`** — from Q2. Paste samples verbatim with a short header explaining their use ("Match this register when drafting; don't fake voice on external content without showing me first").
+4. **`references/voice.md`** — from Q2. **Fill the existing template, don't regenerate it.** Paste the samples verbatim into its **Samples** section, and fill the **Your register** fields (tone, sentence style, punctuation quirks, etc.) if Q2 reveals them. Keep the register fields, the Dos/Don'ts, and the `Sources:` / `Related:` provenance footer intact.
 5. **`connections.md`** — populate the 7-row table from Q4-Q7 answers. Each row gets `mechanism: not yet connected`, `auth: —`, `last checked: —`. The user wires connections on Day 2.
-6. **`CLAUDE.md`** — fill all `{{...}}` placeholders. Substitute the user's name, the AIOS name from Q1, the stated priority, voice register summary, and a brief connections summary.
+6. **`CLAUDE.md`** — fill the two real placeholders only: `{{ABOUT_ME}}` (name + role, from Q1) and `{{VOICE_REGISTER}}` (a one-line voice summary, from Q2). Then **rename the AIOS:** replace every occurrence of the default name `Sage` with the name chosen in Q1, across `CLAUDE.md` and the rest of the kit. Don't invent a priorities or connections placeholder — priorities live in `context/priorities.md` and connections in `connections.md`.
+
+**After scaffolding, reset the staging file:** copy `aios-intake.md.template` back over `aios-intake.md`, returning it to placeholders. The user's answers now live in `context/`; this keeps personal data — especially the pasted voice samples — out of the working intake. (Why a clean staging→durable handoff matters in a re-runnable loop: `references/agent-loops.md`.)
 
 ### Step 4: The closing screen
 
-Print one screen. Three lines max:
+Print one screen — a header line plus three horizon lines (Today / Tomorrow / Day 7):
 
 ```
 ✓ Day 1 done. Your AIOS knows who you are, what you do, what matters this quarter, and how you sound.
 
 Today: ask me — "what should I focus on this week?"
-Tomorrow: pick one tool from connections.md and wire it up (install an MCP, or write a small API script + save references/{tool}-api.md).
+Tomorrow: pick one tool from connections.md and wire it up (check for a CLI first; if none, write a small API script + save references/{tool}-api.md; MCP last).
 Day 7: run /audit to see your score.
 ```
 
@@ -89,9 +93,9 @@ The Default Shift question seeds the Mindset framework before `/level-up` formal
 
 1. **The 7-question cap is non-negotiable.** Don't add Q8 in conversation. The AIOS name folds into Q1.
 2. **Voice paste cannot be skipped.** If the user types samples mid-chat, refuse and tell them to paste from real writing.
-3. **One-shot scaffold.** After Step 2 ends, write Step 3 files in a single batch. No multi-turn confirmation. The user iterates by editing `aios-intake.md` and re-running.
-4. **Idempotent.** Re-running with an edited intake refreshes context files; backs up originals to `archives/intake-{ts}/`. Skips questions already answered unless the user wants to revise.
-5. **Closing screen is three lines.** Not a menu.
+3. **One-shot scaffold.** After Step 2 ends, write Step 3 files in a single batch. No multi-turn confirmation. The user iterates by re-running `/onboard` (it re-interviews) or by editing the `context/` files directly — the working `aios-intake.md` resets to placeholders after each run.
+4. **Idempotent.** Re-running re-scaffolds the context files and backs up originals to `archives/intake-{ts}/`. Skips questions already answered within the current run unless the user wants to revise. The durable record is `context/`, not the intake (which is reset).
+5. **Closing screen is a header line + three horizon lines.** Not a menu.
 6. **No extra skills generated.** Don't scaffold `/today`, `/draft`, `/connect`, etc. The kit ships its starter skills; the user authors more via `/level-up`.
 7. **Read-only on `references/3ms-framework.md`.** It already ships in the kit. Don't overwrite.
 8. **No `.env` writes.** Don't ask for API keys on Day 1. Connections come Day 2.
@@ -99,7 +103,7 @@ The Default Shift question seeds the Mindset framework before `/level-up` formal
 ## Verification (for the implementer)
 
 - Cold-test: clone a fresh kit, run `/onboard`, fill 7 answers, scaffold runs, ask the wow prompt, response cites Q1 + Q3 + Q7 specifically. Generic = fail.
-- Idempotency: re-run `/onboard` with one Q3 priority changed. Expected: only `context/priorities.md` and `CLAUDE.md`'s priority section update; backup created in `archives/intake-{ts}/`.
+- Idempotency: re-run `/onboard` and give a changed Q3 answer. Expected: `context/priorities.md` re-scaffolds; originals backed up to `archives/intake-{ts}/`; the working `aios-intake.md` ends back at placeholders (matching `aios-intake.md.template`). Note `CLAUDE.md` has no priority placeholder — priorities live only in `context/priorities.md`.
 - Voice rejection: type a sample mid-chat. Expected: skill refuses, asks for paste.
 
 > *The Three Ms of AI is a framework by Nate Herk. The Mindset language used in the closing screen comes from `references/3ms-framework.md`.*

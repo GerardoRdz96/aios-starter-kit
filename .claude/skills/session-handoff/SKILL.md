@@ -41,7 +41,7 @@ Produce this, filled in from the actual session — concrete file paths, not vag
 ## Where it goes
 
 1. **Print it in chat** (always — the user may just copy it).
-2. **Save it** to `knowledge/handoffs/{YYYY-MM-DD}-{slug}.md` (create the folder if needed).
+2. **Save it** to `knowledge/handoffs/{YYYY-MM-DD}-{slug}.md` (create the folder if needed). This is a deliberate exception to the "`knowledge/` is immutable raw source" rule: a handoff is a local, gitignored operational record of *this* session, not a fact that graduates into `references/`. Keep `handoffs/` out of version control so private session notes never get committed.
 3. If any item belongs in `pending.md` (a follow-up that would otherwise be lost), append it there too and say so.
 
 ## Guardrails

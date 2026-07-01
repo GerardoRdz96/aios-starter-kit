@@ -25,7 +25,8 @@ by Nate Herk.*
 ## Your skills
 
 Skills are interactive workflows I start by typing `/<name>`. They live in
-`.claude/skills/`. The kit ships thirteen; build your own with the builders below.
+`.claude/skills/`. The kit ships twelve interactive skills plus the auto-firing `multi-brain`
+(13 total); build your own with the builders below.
 
 **Rituals**
 - `/onboard` — Day-1 wizard. ~7-question intake, then scaffolds your `context/` files. Idempotent — re-run after editing `aios-intake.md`.
@@ -43,12 +44,12 @@ Skills are interactive workflows I start by typing `/<name>`. They live in
 - `/hooks-builder` — Build an event-driven hook ("always when <event>, do X") in settings.json: decision gate + mandatory supervised first-fire test.
 - `/plugin-builder` — Package skills/agents into a shippable Claude Code plugin + marketplace: decision gate first (most things shouldn't be plugins).
 
-## Power skills (installed user-wide — lean on these by default)
+## Power skills (NOT bundled — install once via `references/power-skills.md`, then lean on them)
 
 These are real public Claude Code skills you install once and get in every project. Reach
 for them without being asked. Full digest + install pointers: `references/power-skills.md`.
 
-- **Superpowers** — default workflow for non-trivial work: plan first, isolated env, tests before code, self-review twice. Best when bug-cost dominates.
+- **Superpowers** — default workflow for non-trivial work: plan first, isolated env, tests before code, self-review twice (route the judgment call to a *different lineage* — No-Self-Review). Best when bug-cost dominates.
 - **GSD (Get Shit Done)** — larger multi-step builds: fresh sub-agent per task, autonomous spec-to-done. Best when context-rot dominates.
 - **Frontend Design** — for any UI / slide / design artifact.
 - **Build doctrine — route by risk.** Plan → execute by dominant risk → close with an independent review. The `/build`-style flow.
@@ -59,7 +60,7 @@ for them without being asked. Full digest + install pointers: `references/power-
 Subagents are specialized Claudes I delegate to for a clean context window. They live in
 `.claude/agents/*.md`. Build more with `/agent-builder`. Ships with:
 
-- **`warden`** — read-only audit of the `references/` wiki (broken `[[links]]`, orphans, stale claims, index drift). Fires during `/audit`.
+- **`warden`** — read-only audit of the `references/` wiki (broken `[[links]]`, orphans, stale claims, index drift). Fires when you ask to lint the wiki, or proactively after editing `references/` pages.
 - **`scribe`** — read-only. Turns a meeting/call transcript dropped in `knowledge/` into a structured digest (decisions + action items).
 
 ## Your teams
@@ -89,7 +90,8 @@ a **second model**.
 | **Routine** | Itself (schedule/event) | Unattended |
 
 Trap: "I keep doing X by hand" is usually a **skill** (an SOP), not an agent. Reach for an
-agent only when isolation or restricted tools genuinely help.
+agent only when isolation or restricted tools genuinely help. Start solo — reach up the builder
+ladder only when a simpler script or skill genuinely can't keep up.
 
 ## Autonomy governance — the charter
 
@@ -97,7 +99,9 @@ Every capability type now has a builder, so this AIOS can grow itself. The rules
 live in `references/autonomous-entity-charter.md`: risk tiers (P/S/X — **the AI builds, the
 human arms**), the measurement harness (`scripts/entity-scoreboard.py`, weekly), five hard
 human-in-the-loop gates, and a provenance record per creation/import
-(`references/provenance/`). Community imports get a validation scan BEFORE install.
+(`references/provenance/`). Community imports get a validation scan BEFORE install. Every loop
+needs BOTH an objective done-check (a test/metric/boolean, never until-satisfied) AND a numeric
+hard cap (max tries/budget/time) — you supply the brake. See `references/agent-loops.md`.
 
 ## Multi-brain — many models, one driver (don't self-review)
 
@@ -130,7 +134,7 @@ installed? I re-derive the check from scratch rather than rubber-stamp.
 
 The loop: **Ingest** a source → read, discuss, write/update the wiki page, update the index,
 log it. **Query** — read the index, drill in, answer with citations, and file good answers
-back as new pages. **Lint** — during `/audit`, check for contradictions, stale claims,
+back as new pages. **Lint** — ask `warden` to check for contradictions, stale claims,
 orphans, index drift. Full conventions: `references/wiki-protocol.md`.
 
 ## Voice

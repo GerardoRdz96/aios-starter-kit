@@ -2,7 +2,9 @@
 
 # 🧠 AIOS Starter Kit
 
-**Build your own personal AI Operating System.**
+<img src="class/images/hero-aios.png" alt="AIOS Starter Kit — turn Claude Code into a thought partner that remembers" width="640">
+
+**Build your own personal Agentic OS.**
 
 A clonable template that turns Claude Code into a thought partner that *remembers* — it
 knows who you are, compounds knowledge across sessions, and grows new skills over time.
@@ -10,15 +12,15 @@ knows who you are, compounds knowledge across sessions, and grows new skills ove
 *Un sistema operativo de IA personal. Una plantilla para clonar que convierte a Claude Code
 en un compañero de trabajo que **recuerda**.*
 
-**Kit v2.1** — June 2026
+**Kit v2.2** — June 2026
 
 </div>
 
 ---
 
-## What is an AIOS? / ¿Qué es un AIOS?
+## What is an Agentic OS? / ¿Qué es un Agentic OS?
 
-A normal AI chat forgets everything when you close it. An **AI Operating System** doesn't.
+A normal AI chat forgets everything when you close it. An **AI Operating System (AIOS)** — your personal **Agentic OS** — doesn't.
 
 It's a folder — version-controlled, owned by you — that gives your AI assistant four things
 a blank chat never has:
@@ -32,7 +34,7 @@ You don't program it. You *talk* to it, and it writes itself into a system that 
 useful every week.
 
 > **Español:** Un chat normal de IA olvida todo cuando lo cierras. Un **Sistema Operativo de
-> IA (AIOS)** no. Es una carpeta — con control de versiones, tuya — que le da a tu asistente
+> IA (AIOS)** — tu **Agentic OS** personal — no. Es una carpeta — con control de versiones, tuya — que le da a tu asistente
 > cuatro cosas que un chat en blanco nunca tiene: **contexto** (sabe quién eres),
 > una **wiki de conocimiento** (lo que ha aprendido, escrito y reutilizable), **skills**
 > (flujos de trabajo que activas con `/comandos`), y una **forma de crecer** (constructores
@@ -120,6 +122,8 @@ matters. Before you let any of it run unattended, read
 [`references/autonomous-entity-charter.md`](references/autonomous-entity-charter.md) —
 the governance layer: **the AI builds, you arm.**
 
+![Skill vs Agent vs Routine — the three capability types your AIOS can build, each with its own builder](class/images/skill-agent-routine.png)
+
 ### Power skills (install once, user-global)
 
 The kit assumes a small stack of public power skills that work in every project once
@@ -143,6 +147,8 @@ knowledge/      →   references/        →   CLAUDE.md + wiki-protocol.md
 (raw sources)       (the wiki the           (the rules that keep
  you drop in)        AI writes & owns)        the wiki disciplined)
 ```
+
+![The knowledge wiki in three layers: raw sources in knowledge/ become interpreted pages in references/, kept disciplined by CLAUDE.md + wiki-protocol.md](class/images/wiki-tree.png)
 
 You drop a source in `knowledge/`. Your AI reads it, discusses it with you, and writes an
 *interpreted* page into `references/`. Next session, it reads that page instead of starting
@@ -168,7 +174,9 @@ Once you're onboarded, the loop is simple:
 - **Build** with the seven builder skills whenever you hit a repeating need.
 - **Govern** the growth: the [autonomous-entity charter](references/autonomous-entity-charter.md)
   sets the risk tiers, the measurement scoreboard (`scripts/entity-scoreboard.py`), and the five
-  human-in-the-loop gates that keep a self-building AIOS honest.
+  human-in-the-loop gates that keep a self-building AIOS honest. Building a loop that runs on a
+  cadence? The [loop-engineering doctrine](references/agent-loops.md) covers how to design one
+  with safe stop conditions and iteration caps.
 
 **Bonus move for code repos:** install [graphify](https://github.com/safishamsi/graphify)
 and your AI can map any codebase as a knowledge graph *before* working on it:
@@ -209,10 +217,27 @@ And with the `multi-brain` skill, your models stop being either/or: one assistan
 
 ## A note on privacy / Una nota sobre privacidad
 
-This kit ships empty of personal data. Once `/onboard` fills your `context/` files, that
-folder is about *you*. If you make your copy public, check `.gitignore` — there are
-commented lines to keep `context/`, `knowledge/`, and `decisions/` private. **Never commit
-secrets** (`.env` files are already ignored).
+This kit ships with placeholder templates, not personal data — `/onboard` fills them with
+facts about *you*. **Privacy defaults are ON, two ways.** (1) Any *new* file you add under
+`context/`, `knowledge/`, `decisions/`, or `artifacts/` is gitignored, so it never enters
+git. (2) A few starter files ship **tracked** so the template works on day one — your
+`context/` profile, `decisions/log.md`, and `aios-intake.md` — and a filled-in version of
+those *would* commit; the **step-3 pre-push guard** (`scripts/rails-guard.sh install`) is
+what protects them, blocking any push that would leak personal content. So: install the
+guard, and your data can't reach a public remote by accident. Keeping a **private** fork and
+want your context version-controlled? Comment those `.gitignore` lines out. **Never commit
+secrets** — `.env` files are already ignored.
+
+> **Español:** Este kit se entrega con plantillas de ejemplo, no con datos personales —
+> `/onboard` las llena con información sobre *ti*. **La privacidad viene activada por defecto,
+> de dos formas.** (1) Cualquier archivo *nuevo* que agregues en `context/`, `knowledge/`,
+> `decisions/` o `artifacts/` está en `.gitignore`, así que nunca entra a git. (2) Algunos
+> archivos de inicio se entregan **versionados** para que la plantilla funcione desde el día
+> uno — tu perfil en `context/`, `decisions/log.md` y `aios-intake.md` — y una versión llena
+> de esos *sí* se subiría; el **guardia de pre-push del paso 3** (`scripts/rails-guard.sh
+> install`) es lo que los protege, bloqueando cualquier push que filtraría contenido personal.
+> Instálalo y tus datos no llegan a un remoto público por accidente. ¿Un fork **privado**?
+> Descomenta esas líneas de `.gitignore`. **Nunca subas secretos** — los `.env` ya se ignoran.
 
 ---
 

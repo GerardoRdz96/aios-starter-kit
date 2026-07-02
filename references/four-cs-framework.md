@@ -1,6 +1,6 @@
 # The Four Cs of an AIOS — Context, Connections, Capabilities, Cadence
 
-The architecture for building an AI operating system: four layers, each depending on the one before — Context → Connections → Capabilities → Cadence. This is the framework `/audit` scores against, and the companion to the [Three Ms](3ms-framework.md). The 3Ms is *how to think about and build automations* (platform-agnostic); the Four Cs is *how to architect and run an AIOS*.
+The architecture for building an AI operating system: four layers, each depending on the one before — Context → Connections → Capabilities → Cadence. This is the framework `/aios-audit` scores against, and the companion to the [Three Ms](3ms-framework.md). The 3Ms is *how to think about and build automations* (platform-agnostic); the Four Cs is *how to architect and run an AIOS*.
 
 > **The Four Cs is a framework by Nate Herk.** This page is a concise, interpreted digest for use inside the AIOS. For the full version, see Nate Herk's own content.
 >
@@ -55,16 +55,16 @@ The top layer: turning Context + Connections + Capabilities into things that hap
 **Cadence is earned, and it's never free:** as autonomy goes up, cost, risk, *and maintenance* go up together. Deployed ≠ done — every automation still needs an owner, visibility, and a does-it-move-the-needle check.
 *Where it lives:* cloud routines (the only kind that truly run *while your laptop is closed*), plus local hooks, `/loop`, and ritual skills — these last are session/local-bound, so they only fire while the session or machine is up, not while it's asleep.
 
-## How `/audit` scores it
+## How `/aios-audit` scores it
 
-`/audit` scores **each C out of 25 points, for 100 total**, then returns a scoreboard plus the top-3 leverage fixes ranked by impact. Roughly:
+`/aios-audit` scores **each C out of 25 points, for 100 total**, then returns a scoreboard plus the top-3 leverage fixes ranked by impact. Roughly:
 
 - **Context (25):** depth and freshness of `context/`, the wiki, and `CLAUDE.md`. Can a fresh session answer "what does this business do and who works here?"
 - **Connections (25):** how many of your real week-to-week systems the AIOS can actually reach (vs. copy-paste), and whether keys are scoped safely.
 - **Capabilities (25):** how much of *your* work is encoded as skills/agents that produce your-style output, vs. generic prompting.
 - **Cadence (25):** how much runs on a schedule/event without you asking, and whether autonomy was phased up safely.
 
-Run `/audit` early (e.g. Day 7) and then weekly to watch each layer climb. The score isn't the point — the ranked fixes are.
+Run `/aios-audit` early (e.g. Day 7) and then weekly to watch each layer climb. The score isn't the point — the ranked fixes are.
 
 **Sources:** Framework by Nate Herk — see his public content for the full version. This page is an interpreted digest.
 **Related:** [[3ms-framework]], [[power-skills]], [[wiki-protocol]], [[agent-loops]] · builder skills for the Cadence layer: `/routines-builder`, `/hooks-builder`

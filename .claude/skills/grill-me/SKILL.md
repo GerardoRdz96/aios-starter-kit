@@ -1,6 +1,14 @@
 ---
 name: grill-me
-description: Use PROACTIVELY whenever the user is working something OUT OF THEIR HEAD rather than asking a quick question — mulling or scoping a plan/design/decision, describing a process or how they do something, floating a half-formed idea, or wanting to capture knowledge before building. Natural signals: "I've been thinking about…", "I have an idea for…", "I want to build/plan/figure out…", "I'm not sure how to approach…", "let me think this through", "help me scope this", "here's how I do X". Also the explicit "grill me", "interrogate me", "stress-test this", "/grill-me". The relentless one-question-at-a-time extraction engine that captures their thinking into a durable doc and graduates it into the wiki. SAFETY: unless they explicitly asked to be grilled, OFFER first ("want me to grill you on this and capture it?") and wait for yes — never silently launch a long interview on a quick question.
+description: >-
+  Use PROACTIVELY whenever the user is working something OUT OF THEIR HEAD rather than asking a
+  quick question — mulling or scoping a plan/design/decision, describing how they do something, or
+  floating a half-formed idea to capture. Natural signals: "I've been thinking about…", "I have an
+  idea for…", "I want to build/plan/figure out…", "let me think this through", "help me scope
+  this", "here's how I do X". Also the explicit "grill me", "interrogate me", "stress-test this",
+  "/grill-me". One-question-at-a-time extraction into a durable doc. SAFETY: unless they
+  explicitly asked to be grilled, OFFER first and wait for yes — never silently launch a long
+  interview on a quick question.
 argument-hint: [topic to grill on]
 ---
 

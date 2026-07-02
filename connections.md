@@ -1,7 +1,7 @@
 # Connections
 
 The registry of every system your AIOS can reach — or that you want it to reach later.
-`/onboard` populates this from your intake (Q4–Q7); `/audit` scores it as the **Connections**
+`/onboard` populates this from your intake (Q4–Q7); `/aios-audit` scores it as the **Connections**
 C; you keep it current as you wire things up.
 
 **Connecting principle: CLI > API > MCP.** Prefer a command-line tool the AI can drive

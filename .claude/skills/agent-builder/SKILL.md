@@ -139,7 +139,7 @@ Rules:
 ### Step 3 — Document & Register
 
 - Add a one-line entry to `CLAUDE.md` (under a "Your agents" area or alongside skills): agent name, what it does, when it fires, project vs user level. Good practice: update CLAUDE.md in the **same session** a capability is added.
-- If the agent is part of a recurring ritual, note it so `/audit` counts it toward Cadence.
+- If the agent is part of a recurring ritual, note it so `/aios-audit` counts it toward Cadence.
 
 ### Step 4 — Verify
 

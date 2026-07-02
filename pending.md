@@ -19,4 +19,4 @@ Things that would otherwise be lost between sessions. The AIOS appends here at t
 - [ ] *(empty)*
 
 ---
-*Convention: newest items at the top of each section, one line each, link to the canonical file for detail. Done items get checked, then swept to `archives/` during `/audit`.*
+*Convention: newest items at the top of each section, one line each, link to the canonical file for detail. Done items get checked, then swept to `archives/` during `/aios-audit`.*

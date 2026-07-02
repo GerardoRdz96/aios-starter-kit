@@ -119,13 +119,18 @@ Set these fields based on what you learned in discovery:
 - `argument-hint` -- Set if the skill accepts arguments. Shows in the `/` menu autocomplete.
 - `context: fork` + `agent` -- Set if the skill is self-contained and doesn't need conversation history.
 - `model` -- Set if a specific model capability is needed.
-- `allowed-tools` -- Set if the skill should have restricted tool access.
+- `allowed-tools` -- Pre-approves the listed tools to run without permission prompts while the skill is active. This is a GRANT, not a sandbox -- all other tools remain available under normal permissions.
+- `disallowed-tools` -- Set if the skill should actually remove tools while active. This is the real restriction mechanism; `allowed-tools` never takes anything away.
 
 Only set fields you actually need. Don't add frontmatter just because you can.
 
 For the full field reference and invocation control matrix, see [reference.md](reference.md).
 
-**Step 3: Write the skill content**
+**Step 3: Baseline without the skill (eval-first)**
+
+Before writing any content, run 2-3 representative tasks WITHOUT the skill and note where Claude falls short. Those observed failures are your eval scenarios -- write only the minimal instructions needed to fix them, not instructions for failures you never saw. Keep it lightweight: a few bullet notes are enough.
+
+**Step 4: Write the skill content**
 
 Structure task skills as:
 1. **Context** -- Files to read, APIs to call, reference material to load
@@ -139,18 +144,20 @@ Content rules:
 - Use `!`command`` for dynamic context injection (preprocessing).
 - Be specific about agent delegation -- include exact prompt text.
 - Specify all file paths (inputs, outputs, scripts, references).
+- Tell Claude to RUN bundled scripts, not READ them -- executing keeps the code out of context (only the output costs tokens), and tested code beats regenerated code.
+- For fragile, repeatable, or consistency-critical operations (validation, transforms, scaffolding), bundle a tested script and instruct Claude to run it instead of re-deriving the steps as prose.
 
-**Step 4: Add supporting files (if needed)**
+**Step 5: Add supporting files (if needed)**
 
 If your skill needs detailed reference docs, examples, or scripts, add them alongside SKILL.md in the same directory. Reference them from SKILL.md so Claude knows they exist. Supporting files are NOT loaded automatically -- they load only when Claude needs them. See [reference.md](reference.md) for the full pattern.
 
-**Step 5: Document in CLAUDE.md (one line, not four)**
+**Step 6: Document in CLAUDE.md (one line, not four)**
 
 Your project's `CLAUDE.md` is re-read every conversation, so its cost compounds -- keep its footprint tiny. The skill's `description` is *already* auto-loaded into context, so don't restate the trigger phrases or what it does here; that would duplicate what Claude already sees (and the Quality Audit flags duplication). Add at most a single-line pointer -- the skill name and a one-line purpose -- so you and your team can see what's available.
 
 This isn't required for the skill to work. Follow your project's CLAUDE.md budget protocol: one line plus a pointer to the canonical file, detail lives in the skill, not in CLAUDE.md.
 
-**Step 6: Test**
+**Step 7: Test**
 
 Test both invocation methods:
 
@@ -161,7 +168,8 @@ Test both invocation methods:
    - Verify `$ARGUMENTS` / `$N` are substituting correctly
    - Check that outputs go where expected
 3. **Edge cases** -- Try invoking with missing arguments, unusual input, or empty input
-4. **Character budget** -- If you have many skills, run `/context` to confirm your skill's description is being loaded. If it's not, your total descriptions may exceed the budget (see [reference.md](reference.md) for details).
+4. **Fresh session** -- Re-run the 2-3 baseline scenarios from Step 3 in a NEW session, separate from the one that authored the skill. Leftover authoring context masks gaps the written instructions must cover on their own.
+5. **Character budget** -- If you have many skills, run `/context` to confirm your skill's description is being loaded. If it's not, your total descriptions may exceed the budget (see [reference.md](reference.md) for details).
 
 If issues arise, see Troubleshooting in [reference.md](reference.md).
 
@@ -227,7 +235,8 @@ Use this checklist to audit any existing skill. Read the skill file first before
 - [ ] `description` is specific enough to avoid false triggers but broad enough to catch real requests
 - [ ] `disable-model-invocation: true` is set if the skill has side effects (generates files, calls APIs, sends messages, costs money)
 - [ ] `argument-hint` is set if the skill accepts arguments via `/name`
-- [ ] `allowed-tools` is set if the skill should NOT have access to all tools
+- [ ] `allowed-tools` is used only as a grant (pre-approves listed tools without prompts) -- not mistaken for a sandbox; all other tools remain available under normal permissions
+- [ ] `disallowed-tools` is set if the skill should actually remove tools while active
 - [ ] `context: fork` is used if the skill is self-contained and produces verbose output
 - [ ] `model` is set only if a specific model capability is needed
 - [ ] No unnecessary fields are set (don't add frontmatter just because you can)
@@ -242,6 +251,7 @@ Use this checklist to audit any existing skill. Read the skill file first before
 - [ ] Notes section covers edge cases, constraints, and what NOT to do
 - [ ] No vague instructions -- every step tells Claude exactly what to do
 - [ ] String substitutions (`$ARGUMENTS`, `$N`) are used where the skill takes input
+- [ ] Bundled scripts are RUN, not read into context -- and fragile/repeatable operations use a tested script instead of regenerated prose steps
 
 ### Integration Audit
 
@@ -254,6 +264,8 @@ Use this checklist to audit any existing skill. Read the skill file first before
 
 - [ ] A beginner could follow the instructions without prior context
 - [ ] Instructions are actionable, not abstract
+- [ ] Content is anchored to observed failures (2-3 baseline tasks run WITHOUT the skill), not guessed instructions
+- [ ] The finished skill was re-tested in a fresh session, separate from the one that authored it
 - [ ] Delegates to subagents when appropriate to keep main context clean
 - [ ] Doesn't duplicate information that lives elsewhere (CLAUDE.md, other skills)
 - [ ] Output paths follow a predictable convention

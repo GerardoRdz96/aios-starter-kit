@@ -13,13 +13,13 @@ This is the brain-rewire mechanism. The kit doesn't need cron jobs to anchor beh
 
 ## What `/level-up` is NOT
 
-- Not `/audit`. `/audit` is structural ("is the AIOS built right?"). `/level-up` is functional ("what leverage am I missing?"). Run `/audit` first if structure is messy.
+- Not `/aios-audit`. `/aios-audit` is structural ("is the AIOS built right?"). `/level-up` is functional ("what leverage am I missing?"). Run `/aios-audit` first if structure is messy.
 - Not a multi-candidate planner. One run scopes one candidate, ending in one artifact or one logged early-exit decision.
 - Not a coach. The user does the thinking. The skill conducts the interview.
 
 ## When `/level-up` runs
 
-- **First run: after setup is real.** Once the user has connected ≥1 MCP/script and run `/audit` once. Earlier yields trivial output.
+- **First run: after setup is real.** Once the user has connected ≥1 MCP/script and run `/aios-audit` once. Earlier yields trivial output.
 - **Cadence: weekly, Friday afternoon.** Review the week, surface one automation, ship Monday.
 - **On-demand any time.** Mid-week if a manual task itches.
 
@@ -37,7 +37,7 @@ This is the brain-rewire mechanism. The kit doesn't need cron jobs to anchor beh
 
 ### Phase 1 — Mindset interview (find the candidate)
 
-**Fresh clone, no history?** If `decisions/log.md` is empty and there's no `audits/` yet (a brand-new kit), don't stall. Skip the "what did you do in the repo this week" mining and run the interview straight from what the user tells you, plus `top_pain` in `context/about-me.md` and `context/priorities.md`. Suggest running `/audit` once so future runs have signal, but you can still ship one small automation today.
+**Fresh clone, no history?** If `decisions/log.md` is empty and there's no `audits/` yet (a brand-new kit), don't stall. Skip the "what did you do in the repo this week" mining and run the interview straight from what the user tells you, plus `top_pain` in `context/about-me.md` and `context/priorities.md`. Suggest running `/aios-audit` once so future runs have signal, but you can still ship one small automation today.
 
 Surface 1-3 candidates ranked by leverage. Ask these in order, conversationally:
 
@@ -155,7 +155,7 @@ Every `/level-up` run produces:
 ## Verification (for the implementer)
 
 - **Dry run on a populated profile** with no prompt. Expected: skill surfaces 2-3 candidates pulled from recent activity, priorities, and top_pain. Generic output ("you should build a brief") = fail.
-- **Fresh-clone test.** Run on a brand-new kit with an empty `decisions/log.md` and no `audits/`. Expected: skill doesn't stall or error on missing history — it interviews from `top_pain` + priorities + what the user says, and suggests `/audit` for next time.
+- **Fresh-clone test.** Run on a brand-new kit with an empty `decisions/log.md` and no `audits/`. Expected: skill doesn't stall or error on missing history — it interviews from `top_pain` + priorities + what the user says, and suggests `/aios-audit` for next time.
 - **Eliminate-first test.** Feed an obviously eliminate-able candidate. Expected: skill suggests Eliminate, exits, logs the win.
 - **L4 push-back test.** User asks for an autonomous email-replier on first build. Expected: skill insists on L1/L2 first, won't ship L4 without explicit override.
 - **Boring-is-Beautiful test.** Candidate solvable with deterministic Python. Expected: skill recommends `(2) deterministic skill` as default.

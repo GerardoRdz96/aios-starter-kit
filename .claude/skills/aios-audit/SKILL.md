@@ -1,6 +1,6 @@
 ---
-name: audit
-description: Use when someone asks for an AIOS audit, asks to score their setup against the Four Cs, or says "is my AIOS working" / "audit my setup" / "find gaps in my AIOS". Produces a Four-Cs scoreboard with top-3 fixes ranked by leverage.
+name: aios-audit
+description: Use when someone asks for an AIOS audit, asks to score their setup against the Four Cs, or says "is my AIOS working" / "audit my setup" / "find gaps in my AIOS" / "/aios-audit". Produces a Four-Cs scoreboard with top-3 fixes ranked by leverage.
 ---
 
 ## What this skill does
@@ -27,9 +27,26 @@ First run is the baseline. Re-run weekly to watch the score climb. That's the co
 
 ## Execution
 
-### Step 1: Discover the project shape
+### Step 0: Run the deterministic scorer (RUN it, don't read it)
 
-The audit looks for **patterns and intent**, not exact paths. File names vary. Use Glob and Read to check:
+```bash
+python3 .claude/skills/aios-audit/scripts/four-cs-score.py
+```
+
+The bundled script does all the mechanical detection and every piece of point arithmetic — counts, rounding, floors, caps, and leverage multipliers — so weekly scores are comparable, not re-derived by hand. The first pass emits the mechanical counts plus a `needs_judgment` list of flags only you can decide. Steps 1-2 below are your guide for judging those flags; then re-run:
+
+```bash
+python3 .claude/skills/aios-audit/scripts/four-cs-score.py \
+  --tier1-domains N --identity-captured 0|1 \
+  --connected-tools "tool1,tool2" --stale-connections N \
+  --connections-doc 0-3 --write-path 0-2
+```
+
+Use the final JSON's scores, total, stage, and gap leverage **verbatim** — never recompute them. Your judgment goes into the flags, the strengths, and the concrete next-step lines.
+
+### Step 1: Discover the project shape (judgment guide)
+
+The audit looks for **patterns and intent**, not exact paths. File names vary. The script already counted the mechanical parts; use Glob and Read only to judge the flagged criteria against these signals:
 
 **Operating manual:** `CLAUDE.md` (root), `CLAUDE.local.md` (gitignored).
 **Memory:** `MEMORY.md` (root), `~/.claude/projects/<id>/memory/MEMORY.md`, or `memory/` folder.
@@ -51,6 +68,8 @@ The audit looks for **patterns and intent**, not exact paths. File names vary. U
 Don't penalize for non-canonical names if equivalent intent is captured elsewhere.
 
 ### Step 2: Score each C (25 points each)
+
+The tables below are the rubric the script implements — they document *what* is scored and *how to judge* the flagged criteria. Don't hand-compute any of the math; the script owns it.
 
 #### Context (25 pts)
 
@@ -93,7 +112,7 @@ A "reachable" connection counts via ANY mechanism: MCP, script, export pipeline,
 | Criterion | Points | How to detect |
 |---|---|---|
 | 3+ skills installed | 10 | Count `.claude/skills/*/SKILL.md` |
-| 1+ user-built skill | 10 | A skill in `.claude/skills/` **beyond the box-shipped set** (`agent-builder`, `agents-team-builder`, `audit`, `grill-me`, `hooks-builder`, `level-up`, `multi-brain`, `onboard`, `plugin-builder`, `routines-builder`, `session-handoff`, `skill-builder`, `workflow-builder`). A fresh clone scores **0** here — this point is for skills *you* add. (Update this set if the kit ships more.) |
+| 1+ user-built skill | 10 | A skill in `.claude/skills/` **beyond the box-shipped set** (`agent-builder`, `agents-team-builder`, `aios-audit`, `grill-me`, `hooks-builder`, `level-up`, `multi-brain`, `onboard`, `plugin-builder`, `routines-builder`, `session-handoff`, `skill-builder`, `workflow-builder`). A fresh clone scores **0** here — this point is for skills *you* add. (Update this set — and the script's `BOX_SKILLS` — if the kit ships more.) |
 | 1+ user-built agent | 5 | An agent in `.claude/agents/*.md` **beyond the box-shipped `scribe` + `warden`**. A fresh clone scores **0**. |
 
 #### Cadence (25 pts)
@@ -106,7 +125,7 @@ A "reachable" connection counts via ANY mechanism: MCP, script, export pipeline,
 
 ### Step 3: Identify top 3 gaps by leverage
 
-For each criterion that lost points: leverage = (points lost) × (impact multiplier).
+The script already emits `gaps_by_leverage` using this rule — leverage = (points lost) × (impact multiplier) — take its top 3 as ranked. One exception you may adjust: the write-path 2x fires only "where a cadence needs one"; if no cadence needs a write, demote that gap to 1x and re-rank. The multiplier table, for reference:
 
 **Impact multipliers:**
 - 0 tier-1 domains reachable: **4x** (AIOS is blind to the work)
@@ -119,7 +138,7 @@ For each criterion that lost points: leverage = (points lost) × (impact multipl
 - No decisions log: **1.5x**
 - All others: **1x**
 
-Sort gaps by leverage descending. Take top 3. For each, write a one-line concrete next step:
+For each of the top 3, write a one-line concrete next step:
 - **Need a new skill?** Recommend `skill-creator` (Anthropic) or `skill-builder` (local), or "write SKILL.md at `.claude/skills/<name>/SKILL.md` with YAML frontmatter."
 - **Need to log a decision?** "Append to `decisions/log.md`."
 - **Need to reach a tier-1 domain?** Prefer API+script (write `scripts/{tool}_api.py` + save `references/{tool}-api.md`). Recommend `claude mcp add` only if no API path exists.
@@ -176,5 +195,5 @@ After printing, ask: "Save this audit to `audits/audit-{date}.md` so you can tra
 - **Be flexible about file names.** Don't penalize for using non-canonical names if intent is captured.
 - **Be honest, not generous.** A 95/100 is a flex. Most setups land 40-70.
 - **Don't suggest skills that don't exist.** Point at what's actually available.
-- **Speed matters.** Report in under 60 seconds wall-clock. Read targeted files, count skill folders without reading each fully (frontmatter only).
+- **Speed matters.** Report in under 60 seconds wall-clock. The script does the counting; read only the targeted files the judged flags need.
 - **Cadence detection is fuzzy.** Infer from skill names if hooks/cron data isn't cleanly available.

@@ -35,7 +35,8 @@ All fields are optional. Only `description` is recommended.
 | `arguments` | No | string \| list | none | Declare **named** positional arguments (a list of argument names). Reference each by `$<name>` in the skill body instead of positional `$1`/`$2`. |
 | `disable-model-invocation` | No | boolean | `false` | When `true`, only the user can invoke the skill. Removes it from Claude's context entirely. |
 | `user-invocable` | No | boolean | `true` | When `false`, hides the skill from the `/` menu. Only Claude can invoke it. |
-| `allowed-tools` | No | string (comma-separated) | all tools | Tools available without permission prompts when this skill is active. |
+| `allowed-tools` | No | string (comma-separated) | all tools | Tools pre-approved to run without permission prompts when this skill is active. A GRANT, not a sandbox -- every other tool stays available under normal permissions. |
+| `disallowed-tools` | No | string (comma-separated) | none | Tools removed from Claude's pool while this skill is active. This is the actual restriction mechanism -- use it when a skill must NOT touch certain tools. |
 | `model` | No | string | inherit | Model to use: `sonnet`, `opus`, `haiku`, or omit to inherit. |
 | `context` | No | string | none | Set to `fork` to run in an isolated subagent context. |
 | `agent` | No | string | `general-purpose` | Subagent type when `context: fork` is set. Options: `Explore`, `Plan`, `general-purpose`, or any custom agent name. |
@@ -109,9 +110,9 @@ When skills share the same name across levels, higher-priority locations win. Pl
 
 ---
 
-## `allowed-tools` Syntax Guide
+## `allowed-tools` / `disallowed-tools` Syntax Guide
 
-The `allowed-tools` field restricts which tools Claude can use without permission prompts when a skill is active. Your global permission settings still apply on top of this.
+The `allowed-tools` field pre-approves the listed tools to run without permission prompts while a skill is active. It is a permission GRANT, not a sandbox -- all other tools remain available under your normal permission settings. To actually remove tools while a skill is active, use `disallowed-tools`.
 
 **Basic syntax -- comma-separated tool names:**
 
@@ -119,7 +120,7 @@ The `allowed-tools` field restricts which tools Claude can use without permissio
 allowed-tools: Read, Grep, Glob
 ```
 
-Claude can use these tools freely. All other tools will prompt for permission.
+Claude can use these tools without prompting. All other tools remain available under your normal permission settings (prompting as usual) -- they are not blocked.
 
 **Tool-specific patterns with globs:**
 
@@ -140,20 +141,30 @@ The glob pattern inside parentheses filters what arguments Claude can pass:
 **Common patterns:**
 
 ```yaml
-# Read-only skill (no file modifications)
+# Pre-approve read/search tools (does NOT block writes -- see disallowed-tools)
 allowed-tools: Read, Grep, Glob
 
-# Can only run specific commands
+# Pre-approve specific commands only
 allowed-tools: Bash(git status), Bash(git diff), Read
 
-# Can only use web tools
+# Pre-approve web tools
 allowed-tools: WebSearch, WebFetch
 
-# Can read files and run a specific script
+# Pre-approve reading files and running a specific script
 allowed-tools: Read, Glob, Bash(python scripts/analyze.py *)
 ```
 
-**Important:** `allowed-tools` adds *additional* auto-approvals on top of your existing permission settings. It doesn't remove permissions you've already granted globally.
+**Important:** `allowed-tools` adds *additional* auto-approvals on top of your existing permission settings. It doesn't remove permissions you've already granted globally, and it doesn't take any tool away.
+
+**Actually removing tools -- `disallowed-tools`:**
+
+```yaml
+# A genuinely read-only skill: writes are removed, reads are pre-approved
+allowed-tools: Read, Grep, Glob
+disallowed-tools: Write, Edit, Bash
+```
+
+`disallowed-tools` takes the listed tools out of Claude's pool while the skill is active. It is the restriction mechanism; combine it with `allowed-tools` to pre-approve what remains.
 
 ---
 

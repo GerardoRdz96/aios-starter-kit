@@ -180,7 +180,7 @@ Events: `PreToolUse` (before a tool), `PostToolUse` (after), `Stop` (agent finis
 - **No-Self-Review principle.** A Claude subagent reviewing Claude's output has the same architecture, hence the same blind spots. For adversarial review/verification of work the main session produced, route to a **second model (a different AI)** if you have one available — don't build a Claude review agent for that purpose. A Claude *finder* agent (different task, e.g. "list candidate issues") is fine; a Claude *judge* of Claude's own work is not. If only Claude is available, at least review in a fresh, isolated context with explicit critic framing.
 - **Connection preference: CLI > API > MCP.** When an agent needs to reach an external system, prefer a command-line tool, then a `scripts/` API integration, then MCP last. Grant the agent only the tool that mechanism needs.
 - **Another-lineage boundary.** Subagents are Claude-only. If the *better* worker is another model lineage (live web, math, multimodal, whole-repo scans), that's a route to a different AI the orchestrator makes — not a subagent.
-- **Cadence.** If an agent is part of a recurring ritual, document it so `/audit` credits it toward the Cadence pillar. A recurring, scheduled, or run-on-an-event agent is a *loop* — design its cadence, verification beat, and stop-brake per `references/agent-loops.md`.
+- **Cadence.** If an agent is part of a recurring ritual, document it so `/aios-audit` credits it toward the Cadence pillar. A recurring, scheduled, or run-on-an-event agent is a *loop* — design its cadence, verification beat, and stop-brake per `references/agent-loops.md`.
 
 ---
 

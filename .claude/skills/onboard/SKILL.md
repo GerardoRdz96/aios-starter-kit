@@ -1,6 +1,7 @@
 ---
 name: onboard
 description: Use on Day 1 of an AIOS install, when someone says "set me up", "onboard me", "let's get started", "fill in my AIOS", or has just cloned the kit. Combined wizard — runs the 7-question intake AND scaffolds the Day-1 file set at the end. Idempotent — re-run any time; the working aios-intake.md resets to placeholders after each run (your durable answers live in context/).
+disable-model-invocation: true
 ---
 
 ## What this skill does
@@ -18,7 +19,7 @@ Single combined wizard. Reads or writes `aios-intake.md` (the canonical intake),
 
 ### Step 1: Read the intake
 
-If `aios-intake.md` doesn't exist yet (fresh clone), copy it from `aios-intake.md.template` first — the template is the canonical pristine intake that ships with the kit; `aios-intake.md` is the working copy the user fills in.
+First run `bash .claude/skills/onboard/scripts/scaffold.sh init` (RUN it, don't read it) — it creates the working `aios-intake.md` from `aios-intake.md.template` if it's missing, and does nothing otherwise. The template is the canonical pristine intake that ships with the kit; `aios-intake.md` is the working copy the user fills in.
 
 Read `aios-intake.md`. Check which Q1-Q7 sections have content vs. `[Your answer here]` placeholders.
 
@@ -59,16 +60,16 @@ Domain 3 (Calendar) is auto-inferred from Q5 (which email/calendar system the us
 
 ### Step 3: Scaffold the Day-1 file set
 
-Once the intake is complete, generate these files (or update if re-running). Back up originals to `archives/intake-{YYYY-MM-DD-HHMM}/` if any exist.
+Once the intake is complete, first run `bash .claude/skills/onboard/scripts/scaffold.sh backup` — it backs up the files this step overwrites to `archives/intake-{YYYY-MM-DD-HHMM}/`. Then generate these files (or update if re-running):
 
 1. **`context/about-me.md`** — from Q1 (identity, role) + Q7 (top_pain). One short paragraph each.
 2. **`context/about-work.md`** — from Q1 (what you do) + Q4 (how value lands). One paragraph.
 3. **`context/priorities.md`** — from Q3. Numbered list, one line per priority.
 4. **`references/voice.md`** — from Q2. **Fill the existing template, don't regenerate it.** Paste the samples verbatim into its **Samples** section, and fill the **Your register** fields (tone, sentence style, punctuation quirks, etc.) if Q2 reveals them. Keep the register fields, the Dos/Don'ts, and the `Sources:` / `Related:` provenance footer intact.
 5. **`connections.md`** — populate the 7-row table from Q4-Q7 answers. Each row gets `mechanism: not yet connected`, `auth: —`, `last checked: —`. The user wires connections on Day 2.
-6. **`CLAUDE.md`** — fill the two real placeholders only: `{{ABOUT_ME}}` (name + role, from Q1) and `{{VOICE_REGISTER}}` (a one-line voice summary, from Q2). Then **rename the AIOS:** replace every occurrence of the default name `Sage` with the name chosen in Q1, across `CLAUDE.md` and the rest of the kit. Don't invent a priorities or connections placeholder — priorities live in `context/priorities.md` and connections in `connections.md`.
+6. **`CLAUDE.md`** — fill the two real placeholders only: `{{ABOUT_ME}}` (name + role, from Q1) and `{{VOICE_REGISTER}}` (a one-line voice summary, from Q2). Then **rename the AIOS** by running `bash .claude/skills/onboard/scripts/scaffold.sh rename "<chosen name>"` — a deterministic kit-wide whole-word rename from the default `Sage`. Never hand-edit the rename; an LLM pass misses occurrences, the script doesn't. If re-running after an earlier rename, pass the current name as a second argument (`… rename "<new>" "<current>"`). Don't invent a priorities or connections placeholder — priorities live in `context/priorities.md` and connections in `connections.md`.
 
-**After scaffolding, reset the staging file:** copy `aios-intake.md.template` back over `aios-intake.md`, returning it to placeholders. The user's answers now live in `context/`; this keeps personal data — especially the pasted voice samples — out of the working intake. (Why a clean staging→durable handoff matters in a re-runnable loop: `references/agent-loops.md`.)
+**After scaffolding, reset the staging file:** run `bash .claude/skills/onboard/scripts/scaffold.sh reset` — it copies `aios-intake.md.template` back over `aios-intake.md`, returning it to placeholders. The user's answers now live in `context/`; this keeps personal data — especially the pasted voice samples — out of the working intake. (Why a clean staging→durable handoff matters in a re-runnable loop: `references/agent-loops.md`.)
 
 ### Step 4: The closing screen
 
@@ -79,7 +80,7 @@ Print one screen — a header line plus three horizon lines (Today / Tomorrow / 
 
 Today: ask me — "what should I focus on this week?"
 Tomorrow: pick one tool from connections.md and wire it up (check for a CLI first; if none, write a small API script + save references/{tool}-api.md; MCP last).
-Day 7: run /audit to see your score.
+Day 7: run /aios-audit to see your score.
 ```
 
 When the user runs the closing prompt ("what should I focus on this week?"), respond using only the new context files. Hit:
@@ -99,6 +100,7 @@ The Default Shift question seeds the Mindset framework before `/level-up` formal
 6. **No extra skills generated.** Don't scaffold `/today`, `/draft`, `/connect`, etc. The kit ships its starter skills; the user authors more via `/level-up`.
 7. **Read-only on `references/3ms-framework.md`.** It already ships in the kit. Don't overwrite.
 8. **No `.env` writes.** Don't ask for API keys on Day 1. Connections come Day 2.
+9. **Deterministic steps run through the bundled script.** The template copy/reset, the archives backup, and the kit-wide rename all go through `scripts/scaffold.sh` (RUN it, never re-derive those steps by hand). Add `--dry-run` to preview any subcommand.
 
 ## Verification (for the implementer)
 

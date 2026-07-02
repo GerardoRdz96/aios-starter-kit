@@ -44,8 +44,8 @@ The AI may create ANY capability type. What varies by risk is not whether it can
 
 | Instrument | Measures | Cadence |
 |---|---|---|
-| `/audit` (Four-Cs) | Context/Connections/Capabilities/Cadence coverage + gaps | weekly |
-| wiki lint (during `/audit` or a saved workflow) | wiki integrity — contradictions, stale claims, orphans, index drift | weekly or post-heavy-edit |
+| `/aios-audit` (Four-Cs) | Context/Connections/Capabilities/Cadence coverage + gaps | weekly |
+| wiki lint (during `/aios-audit` or a saved workflow) | wiki integrity — contradictions, stale claims, orphans, index drift | weekly or post-heavy-edit |
 | `python3 scripts/entity-scoreboard.py` | aggregates capability counts + wiki size + audit scores into `references/audits/scoreboard.jsonl` | weekly |
 
 **Rules:**

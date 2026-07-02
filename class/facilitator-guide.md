@@ -42,11 +42,11 @@ The honest line: "You're not early to something weird. You're on time for someth
 | 2 | 10–25 | **What is an AIOS** | Definition + purposes. Run the **with/without demo**: cold chat gives a stranger's answer; the AIOS gives a co-founder's answer. Land the **two-layer split**: Context+Connections = the second brain; Capabilities+Cadence = the OS on top. "An OS doesn't start with architecture — it starts with a *default*: one harness everything routes through." |
 | 3 | 25–35 | **Anatomy & architecture** | The folder tree, live in an editor — no magic, just markdown. `context/`, `references/`, `knowledge/`, `.claude/skills/`, `connections.md`, `pending.md`, `decisions/`. Tool-agnostic: same folder works from Claude Code, Cowork, Codex, Gemini (`AGENTS.md`). |
 | 4 | 35–45 | **The router: CLAUDE.md** | Open the real file. **Router, not manual** — it points at where things live; detail lives in the files. The budget protocol (200-line cap — why: it's re-read every turn, cost compounds). "Architecture engineering": can the agent find a file as fast as you can? If not, the architecture is the bug. |
-| 5 | 45–60 | **The Four Cs as one live thread** | **Teach this from the dedicated "spine demo" section below, not as four abstract slides.** Walk ONE worked example (daily research→email) up all four Cs: Context = `/onboard`; Connections = Gmail connector (safe Outlook stand-in) + CLI>API>MCP + keys-not-prompts war story; Capabilities = `/skill-builder` + the starter set; Cadence = **two** routines (A: research→email integrative, B: weekly `/audit` self-improving loop). The escalating thread proves the layers depend on each other. |
+| 5 | 45–60 | **The Four Cs as one live thread** | **Teach this from the dedicated "spine demo" section below, not as four abstract slides.** Walk ONE worked example (daily research→email) up all four Cs: Context = `/onboard`; Connections = Gmail connector (safe Outlook stand-in) + CLI>API>MCP + keys-not-prompts war story; Capabilities = `/skill-builder` + the starter set; Cadence = **two** routines (A: research→email integrative, B: weekly `/aios-audit` self-improving loop). The escalating thread proves the layers depend on each other. |
 | 6 | 60–70 | **Power skills** | What each does + when: Superpowers (bug-cost dominates), GSD (context-rot dominates), route-by-risk doctrine, `/review` closer, Frontend Design. The 70%→92% self-verify rule. Show the install commands (`references/power-skills.md`). Quick aside: the **graphify** companion CLI (`uv tool install graphifyy`) — any repo becomes a knowledge graph the AI queries *before* touching code. |
 | 7 | 70–80 | **Multi-brain** | Many models, one driver. Cloud CLIs + local models (Ollama) on one roster the *student* defines. The **No-Self-Review Law**: same architecture = same blind spots — reviews go to a different lineage. Demo if you have two CLIs installed. |
 | 8 | 80–90 | **The LLM wiki (vs RAG)** | The Karpathy three-layer pattern — go slow, this is the deepest idea. Then the RAG comparison table (`references/llm-wiki-pattern.md`): interpretation at *ingest* time vs query time; human-readable vs opaque; zero infra. Honest trade-off: RAG wins at millions of docs; you don't have millions of docs. |
-| 9 | 90–100 | **The growth rituals** | `/onboard` (day 1) → `/audit` (day 7, then weekly — show a real score) → `/level-up` (weekly, one automation) → `/grill-me` (when knowledge is in your head) → `/session-handoff` (every wrap-up). Then the builders + the Skill-vs-Agent-vs-Routine triage. |
+| 9 | 90–100 | **The growth rituals** | `/onboard` (day 1) → `/aios-audit` (day 7, then weekly — show a real score) → `/level-up` (weekly, one automation) → `/grill-me` (when knowledge is in your head) → `/session-handoff` (every wrap-up). Then the builders + the Skill-vs-Agent-vs-Routine triage. |
 | 10 | 100–120 | **Hands-on + wrap** | Students run exercises 0–4 live; you float. Everyone fires the wow prompt: *"what should I focus on this week?"* Share screens. Assign the rest as homework. |
 | 11 | +10 (optional) | **Governing an AI that builds itself** | The v2.1 add-on — see the dedicated section below. Slot it after module 9 (the builders) for advanced rooms, or run it as a standalone part-2 opener. |
 
@@ -59,7 +59,7 @@ Have a **pre-onboarded** copy of the kit ready on your machine.
 1. **Cold problem.** Plain chat: "what should I prioritize?" → generic. "It doesn't know me."
 2. **The AIOS.** Same question in your kit → it cites your real priorities. "Same model. Different *operating system* around it."
 3. **Compounding.** Drop a short transcript in `knowledge/`, have it filed into `references/`, open the new page. "It just learned something permanent."
-4. **Growth.** Run `/audit`, read the score live. "It grades itself and tells me what to fix."
+4. **Growth.** Run `/aios-audit`, read the score live. "It grades itself and tells me what to fix."
 
 ---
 
@@ -79,7 +79,7 @@ Work email (Outlook / M365) is IT-gated — so don't fight it on stage. Use **pe
 ### C3 · Capabilities — *teach it how YOU work* → `/skill-builder` + the starter set
 A capability is *your* way of doing a task, written down so the model stops guessing.
 - **Build one live with `/skill-builder`** (Discovery Interview → `SKILL.md`). The reverse-engineer trick (the fast path): do the task once end-to-end, then say *"look back at what we just did and make it a skill."*
-- **The starter set worth showing** — all ship in the kit: `/onboard` (C1), `/audit` (grades the four Cs), `/level-up` (find one automation a week), `/grill-me` (get what's in your head into the wiki), `/session-handoff` (clean context switches), plus the **builder family** (`/skill-builder` · `/agent-builder` · `/routines-builder` · `/workflow-builder` · `/hooks-builder` · `/plugin-builder` · `/agents-team-builder`).
+- **The starter set worth showing** — all ship in the kit: `/onboard` (C1), `/aios-audit` (grades the four Cs), `/level-up` (find one automation a week), `/grill-me` (get what's in your head into the wiki), `/session-handoff` (clean context switches), plus the **builder family** (`/skill-builder` · `/agent-builder` · `/routines-builder` · `/workflow-builder` · `/hooks-builder` · `/plugin-builder` · `/agents-team-builder`).
 - **For our thread**, the capability is *"research today's news on my topic, the way I like it"* — a small skill that produces a tight digest in the student's voice.
 - **Every skill use is data:** after each run, say what worked and *"update the skill."* The skill that never gets feedback quietly rots.
 
@@ -91,7 +91,7 @@ Cadence = Context + Connections + Capabilities, fired on a schedule or event, **
 This is the thread's payoff. Point at each C as it fires: it knows the topic + tone (**Context**), it can reach the inbox (**Connection**), it knows how I like the digest (**Capability**), and now it happens every morning without me (**Cadence**). Build it with `/routines-builder` → a cloud routine. **Hard rule: supervised "Run now" first** — watch one real round-trip before you arm the schedule. Cadence is earned, never free.
 
 **Cadence B — the self-improving loop (the AIOS grading itself, inward-facing):**
-> *Weekly Sunday: run `/audit` → score my own four Cs → commit the scoreboard to `references/audits/<date>.md` → file the top-3 fixes.*
+> *Weekly Sunday: run `/aios-audit` → score my own four Cs → commit the scoreboard to `references/audits/<date>.md` → file the top-3 fixes.*
 This is the loop that makes the OS get better on its own: it reads its own state, grades it, and queues its own homework — a tiny self-improving system. Students leave knowing their AIOS isn't static; it has a heartbeat that keeps raising its own floor. (The loop-engineering doctrine behind cadences like this — how to design a loop and the verify-before-you-arm discipline — lives in `references/agent-loops.md`; the full-strength version is the weekly Improvement loop in `references/autonomous-entity-charter.md` — name it as "where this goes next.")
 
 **Why two:** Cadence A does *outward* work **for** you (research → email = leverage); Cadence B does *inward* work **on the system itself** (audit → improve = compounding). One thread, two directions — that's the whole idea of cadence in two demos.
@@ -112,7 +112,7 @@ This is the loop that makes the OS get better on its own: it reads its own state
 4. **Five hard HITL gates** — arming Tier X, identity, external voice, money & keys, the daily revert digest. Everything else, the AI decides.
 5. **Provenance** — one record per creation *and per community import* (`references/provenance/`): who built it, who reviewed it, was it validated, did it ever work. Community skills get a static validation scan BEFORE install — installing someone's skill is letting their instructions run inside your AIOS.
 
-**The demo (2 min).** Run `python3 scripts/entity-scoreboard.py --dry-run` live — the room watches the AIOS count its own capabilities and grade itself. Tie it back to module 9's `/audit`: same idea, now append-only and trend-aware.
+**The demo (2 min).** Run `python3 scripts/entity-scoreboard.py --dry-run` live — the room watches the AIOS count its own capabilities and grade itself. Tie it back to module 9's `/aios-audit`: same idea, now append-only and trend-aware.
 
 **The metaphor that lands.** Extend module 5's intern-with-keys: *you've now given the intern a workshop where it can build new tools. Fine — but the keys to actually switch each tool on stay on your keyring.* Same "keys, not prompts" doctrine, one level up.
 

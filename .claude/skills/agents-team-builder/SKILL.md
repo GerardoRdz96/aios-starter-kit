@@ -1,6 +1,6 @@
 ---
 name: agents-team-builder
-description: Use to design and launch a Claude Code agent team (2–5 specialized agents that share a task list, talk peer-to-peer, work in parallel). Triggers — "build an agent team", "design a team of agents", "set up a Claude agent team", "I need a multi-agent crew", "create an agent team for X", "spin up a team of teammates", "build me a Claude team", or `/agents-team-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/workflow-builder`, `/plugin-builder` — that family picks the *mechanism* and walks the discovery; this one is the agent-teams specialist. Runs a four-part discovery interview (goal, team, roles, deliverables), enforces the do/don't gates, saves a rerunnable template to `.claude/teams/<name>.md`, and ends with a paste-ready invocation prompt + tmux observability tip.
+description: Use to design and launch a Claude Code agent team (2–5 specialized agents that share a task list, talk peer-to-peer, work in parallel). Triggers — "build an agent team", "design a team of agents", "set up a Claude agent team", "I need a multi-agent crew", "create an agent team for X", "spin up a team of teammates", "build me a Claude team", or `/agents-team-builder`. Sibling of `/skill-builder`, `/agent-builder`, `/routines-builder`, `/workflow-builder`, `/plugin-builder` — this one is the agent-teams specialist.
 argument-hint: [optional one-line goal]
 disable-model-invocation: false
 ---

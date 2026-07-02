@@ -103,7 +103,7 @@ is earned, never free.
   `/workflow-builder`, `/hooks-builder`, `/agents-team-builder`.
 - Governing loops that build *themselves*: [[autonomous-entity-charter]] — *the AI builds, the
   human arms.*
-- The self-improving loop the class demos (weekly `/audit`) is itself a loop: give it a done-check,
+- The self-improving loop the class demos (weekly `/aios-audit`) is itself a loop: give it a done-check,
   and remember a self-audit is *same-lineage* — a heartbeat, not a different-lineage review.
 
 **Source:** Nate Herk ("loop engineering") + Anthropic Agent SDK (*verify your work*); the

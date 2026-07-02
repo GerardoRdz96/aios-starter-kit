@@ -14,7 +14,7 @@ Usage:
 Re-running on the same day upserts (replaces today's row) instead of appending a
 duplicate, so the trend window stays one-row-per-day.
 
-Run weekly (alongside /audit, or from a routine once you arm one). Scores it can't
+Run weekly (alongside /aios-audit, or from a routine once you arm one). Scores it can't
 compute locally (the Four-Cs audit grade) are read from the newest
 references/audits/four-cs-*.md if present. --gate makes the charter's "numbers gate
 evolution" rule real — the verification-loop doctrine lives in references/agent-loops.md.

@@ -1,9 +1,9 @@
 ---
 name: multi-brain
 description: |
-  Multi-LLM auto-router. Your main assistant is the orchestrator and driver; it routes a sub-task to a different model ONLY when that model fits the job better than the main one alone. The other brains are tools the orchestrator calls — the user talks to one assistant the whole time. The roster below is YOURS TO FILL IN. Fires automatically when a routing rule matches.
+  Multi-LLM auto-router. Your main assistant orchestrates and routes a sub-task to a different model ONLY when that model fits the job better; the user talks to one assistant the whole time. The roster is yours to fill in. Fires automatically when a routing rule matches.
 
-  NO-SELF-REVIEW LAW: when the user asks you to "check / review / verify / sanity-check / second-opinion" ANY work YOU just produced, route the review to a model from a DIFFERENT lineage if one is on the roster — a model reviewing its own output shares the blind spots that produced the bug. Triggers: "check your work" · "review what you just did" · "is this right?" · "second opinion" · "sanity check" · "double-check" · "make sure this works".
+  NO-SELF-REVIEW LAW: when the user asks you to "check / review / verify / sanity-check / second-opinion" ANY work YOU just produced, route the review to a model from a DIFFERENT lineage if one is on the roster. Triggers: "check your work" · "review what you just did" · "is this right?" · "second opinion" · "sanity check" · "double-check" · "make sure this works".
 ---
 
 # Multi-Brain Auto-Router

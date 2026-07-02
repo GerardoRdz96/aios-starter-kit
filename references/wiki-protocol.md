@@ -80,7 +80,7 @@ Default to **one source at a time, staying involved** — you read the summary a
 
 Answers can take any shape the question wants — a page, a comparison table, a slide deck, a chart. The form is free, the filing-back discipline is not.
 
-### Lint — periodic health check (run during `/audit`, or on request)
+### Lint — periodic health check (run during `/aios-audit`, or on request)
 Walk the wiki looking for:
 - **Contradictions** — two pages making incompatible claims. Reconcile or flag.
 - **Stale claims** — a newer source superseded an older statement. Update it, note the change in the log.
@@ -128,7 +128,7 @@ When unsure: is it interpreted and evergreen? → wiki. Is it raw? → knowledge
 ### Maintenance rituals
 
 - **Adding a capability:** add ONE line + the path to the canonical file. Don't expand inline.
-- **Trim pass** during `/audit`: any inline content already restated in a dedicated file collapses to a one-line cross-link. Log it as `## [date] trim | CLAUDE.md` in `references/log.md`.
+- **Trim pass** during `/aios-audit`: any inline content already restated in a dedicated file collapses to a one-line cross-link. Log it as `## [date] trim | CLAUDE.md` in `references/log.md`.
 - **Self-check on every CLAUDE.md edit:** `wc -l CLAUDE.md && wc -c CLAUDE.md`. **Lines are the speed limit; bytes are the gas** — a 100-line file of 200-char bullets is heavier than a 180-line file of 80-char bullets.
 
 ## Why this works

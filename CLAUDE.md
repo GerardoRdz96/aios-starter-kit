@@ -29,20 +29,20 @@ Skills are interactive workflows I start by typing `/<name>`. They live in
 (13 total); build your own with the builders below.
 
 **Rituals**
-- `/onboard` — Day-1 wizard. ~7-question intake, then scaffolds your `context/` files. Idempotent — re-run after editing `aios-intake.md`.
-- `/audit` — Four-Cs health report (Context, Connections, Capabilities, Cadence). Run on Day 7, then weekly. Spec: `references/four-cs-framework.md`.
-- `/level-up` — Weekly 3Ms interview. Find one thing to automate, scope it, ship it.
-- `/grill-me` — Relentless one-question-at-a-time interview that extracts what's in your head into a checkpointed capture (`knowledge/grills/`), then graduates it into the wiki.
-- `/session-handoff` — Prints + saves a structured handoff note (what we did, files, open decisions, next steps) for clearing context or switching tools.
+- `/onboard` — Day-1 intake + scaffold wizard (idempotent).
+- `/aios-audit` — Four-Cs health report; Day 7, then weekly. Spec: `references/four-cs-framework.md`.
+- `/level-up` — weekly 3Ms interview; ship one automation.
+- `/grill-me` — extract what's in your head into the wiki.
+- `/session-handoff` — structured handoff note for clearing context or switching tools.
 
 **Builders** (use these to grow your AIOS)
-- `/skill-builder` — Build / optimize / audit a skill. Discovery Interview first.
-- `/agent-builder` — Build / optimize / audit a subagent (`.claude/agents/*.md`): decision gate + Discovery Interview.
-- `/routines-builder` — Build a recurring cadence (scheduled routine, hook, `/loop`, or ritual skill): decision gate + supervised test.
-- `/agents-team-builder` — Design / launch a 2–5 agent team that shares a task list and works in parallel.
-- `/workflow-builder` — Build a saved dynamic workflow (`.claude/workflows/*.js`): N parallel sub-agents over a width-shaped task. Builds, never fires.
-- `/hooks-builder` — Build an event-driven hook ("always when <event>, do X") in settings.json: decision gate + mandatory supervised first-fire test.
-- `/plugin-builder` — Package skills/agents into a shippable Claude Code plugin + marketplace: decision gate first (most things shouldn't be plugins).
+- `/skill-builder` — build / optimize / audit a skill.
+- `/agent-builder` — build / optimize / audit a subagent.
+- `/routines-builder` — build a recurring cadence.
+- `/agents-team-builder` — design / launch a 2–5 agent team.
+- `/workflow-builder` — build a saved dynamic workflow (builds, never fires).
+- `/hooks-builder` — build an event-driven hook in settings.json.
+- `/plugin-builder` — package skills/agents into a shippable plugin.
 
 ## Power skills (NOT bundled — install once via `references/power-skills.md`, then lean on them)
 
@@ -60,8 +60,8 @@ for them without being asked. Full digest + install pointers: `references/power-
 Subagents are specialized Claudes I delegate to for a clean context window. They live in
 `.claude/agents/*.md`. Build more with `/agent-builder`. Ships with:
 
-- **`warden`** — read-only audit of the `references/` wiki (broken `[[links]]`, orphans, stale claims, index drift). Fires when you ask to lint the wiki, or proactively after editing `references/` pages.
-- **`scribe`** — read-only. Turns a meeting/call transcript dropped in `knowledge/` into a structured digest (decisions + action items).
+- **`warden`** — read-only wiki lint.
+- **`scribe`** — read-only transcript → structured digest.
 
 ## Your teams
 
@@ -159,5 +159,5 @@ fake my voice on anything external (a post, an email) without showing me a draft
 This file is re-read every turn, so its cost compounds. Keep it lean.
 - **Hard cap: 200 lines. Soft target: 150. Per-bullet cap: 2 lines.**
 - Adding a capability: one line + a pointer to the canonical file. Detail lives there, not here.
-- Trim during `/audit`: anything restated in a dedicated file collapses to a cross-link.
+- Trim during `/aios-audit`: anything restated in a dedicated file collapses to a cross-link.
 - Self-check after edits: `wc -l CLAUDE.md`.

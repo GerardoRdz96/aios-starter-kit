@@ -125,7 +125,7 @@ A fixed pipeline dies at the first failed step. A routine injects your prompt in
 | Local file access | No (fresh clone) | Yes | Yes | Yes |
 | Min interval | 1 hour | event-driven | 1 min | manual |
 | Permission prompts | None (autonomous) | n/a | inherits session | inherits session |
-| `/audit` counts it? | Yes (documented) | Yes (hooks key) | — | Yes (`daily-*`/`weekly-*` name) |
+| `/aios-audit` counts it? | Yes (documented) | Yes (hooks key) | — | Yes (`daily-*`/`weekly-*` name) |
 
 Desktop scheduled tasks do **not** migrate to routines — recreate manually.
 
@@ -141,7 +141,7 @@ Desktop scheduled tasks do **not** migrate to routines — recreate manually.
 
 ## Notes
 
-- **Your AIOS can run itself**: if it's a private GitHub repo, a routine can run weekly rituals (`/audit`, decisions housekeeping) and land them as a reviewable `claude/` branch + PR.
+- **Your AIOS can run itself**: if it's a private GitHub repo, a routine can run weekly rituals (`/aios-audit`, decisions housekeeping) and land them as a reviewable `claude/` branch + PR.
 - **Local-tool caveat:** no local MCP means tools without an API or a cloud Connector won't ride along. External APIs need **Full** network.
 - **Everything posts as you** — branch/draft output (or a per-run human gate) is the permanent rule for any send/post/delete/pay/deploy; test before wiring Slack/comms.
 

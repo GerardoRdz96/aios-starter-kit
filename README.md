@@ -102,7 +102,7 @@ my-aios/
 | Command | What it does |
 |---------|--------------|
 | `/onboard` | Day-1 setup wizard. ~7 questions → your context files. |
-| `/audit` | Health check. Scores your AIOS on the **Four Cs** (Context, Connections, Capabilities, Cadence). |
+| `/aios-audit` | Health check. Scores your AIOS on the **Four Cs** (Context, Connections, Capabilities, Cadence). |
 | `/level-up` | Weekly ritual. Find one thing to automate, scope it, ship it. Runs on the **3Ms** (Mindset, Method, Machine). |
 | `/grill-me` | Deep extraction interview. One question at a time, checkpointed to disk, graduates into your wiki. |
 | `/session-handoff` | Wrap-up note (what we did, open decisions, next steps) so a fresh session — in any tool — continues cold. |
@@ -167,7 +167,7 @@ cold. **Knowledge compounds instead of resetting every chat.** The rules live in
 
 Once you're onboarded, the loop is simple:
 
-- **Run `/audit`** on day 7 and then weekly — it scores your setup and names the top gaps.
+- **Run `/aios-audit`** on day 7 and then weekly — it scores your setup and names the top gaps.
 - **Run `/level-up`** weekly — it finds one manual thing you keep doing and helps you turn it
   into a skill, an agent, or a routine.
 - **Drop sources** into `knowledge/` as you learn — the wiki grows.

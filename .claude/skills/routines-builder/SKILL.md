@@ -15,7 +15,7 @@ Use this whenever:
 - Wiring a new recurring trigger (cloud routine, hook, loop, or ritual skill)
 - Deciding **which** cadence mechanism fits a job
 - Optimizing or auditing an existing routine
-- Closing a Cadence gap surfaced by `/audit`
+- Closing a Cadence gap surfaced by `/aios-audit`
 
 ---
 
@@ -26,7 +26,7 @@ Use this whenever:
 | **Cloud Routine** (`/schedule`) | Anthropic cloud | No | No | 1 hour | True autonomy — repo-centric work that lands as a reviewable `claude/` branch + session |
 | **Hook** (`.claude/settings.json`) | Your machine | Yes (at the event) | No | event-driven | React to an event (SessionStart, PreToolUse, file write) |
 | **`/loop`** | Your machine | Yes | Yes | 1 min | Polling / babysitting within an active session |
-| **Ritual skill** (`daily-*`/`weekly-*`) | Your machine | Yes | Yes (you trigger) | manual | A consistent SOP you run by hand; `/audit` counts it toward Cadence |
+| **Ritual skill** (`daily-*`/`weekly-*`) | Your machine | Yes | Yes (you trigger) | manual | A consistent SOP you run by hand; `/aios-audit` counts it toward Cadence |
 
 **Important reality:** cloud routines **can't reach local MCP, localhost, or your `.env`**, and everything posts **as you**. They shine on work reachable through a GitHub repo or an API. Anything that needs local-only services or a tool with no API won't ride along until a cloud Connector or API exists.
 
@@ -42,7 +42,7 @@ Pick the right mechanism before scoping anything:
 2. **Does it need local files, localhost, or your local MCP servers?** → a cloud routine **can't** do it. Use a **hook**, **`/loop`**, or a **ritual skill** locally.
 3. **Is it reacting to a local event** (session start, a file changed)? → **hook**.
 4. **Is it polling something during a session you're already in?** → **`/loop`**.
-5. **Is it really a manual SOP you just want to run consistently?** → a **ritual skill** named `weekly-*`/`daily-*` (no true automation, but `/audit` credits it).
+5. **Is it really a manual SOP you just want to run consistently?** → a **ritual skill** named `weekly-*`/`daily-*` (no true automation, but `/aios-audit` credits it).
 
 State one sentence on the chosen mechanism and why. If cloud-routine is chosen, continue below. (For hook/loop/ritual, hand off to `/hooks-builder` for hooks, `/loop`, or `/skill-builder` for a ritual skill — and still do the discovery + test discipline.)
 
@@ -118,7 +118,7 @@ Once the supervised run passes, set the recurring schedule via `/schedule` — a
 
 ### Step 6 — Document & register
 
-Write the routine's definition to **`routines/<name>.md`** — the single source of truth, matching `routines/README.md`'s schema: **what it does**, **when it fires** (cadence + any GitHub/API triggers), **what it produces** (output location), plus repo and the verification/human-gate from Step 2. Then add just a **one-line cross-link** to that file in `CLAUDE.md`'s "Your routines / cadence" area — don't duplicate the body. The `routines/<name>.md` file is what lets `/audit` credit the Cadence pillar.
+Write the routine's definition to **`routines/<name>.md`** — the single source of truth, matching `routines/README.md`'s schema: **what it does**, **when it fires** (cadence + any GitHub/API triggers), **what it produces** (output location), plus repo and the verification/human-gate from Step 2. Then add just a **one-line cross-link** to that file in `CLAUDE.md`'s "Your routines / cadence" area — don't duplicate the body. The `routines/<name>.md` file is what lets `/aios-audit` credit the Cadence pillar.
 
 ---
 
@@ -140,7 +140,7 @@ Write the routine's definition to **`routines/<name>.md`** — the single source
 - [ ] Every routine prompt is one-shot with an explicit failure path
 - [ ] Comms/connector actions that post **as you** were tested before being wired
 - [ ] Routines push only to `claude/`-prefixed branches; bearer tokens not leaked
-- [ ] Each routine has a `routines/<name>.md` definition (cross-linked from CLAUDE.md) so `/audit` can see it
+- [ ] Each routine has a `routines/<name>.md` definition (cross-linked from CLAUDE.md) so `/aios-audit` can see it
 
 ---
 
@@ -148,7 +148,7 @@ Write the routine's definition to **`routines/<name>.md`** — the single source
 
 The canonical first routine (closes the Cadence gap):
 - **Repo:** your own AIOS repo  **Cadence:** weekly  **Network:** Trusted (repo-only)  **Env vars:** none
-- **Prompt (one-shot):** "Run the /audit skill on this repo. Then do decisions-log housekeeping: flag any decision older than 30 days with no follow-up. Write the audit report to `audits/audit-<YYYY-MM-DD>.md`. Push to a `claude/weekly-audit-<YYYY-WW>` branch and open a draft PR titled 'Weekly audit <date>' summarizing the score and the delta vs the previous audit. If /audit can't run, log why in the PR body and stop. Do not modify any file outside `audits/`."
+- **Prompt (one-shot):** "Run the /aios-audit skill on this repo. Then do decisions-log housekeeping: flag any decision older than 30 days with no follow-up. Write the audit report to `audits/audit-<YYYY-MM-DD>.md`. Push to a `claude/weekly-audit-<YYYY-WW>` branch and open a draft PR titled 'Weekly audit <date>' summarizing the score and the delta vs the previous audit. If /aios-audit can't run, log why in the PR body and stop. Do not modify any file outside `audits/`."
 - **Output:** reviewable `claude/` branch + draft PR each week. Nothing merges without you.
 
 ---

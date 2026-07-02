@@ -241,6 +241,14 @@ secrets** — `.env` files are already ignored.
 
 ---
 
+## Want it set up for you? / ¿Quieres que te lo dejemos listo?
+
+The kit is free and MIT-licensed. If you want your AIOS set up for you (or for your team), or a hands-on class in English or Spanish, that is a service we offer at [Penguin Alley](https://penguinalley.com). Write to **hello@penguinalley.com**.
+
+> **Español:** El kit es gratis y siempre lo será. Si quieres que te dejemos tu AIOS listo y funcionando, o una clase práctica para tu equipo, escríbenos a **hello@penguinalley.com**.
+
+---
+
 ## Credits / Créditos
 
 - The **knowledge wiki** pattern: [Andrej Karpathy](https://github.com/karpathy)'s LLM Wiki idea.

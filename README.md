@@ -241,6 +241,14 @@ secrets** — `.env` files are already ignored.
 
 ---
 
+## Contributing / Contribuir
+
+New to open source? This kit is a friendly first stop. The easiest first PR: add yourself to the [**Showcase**](SHOWCASE.md). Or grab a [**`good first issue`**](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) — translations, skill recipes, docs. We aim to review within 48 hours. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md). / ¿Primera vez en open source? Este kit es un buen primer paso. El PR más fácil: agrégate al [Showcase](SHOWCASE.md). O toma un `good first issue`. Revisamos en menos de 48 horas.
+
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+---
+
 ## Credits / Créditos
 
 - The **knowledge wiki** pattern: [Andrej Karpathy](https://github.com/karpathy)'s LLM Wiki idea.

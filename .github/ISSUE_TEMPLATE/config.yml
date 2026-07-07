@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🌟 Add yourself to the Showcase
+    url: https://github.com/GerardoRdz96/aios-starter-kit/blob/main/SHOWCASE.md
+    about: Building an AIOS from this kit? The easiest first contribution — add one line via a PR.
+  - name: 📖 Read the Contributing guide
+    url: https://github.com/GerardoRdz96/aios-starter-kit/blob/main/CONTRIBUTING.md
+    about: Three easy ways to contribute, most merged within 48 hours.

@@ -65,23 +65,41 @@ Before any independent review, make the builder check its own work *the way a hu
 
 ## Where to get these
 
-These install from the Claude Code plugin marketplace (and, for Superpowers/GSD, their GitHub repos). **Install them user-global** so they're available in every project, not just one. `/review` and `/ultra-review` ship inside Claude Code already.
+**If you cloned the AIOS Starter Kit: you already have them.** The kit's
+`.claude/settings.json` pre-wires every marketplace and plugin below
+(`extraKnownMarketplaces` + `enabledPlugins`), so Claude Code offers to install the whole
+stack the first time you open the folder and trust it. Accept once, done. `/review` and
+`/ultra-review` ship inside Claude Code already.
+
+Installing by hand (another machine, or **user-global** so they work in *every* project,
+not just this one):
 
 ```bash
-# inside Claude Code, one time:
-/plugin marketplace add obra/superpowers-marketplace
-/plugin install superpowers@superpowers-marketplace
+# inside Claude Code, one time.
+# The official Anthropic marketplace is built in — these install directly:
+/plugin install superpowers@claude-plugins-official
+/plugin install skill-creator@claude-plugins-official
+/plugin install frontend-design@claude-plugins-official
 
-/plugin marketplace add gsd-build/get-shit-done
-/plugin install get-shit-done@gsd-build
+# Community marketplaces — add the marketplace, then install:
+/plugin marketplace add mksglu/context-mode
+/plugin install context-mode@context-mode
 
-# Frontend Design ships in the Anthropic marketplace:
-/plugin install frontend-design@claude-code
-
-# the memory pair (community plugins — search /plugin for current marketplace names):
 /plugin marketplace add thedotmack/claude-mem
 /plugin install claude-mem@thedotmack
-# Context Mode: search "context-mode" in /plugin
+
+/plugin marketplace add openai/codex-plugin-cc
+/plugin install codex@openai-codex                 # needs the codex CLI on your PATH
+
+/plugin marketplace add thepushkarp/cc-gemini-plugin
+/plugin install cc-gemini-plugin@cc-gemini-plugin  # needs the gemini CLI on your PATH
+
+/plugin marketplace add clay-run/agent-plugins
+/plugin install clay@clay-plugins                  # optional — needs a Clay account
+
+# GSD is the one rider NOT pre-wired by the kit — install from its repo:
+/plugin marketplace add gsd-build/get-shit-done
+/plugin install get-shit-done@gsd-build
 ```
 
 ```bash

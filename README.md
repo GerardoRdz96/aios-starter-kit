@@ -64,14 +64,21 @@ claude
 /onboard
 ```
 
-`/onboard` interviews you (about 7 short questions), then fills in your context. That's it —
-you have a working AIOS. Try asking it: *"what should I focus on this week?"*
+The first time you open the folder, Claude Code reads the kit's `.claude/settings.json` and
+**offers to install the whole plugin stack** (Superpowers, Context Mode, Claude Mem, Codex,
+Gemini, and more — see the Power skills section below). Accept once and they're live — no
+manual `/plugin` commands. (If your Claude Code version doesn't prompt, the one-time manual
+commands live in [`references/power-skills.md`](references/power-skills.md).) Then
+`/onboard` interviews you (about 7 short questions) and fills
+in your context. That's it — you have a working AIOS. Try asking it: *"what should I focus
+on this week?"*
 
 **Security:** your personal dirs (`context/`, `knowledge/`, `decisions/`, `artifacts/`) are gitignored by default, and the guards from step 3 block accidental pushes of personal content + silent edits to governance files. Threat model and the rules: [`SECURITY.md`](SECURITY.md).
 
-> **Español:** Necesitas Claude Code instalado. Clona el kit, ábrelo con `claude`, y corre
-> `/onboard`. Te hará unas 7 preguntas y llenará tu contexto. Listo: ya tienes un AIOS
-> funcionando. Pregúntale: *"¿en qué me debo enfocar esta semana?"*
+> **Español:** Necesitas Claude Code instalado. Clona el kit, ábrelo con `claude` (la primera
+> vez te ofrecerá instalar los plugins del kit — acepta), y corre `/onboard`. Te hará unas 7
+> preguntas y llenará tu contexto. Listo: ya tienes un AIOS funcionando. Pregúntale: *"¿en qué
+> me debo enfocar esta semana?"*
 
 ---
 
@@ -84,6 +91,7 @@ my-aios/
 ├── aios-intake.md       ← the 7-question intake /onboard reads
 ├── pending.md           ← open follow-ups that must survive between sessions
 ├── .claude/
+│   ├── settings.json    ← the plugin stack, pre-wired (Claude Code offers to install it on first open)
 │   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 13 total)
 │   ├── agents/          ← specialized helpers (scribe, warden)
 │   └── teams/           ← multi-agent crews you build later
@@ -124,15 +132,28 @@ the governance layer: **the AI builds, you arm.**
 
 ![Skill vs Agent vs Routine — the three capability types your AIOS can build, each with its own builder](class/images/skill-agent-routine.png)
 
-### Power skills (install once, user-global)
+### Power skills (pre-wired — the kit installs them for you)
 
-The kit assumes a small stack of public power skills that work in every project once
-installed: **Superpowers** (plan → test-first → self-review), **GSD** (fresh sub-agent per
-task for long builds), **Frontend Design** (anything visual), the built-in `/review`, and
-the memory pair **Context Mode + Claude Mem** (auto via hooks: leaner context + cross-session
-memory). One companion CLI rides along: **[graphify](https://github.com/safishamsi/graphify)**
-(`uv tool install graphifyy`) — it turns any repo into a knowledge graph, so your AI
-understands a codebase *before* working on it. Install commands + the route-by-risk doctrine:
+The kit ships a `.claude/settings.json` that pre-wires the full plugin stack. The first time
+you open Claude Code in this folder and trust it, it offers to install everything — accept
+once and all of it is live. No manual `/plugin` commands.
+
+| Plugin | Source | What it gives you |
+|--------|--------|-------------------|
+| **Superpowers** | official marketplace | Process discipline: brainstorm → plan → test-first → self-review. |
+| **Skill Creator** | official marketplace | Guided skill authoring (pairs with `/skill-builder`). |
+| **Frontend Design** | official marketplace | Anti-generic design direction for anything visual. |
+| **Context Mode** | `mksglu/context-mode` | Leaner context: research runs in a sandbox, only answers enter the session. |
+| **Claude Mem** | `thedotmack/claude-mem` | Cross-session memory via hooks — your AI remembers past sessions. |
+| **Codex** | `openai/codex-plugin-cc` | A different-lineage reviewer — powers the **No-Self-Review Law** (needs the `codex` CLI). |
+| **Gemini** | `thepushkarp/cc-gemini-plugin` | Large-context second brain for whole-repo passes (needs the `gemini` CLI). |
+| **Clay** | `clay-run/agent-plugins` | GTM / lead-gen tables and workflows (optional — needs a Clay account). |
+
+The built-in `/review` closer needs no install. Two riders stay manual: **GSD** (fresh
+sub-agent per task for long builds) and the companion CLI
+**[graphify](https://github.com/safishamsi/graphify)** (`uv tool install graphifyy`) — it
+turns any repo into a knowledge graph, so your AI understands a codebase *before* working
+on it. Manual install commands + the route-by-risk doctrine:
 [`references/power-skills.md`](references/power-skills.md).
 
 ---

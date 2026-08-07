@@ -12,7 +12,7 @@ knows who you are, compounds knowledge across sessions, and grows new skills ove
 *Un sistema operativo de IA personal. Una plantilla para clonar que convierte a Claude Code
 en un compañero de trabajo que **recuerda**.*
 
-**Kit v2.2** — June 2026
+**Kit v2.3** — August 2026
 
 </div>
 
@@ -41,6 +41,31 @@ useful every week.
 > que crean nuevas skills, agentes y automatizaciones). No lo programas: hablas con él.
 
 ---
+
+## Read this before you clone / Léelo antes de clonar
+
+**If any of your work touches an employer's or a client's information, this template does not
+authorize you to process it.** Approval comes from your organization and covers a specific
+combination: the product, tenant, account, model, connectors, retention and data class. Some
+engagements prohibit local AI processing entirely.
+
+Two practical consequences, both **before** you run the quickstart below:
+
+1. **Clone twice.** One AIOS for sensitive work, one for everything else. Two folders are
+   *defense in depth*, not isolation: under one OS user they share your shell environment,
+   keychain, CLI logins, plugins and memory. Real separation needs a separate OS profile, a
+   VM, or an environment your organization provides.
+2. **The quickstart offers to install a plugin stack** that includes cross-session memory and
+   third-party model routes. On a work system, prune `.claude/settings.json` to what your
+   organization approves **before** you open the folder and accept that prompt.
+
+Full guidance: [`references/data-boundary.md`](references/data-boundary.md).
+
+> **Español:** Si tu trabajo toca información de tu empresa o de un cliente, esta plantilla no
+> te autoriza a procesarla; la autorización viene de tu organización. Clona dos veces, una para
+> trabajo sensible y otra para todo lo demás. Dos carpetas son defensa en profundidad, no
+> aislamiento. Y antes de aceptar la instalación de plugins, quita de `.claude/settings.json`
+> todo lo que tu organización no haya aprobado.
 
 ## Quickstart / Inicio rápido
 
@@ -92,7 +117,7 @@ my-aios/
 ├── pending.md           ← open follow-ups that must survive between sessions
 ├── .claude/
 │   ├── settings.json    ← the plugin stack, pre-wired (Claude Code offers to install it on first open)
-│   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 13 total)
+│   ├── skills/          ← /commands you run (rituals + builders + multi-brain, 14 total)
 │   ├── agents/          ← specialized helpers (scribe, warden)
 │   └── teams/           ← multi-agent crews you build later
 ├── scripts/             ← deterministic helpers (e.g. the weekly scoreboard)
@@ -114,6 +139,7 @@ my-aios/
 | `/level-up` | Weekly ritual. Find one thing to automate, scope it, ship it. Runs on the **3Ms** (Mindset, Method, Machine). |
 | `/grill-me` | Deep extraction interview. One question at a time, checkpointed to disk, graduates into your wiki. |
 | `/session-handoff` | Wrap-up note (what we did, open decisions, next steps) so a fresh session — in any tool — continues cold. |
+| `/printing-press` | Wire a new **connection**. Finds the cheapest way in (CLI > API > MCP), scopes the key read-only first, proves it with a real call, registers it in `connections.md`. |
 | `/skill-builder` | Build a new skill. |
 | `/agent-builder` | Build a new specialized agent. |
 | `/routines-builder` | Build a scheduled / recurring automation. |
@@ -123,7 +149,7 @@ my-aios/
 | `/plugin-builder` | Package your skills/agents into a shippable, installable plugin. |
 | `multi-brain` | Auto-router for *all* your models — cloud CLIs and local ones. You define the roster; it enforces the **No-Self-Review Law** (a model never reviews its own work). |
 
-The first five are **rituals** (you run them on a cadence or a moment). The next seven are
+The first six are **rituals** (you run them on a cadence or a moment). The next seven are
 **builders** — every capability type your AIOS can have now has a builder, which means it
 can grow *itself*. `multi-brain` has no slash command; it fires on its own when a route
 matters. Before you let any of it run unattended, read

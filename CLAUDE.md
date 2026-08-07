@@ -25,8 +25,8 @@ by Nate Herk.*
 ## Your skills
 
 Skills are interactive workflows I start by typing `/<name>`. They live in
-`.claude/skills/`. The kit ships twelve interactive skills plus the auto-firing `multi-brain`
-(13 total); build your own with the builders below.
+`.claude/skills/`. The kit ships thirteen interactive skills plus the auto-firing `multi-brain`
+(14 total); build your own with the builders below.
 
 **Rituals**
 - `/onboard` — Day-1 intake + scaffold wizard (idempotent).
@@ -34,6 +34,7 @@ Skills are interactive workflows I start by typing `/<name>`. They live in
 - `/level-up` — weekly 3Ms interview; ship one automation.
 - `/grill-me` — extract what's in your head into the wiki.
 - `/session-handoff` — structured handoff note for clearing context or switching tools.
+- `/printing-press` — wire a new connection (CLI > API > MCP), prove it, register it.
 
 **Builders** (use these to grow your AIOS)
 - `/skill-builder` — build / optimize / audit a skill.
@@ -116,7 +117,8 @@ installed? I re-derive the check from scratch rather than rubber-stamp.
 ## Where things live
 
 - `context/` — about me, my work, my priorities (filled by `/onboard`)
-- `connections.md` — registry of the systems your AIOS can reach
+- `connections.md` — registry of the systems your AIOS can reach (add one with `/printing-press`)
+- `references/data-boundary.md` — **read before wiring anything that touches employer or client material.** Two systems, not one.
 - `references/` — **your knowledge wiki** (you own and write it). Start at `references/index.md`. Your voice lives in `references/voice.md`.
 - `knowledge/` — raw source drop zone (transcripts, PDFs, notes). Immutable. Facts graduate into `references/`.
 - `artifacts/` — HTML / deliverables you render for me. Naming: `artifacts/<topic>/<date>-<slug>.html`.

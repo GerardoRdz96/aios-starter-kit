@@ -42,7 +42,11 @@ Name · **Prompt (this IS the routine)** · Model · Repository · Cloud environ
 
 The fresh clone has **no `.env`** (it's `.gitignored`). Configure at claude.ai **before** creating the routine:
 
-- **Environment variables** — put API keys here; the run reads them as normal env vars.
+- **Environment variables** — non-secret configuration only. Anthropic's documentation says
+  these values are readable by anyone using the environment and that it is not a secrets
+  store, so **credentials do not belong here**. For anything secret, prefer an official
+  connector, the scoped GitHub access the product provides, or a real secret manager the
+  run can call.
 - **Network access** — what the run can reach (below).
 - **Setup script** — install commands before each session (`npm install`, `pip install`).
 

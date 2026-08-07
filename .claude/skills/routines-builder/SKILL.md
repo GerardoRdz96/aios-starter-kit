@@ -60,7 +60,7 @@ Ask with AskUserQuestion, one round at a time, skipping what's already known.
 - What files/dirs is it allowed to touch? What is off-limits?
 
 **Round 3: Environment & secrets**
-- Does it need external APIs or secrets? If yes → those go in **cloud env vars at claude.ai** (never `.env` — the fresh clone has none). The prompt must say "read KEY from the environment, don't look for a `.env`."
+- Does it need external APIs or secrets? The fresh clone has no `.env`, so the prompt must say "don't look for a `.env`." But **do not paste credentials into cloud env vars either** — Anthropic documents those as readable by anyone using the environment and explicitly not a secrets store. Use an official connector, the product's scoped GitHub access, or a real secret manager; keep env vars for non-secret config.
 - Network mode: **Trusted** (GitHub + Anthropic + connectors only — the default, fine for repo-only work) or **Full** (needed for external APIs)?
 - Setup script needed before each run? (`npm install`, `pip install`.)
 

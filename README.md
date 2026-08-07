@@ -275,9 +275,10 @@ carries personal content. It runs in two places: the **step-3 pre-push hook**
 fires if you skipped step 3. It knows the shipped placeholders by hash, so it stays quiet
 until *you* put your facts in them. Run step 3: the hook is the half that stops the data
 before it leaves your machine, while CI can only tell you afterwards that it already left.
-Neither survives a deliberate `ALLOW_PERSONAL_PUSH=1`, and that is the point — the override
-exists so a **private** fork can version its own context. Doing that? Comment those
-`.gitignore` lines out too. **Never commit secrets** — `.env` files are already ignored.
+`ALLOW_PERSONAL_PUSH=1` turns off the **hook**, on purpose, so a **private** fork can version
+its own context — but it is a local variable, so CI still flags the push and your build goes
+red. Keeping a private fork? Comment those `.gitignore` lines out too. **Never commit
+secrets** — `.env` files are already ignored.
 
 > **Español:** Este kit se entrega con plantillas de ejemplo, no con datos personales —
 > `/onboard` las llena con información sobre *ti*. **La privacidad viene activada por defecto,
@@ -291,10 +292,11 @@ exists so a **private** fork can version its own context. Doing that? Comment th
 > igual se activa si te saltaste el paso 3. Reconoce las plantillas que vienen en el kit por su
 > hash, así que se queda callado hasta que *tú* pongas tus datos en ellas. Haz el paso 3: el
 > hook es la mitad que detiene los datos antes de que salgan de tu máquina, mientras que CI
-> solo puede avisarte después de que ya salieron. Ninguno sobrevive a un
-> `ALLOW_PERSONAL_PUSH=1` deliberado, y esa es la idea: el override existe para que un fork
-> **privado** pueda versionar su propio contexto. ¿Vas a hacer eso? Descomenta también esas
-> líneas de `.gitignore`. **Nunca subas secretos** — los `.env` ya se ignoran.
+> solo puede avisarte después de que ya salieron. `ALLOW_PERSONAL_PUSH=1` apaga el **hook**, a
+> propósito, para que un fork **privado** pueda versionar su propio contexto — pero es una
+> variable local, así que CI igual marca el push y tu build se pone en rojo. ¿Vas a hacer eso?
+> Descomenta también esas líneas de `.gitignore`. **Nunca subas secretos** — los `.env` ya se
+> ignoran.
 
 ---
 

@@ -83,7 +83,9 @@ not expose anything. All test commits and the branch were deleted afterwards;
    privacy gate means the content is already published and needs removing from history.
    Only the local hook stops data before it leaves the machine.
 2. **`git push --no-verify` skips the hook.** CI is the reason that is no longer a silent win.
-3. **`ALLOW_PERSONAL_PUSH=1` disables the gate** by design, for private forks.
+3. **`ALLOW_PERSONAL_PUSH=1` disables the HOOK only**, by design, for private forks. It is a
+   local environment variable, so the CI run does not see it and still fails the build. Turning
+   the gate off in both places means editing the workflow, which is a reviewable commit.
 4. **Baselines are a maintainer tool.** Running `rails-guard.sh baseline` in a personal clone
    re-blesses filled-in files and switches the gate off for them. Documented in the script's
    own usage block.

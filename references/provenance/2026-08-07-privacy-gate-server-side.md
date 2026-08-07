@@ -63,9 +63,19 @@ not expose anything. All test commits and the branch were deleted afterwards;
 
 - **Armed-by:** hooks armed in the maintainer's clone 2026-08-07 (`rails-guard.sh install`);
   CI enforcement ships with this commit and arms itself on push.
-- **Post-ship verification:** the CI privacy gate must be observed running green on this very
-  push, and `rails-guard` must be added as a **required status check** in branch protection —
-  until then the CI half reports rather than blocks, and this record stays incomplete.
+- **Post-ship verification:** **DONE.** CI run `31195386533` on commit `d224005` executed the
+  step "Personal-content privacy gate (push)" with `BEFORE=51e1c27 AFTER=d224005` and returned
+  `rails-guard: privacy gate OK`. The step ran; it was not skipped by its `if:` condition.
+  That a non-zero exit turns the build red is separately evidenced by runs `28895709104` and
+  `29374939455`, where the same script exiting 2 failed the same workflow.
+- **Branch protection: deliberately NOT enabled** (owner's decision, 2026-08-07). Requiring
+  `rails-guard` as a status check would block direct pushes to `main` and force a PR workflow
+  on a single-maintainer repo. The trade accepted: **the local hook is the preventing layer**
+  (armed in the maintainer's clone, blocks before data leaves the machine) and **CI is the
+  detecting layer** for the cases the hook cannot cover — an unarmed clone, a push from a
+  cloud routine, `git push --no-verify`, and contributor pull requests. A red privacy gate is
+  therefore an incident to act on, not a merge blocker. Revisit if the repo gains
+  co-maintainers, since detection-only scales badly across people.
 
 ## Honest limits
 

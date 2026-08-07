@@ -1,14 +1,50 @@
 name: rails-guard
-# Charter §7 item 1 — server-side rail enforcement: frozen-file integrity on every push/PR.
+# Charter §7 item 1 — server-side rail enforcement.
+#
+# TWO gates run here, and both matter:
+#   1. frozen-file integrity  — governance files cannot drift silently
+#   2. personal-content gate  — context/, knowledge/, decisions/, artifacts/, aios-intake.md
+#                               must not reach a remote by accident
+#
+# Gate 2 also runs as a local pre-push hook (scripts/rails-guard.sh install), but a hook is
+# opt-in, lives only on one machine, and is skipped by `git push --no-verify`. Running it here
+# too means the gate still fires for a clone that never armed the hook, for a push from a
+# cloud routine, and for a pull request opened by someone else.
 on:
   push:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   rails:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          # The privacy gate walks commit history. The default shallow clone would make
+          # every range unresolvable, and this script fails CLOSED, so CI would be red
+          # for the wrong reason.
+          fetch-depth: 0
+
       - name: Frozen-file integrity check
         run: bash scripts/rails-guard.sh check
+
+      # SHAs go through the environment rather than being interpolated straight into the
+      # shell. GitHub controls these particular values, but `${{ }}` inside `run:` is a
+      # script-injection sink in general and this repo is read as a teaching example.
+      - name: Personal-content privacy gate (push)
+        if: github.event_name == 'push'
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: bash scripts/rails-guard.sh privacy-range "$BEFORE" "$AFTER"
+
+      - name: Personal-content privacy gate (pull request)
+        if: github.event_name == 'pull_request'
+        env:
+          BEFORE: ${{ github.event.pull_request.base.sha }}
+          AFTER: ${{ github.event.pull_request.head.sha }}
+        run: bash scripts/rails-guard.sh privacy-range "$BEFORE" "$AFTER"

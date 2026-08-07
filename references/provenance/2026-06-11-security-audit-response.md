@@ -19,3 +19,13 @@
 - **Validator verdict:** guard script tested 7 scenarios locally (freeze/check OK, tamper → exit 2, staged-frozen block, privacy block, ALLOW_PERSONAL_PUSH override, README exceptions, restore OK).
 - **Open (not closed by this patch):** section-level CLAUDE.md content guard (§7 item 2), validator-as-gate in builders (§7 item 3), wiki lint in CI.
 - **Armed-by:** guards are install-on-clone (`scripts/rails-guard.sh install`) — the human arms them, per "the AI builds, you arm". CI arms automatically on push to GitHub.
+
+> **Correction, 2026-08-07.** The last sentence above was true only of the frozen-file check.
+> CI ran `rails-guard.sh check` and never `rails-guard.sh privacy`, so the **personal-content
+> gate (V4) had no server-side enforcement at all** — it depended entirely on a per-clone
+> pre-push hook, which was not installed in the maintainer's own clone. The claim stood
+> uncorrected for 57 days. Fixed in
+> [`2026-08-07-privacy-gate-server-side.md`](2026-08-07-privacy-gate-server-side.md), which
+> adds the gate to CI, makes it recognise unmodified template placeholders by hash, and
+> records the block-proof tests. Left in place rather than edited away: a governance record
+> that quietly rewrites its own claims is worth less than one that shows what it got wrong.

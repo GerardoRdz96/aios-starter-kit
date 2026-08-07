@@ -25,7 +25,7 @@ Prompt-level rails are best-effort — an LLM following instructions is not a se
 | Control | Mechanism |
 |---|---|
 | Frozen governance files can't drift silently | `scripts/rails-guard.sh check` — sha256 manifest at `references/provenance/frozen.manifest`, run by CI (`.github/workflows/rails.yml`) and the installable git hooks |
-| Personal content doesn't get pushed by accident | `scripts/rails-guard.sh install` arms a pre-push privacy gate over `context/`, `knowledge/`, `decisions/`, `artifacts/`, `aios-intake.md` (override: `ALLOW_PERSONAL_PUSH=1`) |
+| Personal content doesn't get pushed by accident | `scripts/rails-guard.sh privacy` over `context/`, `knowledge/`, `decisions/`, `artifacts/`, `aios-intake.md`. Runs in **two** places: the pre-push hook `install` arms locally, and **CI on every push and pull request** (`.github/workflows/rails.yml`), which still fires for a clone that never armed the hook, a push from a cloud routine, or `git push --no-verify`. It scans every commit in the range, not just the endpoints, so a file added and deleted before the push is still caught. Placeholder files the template ships in those paths are recognised by hash (`references/provenance/template-baseline.manifest`) and allowed until *you* edit them. Override: `ALLOW_PERSONAL_PUSH=1` |
 | Secrets stay out of git | `.gitignore` (`.env*`, keys) + privacy defaults ON for personal dirs |
 | Guards fail closed *(recommended pattern — you wire it)* | `/hooks-builder` generates guard skeletons that start fail-closed (`set -euo pipefail` + an `ERR` trap → `exit 2`), so a crashing guard denies instead of silently allowing. This is the pattern the skill emits when you build a hook, not a control the kit ships pre-armed. |
 
@@ -36,6 +36,8 @@ scripts/rails-guard.sh install   # arms pre-commit + pre-push guards in YOUR clo
 ```
 
 When you *deliberately* change a frozen file: `scripts/rails-guard.sh freeze <file>` and commit the manifest with the change.
+
+**Know what each layer actually buys you.** The hook *prevents*: it runs before the data leaves your machine, and a blocked push means nothing was transmitted. CI *detects*: it runs after the push has already been accepted, so a red build tells you the content is on the remote and needs removing from history, not that it was stopped. Arm the hook, and treat a red privacy gate in CI as an incident rather than a warning. Neither layer helps if you push personal content from a machine you never armed to a remote whose CI you never look at, which is why branch protection requiring the `rails-guard` check is the thing that makes the CI half enforceable rather than advisory.
 
 ## Reporting a vulnerability
 

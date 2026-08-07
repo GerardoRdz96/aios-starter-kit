@@ -269,11 +269,15 @@ facts about *you*. **Privacy defaults are ON, two ways.** (1) Any *new* file you
 `context/`, `knowledge/`, `decisions/`, or `artifacts/` is gitignored, so it never enters
 git. (2) A few starter files ship **tracked** so the template works on day one — your
 `context/` profile, `decisions/log.md`, and `aios-intake.md` — and a filled-in version of
-those *would* commit; the **step-3 pre-push guard** (`scripts/rails-guard.sh install`) is
-what protects them, blocking any push that would leak personal content. So: install the
-guard, and your data can't reach a public remote by accident. Keeping a **private** fork and
-want your context version-controlled? Comment those `.gitignore` lines out. **Never commit
-secrets** — `.env` files are already ignored.
+those *would* commit; the **privacy gate** is what protects them, blocking any push that
+carries personal content. It runs in two places: the **step-3 pre-push hook**
+(`scripts/rails-guard.sh install`), and **CI on every push and pull request**, which still
+fires if you skipped step 3. It knows the shipped placeholders by hash, so it stays quiet
+until *you* put your facts in them. Run step 3: the hook is the half that stops the data
+before it leaves your machine, while CI can only tell you afterwards that it already left.
+Neither survives a deliberate `ALLOW_PERSONAL_PUSH=1`, and that is the point — the override
+exists so a **private** fork can version its own context. Doing that? Comment those
+`.gitignore` lines out too. **Never commit secrets** — `.env` files are already ignored.
 
 > **Español:** Este kit se entrega con plantillas de ejemplo, no con datos personales —
 > `/onboard` las llena con información sobre *ti*. **La privacidad viene activada por defecto,
@@ -281,10 +285,16 @@ secrets** — `.env` files are already ignored.
 > `decisions/` o `artifacts/` está en `.gitignore`, así que nunca entra a git. (2) Algunos
 > archivos de inicio se entregan **versionados** para que la plantilla funcione desde el día
 > uno — tu perfil en `context/`, `decisions/log.md` y `aios-intake.md` — y una versión llena
-> de esos *sí* se subiría; el **guardia de pre-push del paso 3** (`scripts/rails-guard.sh
-> install`) es lo que los protege, bloqueando cualquier push que filtraría contenido personal.
-> Instálalo y tus datos no llegan a un remoto público por accidente. ¿Un fork **privado**?
-> Descomenta esas líneas de `.gitignore`. **Nunca subas secretos** — los `.env` ya se ignoran.
+> de esos *sí* se subiría; el **guardia de privacidad** es lo que los protege, bloqueando
+> cualquier push que lleve contenido personal. Corre en dos lugares: el **hook de pre-push del
+> paso 3** (`scripts/rails-guard.sh install`) y **CI en cada push y cada pull request**, que
+> igual se activa si te saltaste el paso 3. Reconoce las plantillas que vienen en el kit por su
+> hash, así que se queda callado hasta que *tú* pongas tus datos en ellas. Haz el paso 3: el
+> hook es la mitad que detiene los datos antes de que salgan de tu máquina, mientras que CI
+> solo puede avisarte después de que ya salieron. Ninguno sobrevive a un
+> `ALLOW_PERSONAL_PUSH=1` deliberado, y esa es la idea: el override existe para que un fork
+> **privado** pueda versionar su propio contexto. ¿Vas a hacer eso? Descomenta también esas
+> líneas de `.gitignore`. **Nunca subas secretos** — los `.env` ya se ignoran.
 
 ---
 
